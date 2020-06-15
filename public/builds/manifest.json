@@ -1,9 +1,9 @@
 {
-  "builds/0.8bc16257.css": "/builds/0.8bc16257.css",
-  "builds/0.be6f37b6.js": "/builds/0.be6f37b6.js",
-  "builds/app.css": "/builds/app.f512fd25.css",
-  "builds/app.js": "/builds/app.45aa36c4.js",
-  "builds/runtime.js": "/builds/runtime.13461c14.js",
+  "builds/app.css": "/builds/app.css",
+  "builds/app.js": "/builds/app.js",
+  "builds/runtime.js": "/builds/runtime.js",
+  "builds/vendors~app.css": "/builds/vendors~app.css",
+  "builds/vendors~app.js": "/builds/vendors~app.js",
   "builds/fonts/fa-brands-400.ttf": "/builds/fonts/fa-brands-400.1437eef4.ttf",
   "builds/fonts/fa-brands-400.eot": "/builds/fonts/fa-brands-400.3825c40f.eot",
   "builds/fonts/fa-brands-400.woff2": "/builds/fonts/fa-brands-400.9a01a31d.woff2",
@@ -20,11 +20,14 @@
   "builds/fonts/glyphicons-halflings-regular.eot": "/builds/fonts/glyphicons-halflings-regular.5be1347c.eot",
   "builds/fonts/glyphicons-halflings-regular.woff": "/builds/fonts/glyphicons-halflings-regular.82b1212e.woff",
   "builds/fonts/glyphicons-halflings-regular.woff2": "/builds/fonts/glyphicons-halflings-regular.be810be3.woff2",
+  "builds/images/32px.png": "/builds/images/32px.7b8ef980.png",
+  "builds/images/40px.png": "/builds/images/40px.106a7abc.png",
   "builds/images/blue.png": "/builds/images/blue.47dfe954.png",
   "builds/images/blue@2x.png": "/builds/images/blue@2x.eb5592d0.png",
   "builds/images/default_avatar.png": "/builds/images/default_avatar.0f50fed9.png",
   "builds/images/fa-brands-400.svg": "/builds/images/fa-brands-400.55faa7ef.svg",
   "builds/images/fa-regular-400.svg": "/builds/images/fa-regular-400.fa5f132d.svg",
   "builds/images/fa-solid-900.svg": "/builds/images/fa-solid-900.a84653d4.svg",
-  "builds/images/glyphicons-halflings-regular.svg": "/builds/images/glyphicons-halflings-regular.060b2710.svg"
+  "builds/images/glyphicons-halflings-regular.svg": "/builds/images/glyphicons-halflings-regular.060b2710.svg",
+  "builds/images/throbber.gif": "/builds/images/throbber.f3bc1490.gif"
 }

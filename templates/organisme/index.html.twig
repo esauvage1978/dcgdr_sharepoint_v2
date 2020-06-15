@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}Documentation{% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% block page_content %}
+    {% import "@AdminLTE/Macros/default.html.twig" as macro %}
+
+    <div class="row">
+        <div class="col-xs-12  col-sm-4 col-md-3 " >
+            <div  class="div_tree table-responsive">
+                <div id="tree" ></div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8 col-md-9 ">
+            <div class="col-lg-12 ">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var treedata = {{ treeData|raw }};
+        var tree = true;
+
+        function initTree(treedata) {
+            $('#tree').jstree({
+                'core': {
+                    'data': treedata,
+                    "check_callback": true
+                }
+            }).bind("changed.jstree", function (e, data) {
+                if (data.node) {
+                    document.location = data.node.a_attr.href;
+                }
+            });
+        }
+
+        initTree(treedata);
+
+    </script>
+{% endblock %}

@@ -14,5 +14,22 @@ require('../../vendor/kevinpapst/adminlte-bundle/Resources/assets/admin-lte.js')
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
+const $ = require('jquery');
+require('jstree');
+require('jstree/dist/themes/default/style.min.css');
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+var tree = true;
+function initTree(treedata) {
+    $('#tree').jstree({
+        'core': {
+            'data': treedata,
+            "check_callback": true
+        }
+    }).bind("changed.jstree", function (e, data) {
+        if (data.node) {
+            document.location = data.node.a_attr.href;
+        }
+    });
+}
+
+initTree(treedata);

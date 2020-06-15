@@ -15,7 +15,8 @@
         "node-sass": "^4.13",
         "regenerator-runtime": "^0.13.2",
         "sass-loader": "^8.0",
-        "webpack-notifier": "^1.8"
+        "webpack-notifier": "^1.8",
+        "jstree": "^3.3"
     },
     "license": "UNLICENSED",
     "private": true,
@@ -24,5 +25,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
     }
 }
