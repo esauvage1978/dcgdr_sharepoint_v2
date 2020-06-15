@@ -42,10 +42,22 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             ])->setAttribute('class', 'header');
 
             $menu->addChild('admin_action', [
-                'route' => 'home',
+                'route' => 'home    ',
                 'label' => 'Mon action admin',
                 'childOptions' => $event->getChildOptions()
             ])->setLabelAttribute('icon', 'fas fa-cogs');
         }
+
+
+        $menu->addChild('MainDocumentation', [
+            'label' => 'Documentation',
+            'childOptions' => $event->getChildOptions()
+        ])->setAttribute('class', 'header');
+
+        $menu->addChild('documentation', [
+            'route' => 'documentation',
+            'label' => 'Consulter',
+            'childOptions' => $event->getChildOptions()
+        ])->setLabelAttribute('icon', 'fas fa-file-pdf');
     }
 }

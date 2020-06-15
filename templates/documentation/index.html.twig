@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}Documentation{% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% block page_content %}
+    {% import "@AdminLTE/Macros/default.html.twig" as macro %}
+
+    <div class="row">
+        <div class="col-md-3" ></div>
+        <div class="col-md-6 offset-md-3" >
+            {# ... box widget with defaults ... #}
+            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+
+                {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+
+                {% block box_body %}
+                    {% for doc in docs %}
+                        <div class="row ">
+                            <div class="col-sm-8">
+                                <a href="doc/{{ doc.url }}" target="_blank">
+                                    <i class="fas fa-angle-right text-purple"></i>  {{ doc.name }}
+                                </a>
+                            </div>
+                            <div class="col-sm-4">
+                                version du {{ doc.date }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}
+
+
