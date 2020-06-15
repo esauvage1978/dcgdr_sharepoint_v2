@@ -2,12 +2,18 @@
 
 
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('builds/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('bundles/adminlte/adminlte.css') }}">
-{% endblock %}
+        {% block stylesheets %}
+            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
+            {{ encore_entry_link_tags('app') }}
 
-{% block javascripts %}
-    <script src="{{ asset('builds/app.js') }}"></script>
-    <script src="{{ asset('bundles/adminlte/adminlte.js') }}"></script>
-{% endblock %}
+            <!-- Renders a link tag (if your module requires any CSS)
+                 <link rel="stylesheet" href="/build/app.css"> -->
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+
+            <!-- Renders app.js & a webpack runtime.js file
+                <script src="/build/runtime.js"></script>
+                <script src="/build/app.js"></script> -->
+        {% endblock %}
