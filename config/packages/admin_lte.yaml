@@ -11,8 +11,8 @@ admin_lte:
         skin: skin-blue
         fixed_layout: false
         boxed_layout: false
-        collapsed_sidebar: false
-        mini_sidebar: false
+        collapsed_sidebar: true
+        mini_sidebar: true
 
     knp_menu:
         enable: false
