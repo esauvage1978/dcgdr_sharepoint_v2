@@ -2,31 +2,71 @@
 
 namespace App\Controller;
 
-use App\Tree\OrganismeTree;
+use App\Entity\Organisme;
+use App\Form\Admin\OrganismeType;
+use App\Manager\OrganismeManager;
 use App\Repository\OrganismeRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class OrganismeController extends AbstractController
+/**
+ * Class OrganismeController
+ * @package App\Controller
+ * @route("/organisme")
+ */
+class OrganismeController extends AbstractGController
 {
-    /**
-     * @Route("/organisme", name="organismes")
-     */
-    public function organisme(
-        Request $request,
-        OrganismeRepository $repo
+    const DOMAINE = 'organisme';
+
+    public function __construct
+    (
+        OrganismeRepository $repository,
+        OrganismeManager $manager
     )
     {
-        $tree = new OrganismeTree($this->container, $request);
-        $tree
-            ->initialise($repo->findAll())
-            ->setRoute('organismes');
+        $this->repository = $repository;
+        $this->manager = $manager;
+        $this->domaine = 'organisme';
+    }
 
-        return $this->render('organisme/index.html.twig',             [
-            'treeData' => $tree->getTree(),
-            'items' => $tree->getItems(),
-            'item' => $tree->getItem()
-        ]);
+    /**
+     * @Route("/", name="organisme_list", methods={"GET"})
+     */
+    public function list()
+    {
+        return $this->listAction();
+    }
+
+    /**
+     * @Route("/add", name="organisme_add", methods={"GET","POST"})
+     */
+    public function add(Request $request)
+    {
+        return $this->editAction($request, new Organisme(), OrganismeType::class,false);
+    }
+
+    /**
+     * @Route("/{id}", name="organisme_del", methods={"DELETE"})
+     */
+    public function delete(Request $request, Organisme $item)
+    {
+        return $this->deleteAction($request, $item);
+    }
+
+    /**
+     * @Route("/{id}", name="organisme_show", methods={"GET"})
+     */
+    public function show(Request $request, Organisme $item)
+    {
+        return $this->showAction($request, $item);
+    }
+
+
+    /**
+     * @Route("/{id}/edit", name="organisme_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Organisme $item)
+    {
+        return $this->editAction($request, $item, OrganismeType::class);
     }
 }

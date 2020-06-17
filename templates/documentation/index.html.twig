@@ -1,13 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block page_title %}Documentation{% endblock %}
-{% block page_subtitle %}{% endblock %}
 
 {% block page_content %}
-    {% import "@AdminLTE/Macros/default.html.twig" as macro %}
 
     <div class="row">
-        <div class="col-md-3" ></div>
         <div class="col-md-6 offset-md-3" >
             {# ... box widget with defaults ... #}
             {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}

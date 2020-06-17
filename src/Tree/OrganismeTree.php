@@ -17,23 +17,6 @@ class OrganismeTree extends AbstractTree
      */
     protected $item;
 
-
-
-    public function initialise($items): self
-    {
-        $this->items = $items;
-        $this->item=null;
-
-        if ($this->request->query->has('itemRequestId')) {
-            $this->itemRequestId = $this->request->query->get('itemRequestId');
-            $this->findItem();
-        } else if (count($this->items)>0) {
-            $this->item=$this->items[0];
-        }
-
-        return $this;
-    }
-
     /**
      * @param $path
      * @param string $parent
@@ -51,8 +34,9 @@ class OrganismeTree extends AbstractTree
             $this->tree[] = [
                 'id' => $item->getid(),
                 'parent' => $this->getParent(),
-                'text' => '<span class="text-primary">' . $item->getName() . '</span> ',
-                'icon' => $this->icone. ' text-info ',
+                'text' => '<span class="'. ($item->getIsEnable()?'text-primary':'text-warning').'">'
+                    .$item->getRef(). ' '. $item->getName() . '</span> ',
+                'icon' =>  'fas fa-building ' . ($item->getIsEnable()?'text-primary':'text-warning'),
                 'a_attr' => [
                     'href' => $this->generateUrl($item->getId()),
                 ],

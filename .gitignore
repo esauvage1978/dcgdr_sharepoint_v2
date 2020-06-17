@@ -5,6 +5,7 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/migrations
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
@@ -19,9 +20,13 @@
 /.idea
 ###< php storm ###
 
+###> fixtures ###
+/data
+###< fixtures ###
+
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
-/public/build/
+/public/builds/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###

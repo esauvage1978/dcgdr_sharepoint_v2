@@ -14,9 +14,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OrganismeRepository extends ServiceEntityRepository
 {
+    const ALIAS='o';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Organisme::class);
+    }
+
+    public function findAllForAdmin()
+    {
+        return $this->createQueryBuilder(self::ALIAS)
+            ->select( self::ALIAS)
+            ->orderBy(self::ALIAS . '.ref', 'ASC')
+            ->addOrderBy(self::ALIAS. '.name','ASC')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     // /**

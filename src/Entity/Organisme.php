@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=OrganismeRepository::class)
  */
-class Organisme
+class Organisme implements EntityInterface
 {
     /**
      * @ORM\Id()
@@ -37,10 +37,17 @@ class Organisme
      */
     private $isEnable;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
+    public function setId(int $id): self
+    {
+        $this->id=$id;
+        return $this;
+    }
+
 
     public function getName(): ?string
     {
@@ -89,4 +96,5 @@ class Organisme
 
         return $this;
     }
+
 }

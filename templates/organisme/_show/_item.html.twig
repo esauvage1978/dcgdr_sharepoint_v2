@@ -1,0 +1,65 @@
+{% if item is defined %}
+
+    {% embed '@AdminLTE/Widgets/box-widget.html.twig' with {
+        'boxtype' : ''
+    } %}
+        {% import "macros/delele.html.twig" as del %}
+        {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+
+
+        {% block box_title %}
+            {{ item.ref }} {{ item.name }}
+        {% endblock %}
+        {% block box_body %}
+
+
+            <div class="row">
+                <div class="col-sm-1 shadow">
+                    <div class="mr-1 ml-1 p-3 ">
+                        <p class="text-center {{ item.isEnable ?'text-success':'text-warning' }}">
+                            <i class="fas fa-{{ item.isEnable ?'check':'times' }} fa-3x"></i><br>
+                            Utilisable
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-sm-11">
+                    {{ item.content | raw }}
+                </div>
+            </div>
+
+        {% endblock %}
+        {% block box_footer %}
+            <div class="row">
+                <div class="col-6">
+                    <div class="text-left">
+                        {{ btn.link_button(
+                            'Liste',
+                            path(route_list),
+                            'fa fa-list',
+                            'secondary',
+                            'secondary'
+                        ) }}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-right">
+                        {{ del.delete_btn('show') }}
+                        {{ btn.link_button(
+                            'Modifier',
+                            path(route_edit,{id:item.id}),
+                            'fa fa-edit',
+                            'purple',
+                            'primary'
+                        ) }}
+                    </div>
+                </div>
+            </div>
+
+        {% endblock %}
+        {% block box_after %}
+            {{ del.delete_form(route_del,item.id, 'show') }}
+        {% endblock %}
+    {% endembed %}
+
+{% endif %}
