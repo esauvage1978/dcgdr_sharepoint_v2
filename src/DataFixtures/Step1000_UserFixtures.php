@@ -91,7 +91,7 @@ class Step1000_UserFixtures extends Fixture implements FixtureGroupInterface
             ->setName($data['nom'])
             ->setEmailValidated($data['afficher'])
             ->setEmailValidatedToken(md5(random_bytes(50)))
-            ->setEnable($data['afficher'])
+            ->setIsEnable($data['afficher'])
             ->setEmail(
                 filter_var($data['mail'], FILTER_VALIDATE_EMAIL) ?
                     $data['mail'] :

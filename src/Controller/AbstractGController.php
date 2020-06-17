@@ -35,7 +35,7 @@ abstract class AbstractGController extends AbstractController
 
     public function listAction()
     {
-        return $this->render($this->domaine . '/index.html.twig',
+        return $this->render($this->domaine . '/list.html.twig',
             [
                 'items' => $this->repository->findAllForAdmin()
             ]);

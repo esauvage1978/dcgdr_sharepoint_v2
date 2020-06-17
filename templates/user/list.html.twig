@@ -1,0 +1,99 @@
+{% extends 'user/layout.html.twig' %}
+{% import "macros/datatables.html.twig" as tables %}
+{% set columns = {
+    '#': {'class': 'all', 'orderBy': true},
+    'Nom / Email': {'class': 'alwaysVisible', 'orderBy': true},
+    'Description': {'class': 'alwaysVisible', 'orderBy': true},
+    'Description': {'class': 'alwaysVisible', 'orderBy': true},
+    '<i class="fa fa-user-cog"  data-toggle="tooltip" data-placement="top" title="Administrateur"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-user-astronaut"  data-toggle="tooltip" data-placement="top" title="Gestionnaire"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-user-secret"  data-toggle="tooltip" data-placement="top" title="Gestionnaire local"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-user"  data-toggle="tooltip" data-placement="top" title="Utilisateur"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-envelope-open-text"  data-toggle="tooltip" data-placement="top" title="Mail non vérifié"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-rss"  data-toggle="tooltip" data-placement="top" title="Abonné"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-globe"  data-toggle="tooltip" data-placement="top" title="Nombre d\'organismes"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'text-center', 'orderBy': false},
+    'actions': {'class': 'alwaysVisible', 'orderBy': false}
+} %}
+
+    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+{% block page_subtitle %}Liste des {{ domaine }}s{% endblock %}
+
+{% block breadcrumb %}
+    <div class="row mb-2">
+        <div class="col-12 text-right">
+            {{ btn.link_button(
+                'Ajouter',
+                path(route_add),
+                'fa fa-edit',
+                'success',
+                'success'
+            ) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block page_content %}
+
+
+    {% import "@AdminLTE/Macros/default.html.twig" as macro %}
+
+    {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
+    {% for item in items %}
+
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>
+                <a href="{{ path(route_show,{id:item.id}) }}" class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
+                    {{ item.name }}
+                </a>
+                <br/>
+                <small>{{ item.email }}</small>
+            </td>
+            <td>{{ item.content | raw }}</td>
+            <td class="text-center">
+                <span class="text-{{ 'ROLE_ADMIN' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="text-center">
+                <span class="text-{{ 'ROLE_GESTIONNAIRE' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="text-center">
+                <span class="text-{{ 'ROLE_GESTIONNAIRE_LOCAL' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="text-center">
+                <span class="text-{{ 'ROLE_USER' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="text-center">
+                <span class="text-{{ not item.emailvalidated ? 'danger' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="text-center">
+                <span class="text-{{ item.subscription ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="text-center">
+
+            </td>
+            <td class="text-center">
+
+            </td>
+            <td class=" d-flex  justify-content-end ">
+                {{ btn.link_button(
+                    'Modifier',
+                    path(route_edit,{id:item.id}),
+                    'fa fa-edit',
+                    'purple',
+                    'primary btn-sm'
+                ) }}
+            </td>
+        </tr>
+    {% else %}
+        {{ tables.datatable_data_else(columns) }}
+    {% endfor %}
+    {{ tables.datatable_footer(tableName,1) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ tables.datatable_javascript(tableName,1,columns) }}
+{% endblock %}
