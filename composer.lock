@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13bd873559db3b6c9edd77331444f898",
+    "content-hash": "022a9c3cf5cd6985cf1457858ada54bc",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1280,16 +1280,16 @@
         },
         {
             "name": "kevinpapst/adminlte-bundle",
-            "version": "3.2.3",
+            "version": "dev-adminlte-v3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kevinpapst/AdminLTEBundle.git",
-                "reference": "e79543f789ce4b1560c2d113eb40de12d390c74a"
+                "reference": "78d2b3198582b753851213f45ca2545137009b26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kevinpapst/AdminLTEBundle/zipball/e79543f789ce4b1560c2d113eb40de12d390c74a",
-                "reference": "e79543f789ce4b1560c2d113eb40de12d390c74a",
+                "url": "https://api.github.com/repos/kevinpapst/AdminLTEBundle/zipball/78d2b3198582b753851213f45ca2545137009b26",
+                "reference": "78d2b3198582b753851213f45ca2545137009b26",
                 "shasum": ""
             },
             "require": {
@@ -1340,8 +1340,8 @@
                     "homepage": "https://shakaran.net/blog"
                 }
             ],
-            "description": "Admin theme bundle for Symfony 4+ based on AdminLTE 2.4 with FOSUserBundle support",
-            "time": "2020-05-20T15:37:54+00:00"
+            "description": "Admin theme bundle for Symfony 4+ based on AdminLTE 3 with FOSUserBundle and KNPMenu support",
+            "time": "2020-06-08T12:13:22+00:00"
         },
         {
             "name": "knplabs/knp-menu",
@@ -2010,16 +2010,16 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v5.5.5",
+            "version": "v5.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "c76bb1c5c67840ecb6d9be8e9d8d7036e375e317"
+                "reference": "b49f079d8a87a6e6dd434062085ff5a132af466b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/c76bb1c5c67840ecb6d9be8e9d8d7036e375e317",
-                "reference": "c76bb1c5c67840ecb6d9be8e9d8d7036e375e317",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/b49f079d8a87a6e6dd434062085ff5a132af466b",
+                "reference": "b49f079d8a87a6e6dd434062085ff5a132af466b",
                 "shasum": ""
             },
             "require": {
@@ -2079,7 +2079,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2020-05-06T12:12:33+00:00"
+            "time": "2020-06-15T20:28:02+00:00"
         },
         {
             "name": "symfony/asset",
@@ -3033,16 +3033,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.8.1",
+            "version": "v1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "967fb2d58d4e8437e0e417979dd0e8ee4891cfb9"
+                "reference": "44c7de554df78da0a635a215a9d604e5e4ecc462"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/967fb2d58d4e8437e0e417979dd0e8ee4891cfb9",
-                "reference": "967fb2d58d4e8437e0e417979dd0e8ee4891cfb9",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/44c7de554df78da0a635a215a9d604e5e4ecc462",
+                "reference": "44c7de554df78da0a635a215a9d604e5e4ecc462",
                 "shasum": ""
             },
             "require": {
@@ -3078,7 +3078,7 @@
                 }
             ],
             "description": "Composer plugin for Symfony",
-            "time": "2020-06-14T09:29:35+00:00"
+            "time": "2020-06-15T15:14:13+00:00"
         },
         {
             "name": "symfony/form",
@@ -6098,16 +6098,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.8.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "ab2cb0b3b559010b75981b1bdce728da3ee90ad6"
+                "reference": "9dc4f203e36f2b486149058bade43c851dd97451"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/ab2cb0b3b559010b75981b1bdce728da3ee90ad6",
-                "reference": "ab2cb0b3b559010b75981b1bdce728da3ee90ad6",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/9dc4f203e36f2b486149058bade43c851dd97451",
+                "reference": "9dc4f203e36f2b486149058bade43c851dd97451",
                 "shasum": ""
             },
             "require": {
@@ -6115,6 +6115,7 @@
                 "symfony/polyfill-ctype": "^1.8"
             },
             "conflict": {
+                "phpstan/phpstan": "<0.12.20",
                 "vimeo/psalm": "<3.9.1"
             },
             "require-dev": {
@@ -6142,7 +6143,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2020-04-18T12:12:48+00:00"
+            "time": "2020-06-16T10:16:42+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -6853,7 +6854,7 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v5.1.1",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
@@ -7041,13 +7042,16 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "kevinpapst/adminlte-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.1.3",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

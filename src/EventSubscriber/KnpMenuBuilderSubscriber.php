@@ -24,35 +24,17 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('MainNavigationMenuItem', [
-            'label' => 'MON LABEL',
+        $menu->addChild('Administration', [
+            'route' => 'admin',
+            'label' => 'Administration',
             'childOptions' => $event->getChildOptions()
-        ])->setAttribute('class', 'header');
+        ])->setLabelAttribute('icon', 'fas fa-cog');
 
-        $menu->addChild('demande_personnelle_new', [
-            'route' => 'home',
-            'label' => 'Action sur ma route',
+        $menu->getChild('Administration')->addChild('Organisme', [
+            'route' => 'organisme_list',
+            'label' => 'Organisme',
             'childOptions' => $event->getChildOptions()
-        ])->setLabelAttribute('icon', 'fas fa-plus');
-
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            $menu->addChild('administration', [
-                'label' => 'ADMINISTRATION',
-                'childOptions' => $event->getChildOptions()
-            ])->setAttribute('class', 'header');
-
-            $menu->addChild('admin_action', [
-                'route' => 'home    ',
-                'label' => 'Mon action admin',
-                'childOptions' => $event->getChildOptions()
-            ])->setLabelAttribute('icon', 'fas fa-cogs');
-        }
-
-
-        $menu->addChild('MainDocumentation', [
-            'label' => 'Documentation',
-            'childOptions' => $event->getChildOptions()
-        ])->setAttribute('class', 'header');
+        ])->setLabelAttribute('icon', 'fas fa-building');
 
         $menu->addChild('documentation', [
             'route' => 'documentation',
