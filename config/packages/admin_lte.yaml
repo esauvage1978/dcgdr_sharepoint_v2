@@ -20,11 +20,6 @@ admin_lte:
         enable: true
         breadcrumb_menu: false
 
-    control_sidebar:
-        organisme:
-            icon: fas fa-building
-            template: organisme/sb_show.html.twig
-
     routes:
         adminlte_welcome: home
         adminlte_login: user_login
