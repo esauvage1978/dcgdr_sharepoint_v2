@@ -5,6 +5,8 @@
 
         {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
         {% import "macros/delele.html.twig" as del %}
+        {% import "macros/submit.html.twig" as sub %}
+
         {% block box_before %}{{ form_start(form) }}{% endblock %}
         {% block box_title %}{{ item.ref }}<span class="text-bold"> {{ item.name }}</span>{% endblock %}
         {% block box_body %}
@@ -47,43 +49,8 @@
                 </div>
             </div>
         {% endblock %}
-        {% block box_footer %}
-            <div class="row">
-                <div class="col-6">
-                    <div class="text-left">
-                        {{ btn.link_button(
-                            'Liste',
-                            path(route_list),
-                            'fa fa-list',
-                            'secondary',
-                            'secondary'
-                        ) }}
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="text-right">
-                        {% if item.id is not null %}
-                            {{ del.delete_btn('show') }}
-                            {{ btn.link_button(
-                                'Consulter',
-                                path(route_show,{id:item.id}),
-                                'fa fa-eye',
-                                'primary',
-                                'primary'
-                            ) }}
-                        {% endif %}
-                        {{ btn.action_button(
-                            'Enregistrer',
-                            'submit',
-                            'fa fa-save',
-                            'success',
-                            'success'
-                        ) }}
-                    </div>
-                </div>
-            </div>
-        {% endblock %}
         {% block box_after %}
+            <div class="d-none">{{ sub.submit_btn_hidden() }}</div>
             {{ form_end(form)}}
             {% if item.id is not null %}
             {{ del.delete_form(route_del,item.id, 'show') }}

@@ -30,36 +30,6 @@
 
         {% endblock %}
 
-        {% block box_footer %}
-            <div class="row">
-                <div class="col-6">
-                    <div class="text-left">
-                        {{ btn.link_button(
-                            'Liste',
-                            path(route_list),
-                            'fa fa-list',
-                            'secondary',
-                            'secondary'
-                        ) }}
-                    </div>
-                </div>
-                <div class="col-6">
-                    {%  if is_granted('ROLE_GESTIONNAIRE') %}
-                    <div class="text-right">
-                        {{ del.delete_btn('show') }}
-                        {{ btn.link_button(
-                            'Modifier',
-                            path(route_edit,{id:item.id}),
-                            'fa fa-edit',
-                            'purple',
-                            'primary'
-                        ) }}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-
-        {% endblock %}
         {% block box_after %}
             {{ del.delete_form(route_del,item.id, 'show') }}
         {% endblock %}

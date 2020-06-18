@@ -1,8 +1,9 @@
 {% if item is defined %}
 
 
-    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
     {% import "macros/delele.html.twig" as del %}
+    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+    {% import "macros/submit.html.twig" as sub %}
     {{ form_start(form) }}
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-8 col-lg-8 col-xl-6">
@@ -42,42 +43,6 @@
 
 
                 </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="text-left">
-                                {{ btn.link_button(
-                                    'Liste',
-                                    path(route_list),
-                                    'fa fa-list',
-                                    'secondary',
-                                    'secondary'
-                                ) }}
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="text-right">
-                                {% if item.id is not null %}
-                                    {{ del.delete_btn('show') }}
-                                    {{ btn.link_button(
-                                        'Consulter',
-                                        path(route_show,{id:item.id}),
-                                        'fa fa-eye',
-                                        'primary',
-                                        'primary'
-                                    ) }}
-                                {% endif %}
-                                {{ btn.action_button(
-                                    'Enregistrer',
-                                    'submit',
-                                    'fa fa-save',
-                                    'success',
-                                    'success'
-                                ) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -104,7 +69,9 @@
                 </div>
             </div>
         </div>
+
         <div class="d-none">
+            {{ sub.submit_btn_hidden() }}
             {{ form_rest(form) }}
         </div>
     </div>

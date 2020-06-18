@@ -343,5 +343,8 @@ class User implements UserInterface, EntityInterface
         return $this;
     }
 
-
+    public function getAvatar(): string
+    {
+        return 'avatar/' .$this->getId() . '.png';
+    }
 }

@@ -3,10 +3,10 @@
 
 {% block page_subtitle %}Détail d'un {{ domaine }}{% endblock %}
 
+{% block breadcrumb %}
+    {{ include(domaine ~ '/_show/_item_btn.html.twig') }}
+{% endblock %}
+
 {% block page_content %}
     {{ include(domaine ~ '/_show/_item.html.twig') }}
 {% endblock %}
-
-    {% block control_sidebar %}
-        {% include '@AdminLTE/Partials/_control-sidebar.html.twig' %}
-    {% endblock %}

@@ -30,4 +30,4 @@ admin_lte:
         adminlte_login: user_login
         adminlte_notification: home
         adminlte_notifications: home
-        adminlte_profile: home
+        adminlte_profile: profil

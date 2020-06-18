@@ -62,7 +62,7 @@ class NavbarUserSubscriber implements EventSubscriberInterface
             ->setUsername($myUser->getName())
             ->setIsOnline(true)
             ->setTitle('')
-            ->setAvatar('avatar/' .$myUser->getId() . '.png')
+            ->setAvatar($myUser->getAvatar())
             ->setMemberSince($myUser->getCreatedAt());
 
         //$event->setShowProfileLink(false);
