@@ -5,11 +5,9 @@
     <div class="row">
         <div class="col-md-2 offset-md-3" >
             {# ... box widget with defaults ... #}
-            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+            {% embed 'widgets/card-widget.html.twig'%}
 
-                {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-
-                {% block box_body %}
+                {% block card_body %}
                     {% for entry in general_entries %}
                         <div class="row ">
                             <div class="col-sm-12">
