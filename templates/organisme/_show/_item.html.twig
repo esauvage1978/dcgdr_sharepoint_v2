@@ -1,18 +1,8 @@
 {% if item is defined %}
 
-    {% embed '@AdminLTE/Widgets/box-widget.html.twig' with {
-        'boxtype' : ''
-    } %}
-        {% import "macros/delele.html.twig" as del %}
-        {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-
-
-        {% block box_title %}
-            {{ item.ref }} {{ item.name }}
-        {% endblock %}
-        {% block box_body %}
-
-
+    {% embed 'widgets/card-widget.html.twig' %}
+        {% block card_title %}{{ item.ref }}<span class="text-bold"> {{ item.name }}</span>{% endblock %}
+        {% block card_body %}
             <div class="row">
                 <div class="col-sm-1 shadow">
                     <div class="mr-1 ml-1 p-3 ">
@@ -27,10 +17,9 @@
                     {{ item.content | raw }}
                 </div>
             </div>
-
         {% endblock %}
-
-        {% block box_after %}
+        {% block card_after %}
+            {% import "macros/delele.html.twig" as del %}
             {{ del.delete_form(route_del,item.id, 'show') }}
         {% endblock %}
     {% endembed %}
