@@ -5,11 +5,11 @@
 
 
 {% block breadcrumb %}
-<div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
-    {{ sub.submit_btn() }}
+    <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            {{ sub.submit_btn() }}
+        </div>
     </div>
-</div>
 {% endblock %}
 
 
@@ -17,9 +17,10 @@
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-8 col-lg-8 col-xl-6">
 
-            <!-- Profile Image -->
-            <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_class %} card-primary card-outline{% endblock %}
+                {% block card_body_class %} box-profile{% endblock %}
+                {% block card_body %}
                     <div class="text-center">
                         <img class="profile-user-img img-fluid img-circle"
                              src="{{ asset(app.user.avatar) }}"
@@ -29,9 +30,8 @@
                     <h3 class="profile-username text-center">{{ app.user.name }}</h3>
 
                     <p class="text-muted text-center">{{ app.user.email }}</p>
-                </div>
-            </div>
-
+                {% endblock %}
+            {% endembed %}
 
             {% if app.user.emailvalidated == false %}
                 <div class="alert alert-danger alert-dismissible">
@@ -48,15 +48,17 @@
             {% endif %}
 
             {{ form_start(form) }}
-            <div class="card border border-info bg-info">
-                <div class="card-body text-center">
+
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_class %} border border-info{% endblock %}
+                {% block card_body_class %} text-center{% endblock %}
+                {% block card_body %}
                     {{ form_row(form.subscription) }}
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
 
-            <div class="card card-primary ">
-
-                <div class="card-body">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_body %}
                     <div class="form-group row">
                         {{ form_label(form.name,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
                         <div class="col">
@@ -85,9 +87,9 @@
                             {{ form_widget(form.content) }}
                         </div>
                     </div>
-                </div>
+                {% endblock %}
+            {% endembed %}
 
-            </div>
             <div class="d-none">
                 {{ sub.submit_btn_hidden() }}
                 {{ form_rest(form) }}
@@ -115,64 +117,69 @@
 
         </div>
         <div class="col-sm-12 col-md-4 ">
-            <div class="card">
-                <div class="card-footer">
-                    Habilitations
-                </div>
-                <div class="list-group list-group-flush dropright">
-                    <div class="list-group-item list-group-item-action">
-                        {% if 'ROLE_ADMIN' in app.user.roles %}
-                            <span class="text-success"><i class="fas fa-check"></i> Administrateur</span>
-                        {% else %}
-                            <span class="text-danger"><i class="fas fa-times"></i> Administrateur</span>
-                        {% endif %}
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Habilitations{% endblock %}
+                {% block card_body_class %}p-0{% endblock %}
+                {% block card_body %}
+                    <div class="list-group list-group-flush dropright">
+                        <div class="list-group-item list-group-item-action">
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                <span class="text-success"><i class="fas fa-check"></i> Administrateur</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times"></i> Administrateur</span>
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item list-group-item-action">
+                            {% if 'ROLE_GESTIONNAIRE' in app.user.roles %}
+                                <span class="text-success"><i class="fas fa-check"></i> Gestionnaire</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times"></i> Gestionnaire</span>
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item list-group-item-action">
+                            {% if 'ROLE_USER' in app.user.roles %}
+                                <span class="text-success"><i class="fas fa-check"></i> Utilisateur</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times"></i> Utilisateur</span>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="list-group-item list-group-item-action">
-                        {% if 'ROLE_GESTIONNAIRE' in app.user.roles %}
-                            <span class="text-success"><i class="fas fa-check"></i> Gestionnaire</span>
-                        {% else %}
-                            <span class="text-danger"><i class="fas fa-times"></i> Gestionnaire</span>
-                        {% endif %}
-                    </div>
-                    <div class="list-group-item list-group-item-action">
-                        {% if 'ROLE_USER' in app.user.roles %}
-                            <span class="text-success"><i class="fas fa-check"></i> Utilisateur</span>
-                        {% else %}
-                            <span class="text-danger"><i class="fas fa-times"></i> Utilisateur</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
 
-            <div class="card mt-3">
-                <div class="card-footer d-flex">
-                    Organismes
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Organismes{% endblock %}
+                {% block card_tools %}
                     {% if is_granted('ROLE_GESTIONNAIRE') %}
                         <small class="ml-auto">
                             <a href="{{ path('user_edit',{'id': app.user.id}) }}">modifier</a>
                         </small>
                     {% endif %}
-                </div>
-                <div class="card-body">
+                {% endblock %}
 
-                </div>
+                {% block card_body_class %}p-0{% endblock %}
+                {% block card_body %}
 
-            </div>
 
-            <div class="card mt-3">
-                <div class="card-footer  d-flex">
-                    Corbeilles
+                {% endblock %}
+            {% endembed %}
+
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Corbeilles{% endblock %}
+                {% block card_tools %}
                     {% if is_granted('ROLE_GESTIONNAIRE') %}
                         <small class="ml-auto">
                             <a href="{{ path('user_edit',{'id': app.user.id}) }}">modifier</a>
                         </small>
                     {% endif %}
-                </div>
-                <div class="list-group list-group-flush dropright">
+                {% endblock %}
 
-                </div>
+                {% block card_body_class %}p-0{% endblock %}
+                {% block card_body %}
 
-            </div>
+
+                {% endblock %}
+            {% endembed %}
         </div>
     </div>
 {% endblock %}
