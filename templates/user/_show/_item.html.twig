@@ -1,10 +1,12 @@
 {% if item is defined %}
     <div class="row justify-content-center">
-        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-6">
+        <div class="{{ col_1_2 }}">
 
 
-            <div class="card card-secondary card-outline">
-                <div class="card-body box-profile">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_class %} card-primary card-outline{% endblock %}
+                {% block card_body_class %} box-profile{% endblock %}
+                {% block card_body %}
 
                     <div class="text-center">
                         <img class="profile-user-img img-fluid img-circle"
@@ -23,11 +25,13 @@
                             <span class="text-danger">Masquée</span>
                         {% endif %}
                     </small>
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
 
-            <div class="card border border-info">
-                <div class="card-body text-center">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_class %} border border-info{% endblock %}
+                {% block card_body_class %} text-center{% endblock %}
+                {% block card_body %}
                     {% if item.subscription %}
                         <span class="text-success">
                             <i class="fa fa-check-circle"></i> L'utilisateur est abonné
@@ -37,14 +41,11 @@
                             <i class="fa fa-times-circle"></i> L'utilisateur n'est pas encore abonné
                         </span>
                     {% endif %}
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
 
-            <div class="card">
-                <div class="card-footer">
-                    données
-                </div>
-                <div class="card-body">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_body %}
                     {% if item.phone %}
                         <div class="row">
                             <div class="col-3">
@@ -99,56 +100,56 @@
                             </div>
                         </div>
                     {% endif %}
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
 
-            <div class="card">
-                <div class="card-footer" id="anchor_habilitations">
-                    Habilitations
-                </div>
-                <div class="list-group list-group-flush dropright">
-                    <div class="list-group-item list-group-item-action">
-                        {% if 'ROLE_ADMIN' in item.roles %}
-                            <span class="text-success"><i class="fas fa-check"></i> Administrateur</span>
-                        {% else %}
-                            <span class="text-danger"><i class="fas fa-times"></i> Administrateur</span>
-                        {% endif %}
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Habilitations{% endblock %}
+                {% block card_body_class %}p-0{% endblock %}
+                {% block card_body %}
+                    <div class="list-group list-group-flush dropright">
+                        <div class="list-group-item list-group-item-action">
+                            {% if 'ROLE_ADMIN' in item.roles %}
+                                <span class="text-success"><i class="fas fa-check"></i> Administrateur</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times"></i> Administrateur</span>
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item list-group-item-action">
+                            {% if 'ROLE_GESTIONNAIRE' in item.roles %}
+                                <span class="text-success"><i class="fas fa-check"></i> Gestionnaire</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times"></i> Gestionnaire</span>
+                            {% endif %}
+                        </div>
+                        <div class="list-group-item list-group-item-action">
+                            {% if 'ROLE_USER' in item.roles %}
+                                <span class="text-success"><i class="fas fa-check"></i> Utilisateur</span>
+                            {% else %}
+                                <span class="text-danger"><i class="fas fa-times"></i> Utilisateur</span>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="list-group-item list-group-item-action">
-                        {% if 'ROLE_GESTIONNAIRE' in item.roles %}
-                            <span class="text-success"><i class="fas fa-check"></i> Gestionnaire</span>
-                        {% else %}
-                            <span class="text-danger"><i class="fas fa-times"></i> Gestionnaire</span>
-                        {% endif %}
-                    </div>
-                    <div class="list-group-item list-group-item-action">
-                        {% if 'ROLE_USER' in item.roles %}
-                            <span class="text-success"><i class="fas fa-check"></i> Utilisateur</span>
-                        {% else %}
-                            <span class="text-danger"><i class="fas fa-times"></i> Utilisateur</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
         </div>
+        <div class="{{ col_2_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Organismes{% endblock %}
+                {% block card_body_class %}p-0{% endblock %}
+                {% block card_body %}
 
-        <div class="col-sm-12 col-md-4">
-            <div class="card mt-3">
-                <div class="card-footer d-flex">
-                    Organismes
-                </div>
-                <div class="card-body">
-                </div>
+                {% endblock %}
+            {% endembed %}
 
-            </div>
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Corbeilles{% endblock %}
+                {% block card_body_class %}p-0{% endblock %}
+                {% block card_body %}
 
-            <div class="card mt-3">
-                <div class="card-footer d-flex">
-                    Corbeilles
-                </div>
-                <div class="card-body">
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
+
         </div>
     </div>
 {% endif %}

@@ -15,7 +15,7 @@
 
 {% block page_content %}
     <div class="row justify-content-center">
-        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-6">
+        <div class="{{ col_1_2 }}">
 
             {% embed 'widgets/card-widget.html.twig' %}
                 {% block card_class %} card-primary card-outline{% endblock %}
@@ -116,7 +116,7 @@
             </div>
 
         </div>
-        <div class="col-sm-12 col-md-4 ">
+        <div class="{{ col_2_2 }} ">
             {% embed 'widgets/card-widget.html.twig' %}
                 {% block card_title %}Habilitations{% endblock %}
                 {% block card_body_class %}p-0{% endblock %}
