@@ -29,6 +29,7 @@
             </div>
 
         {% endblock %}
+
         {% block box_footer %}
             <div class="row">
                 <div class="col-6">
@@ -43,6 +44,7 @@
                     </div>
                 </div>
                 <div class="col-6">
+                    {%  if is_granted('ROLE_GESTIONNAIRE') %}
                     <div class="text-right">
                         {{ del.delete_btn('show') }}
                         {{ btn.link_button(
@@ -53,6 +55,7 @@
                             'primary'
                         ) }}
                     </div>
+                    {% endif %}
                 </div>
             </div>
 

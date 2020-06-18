@@ -13,17 +13,19 @@
 {% block page_subtitle %}Liste des {{ domaine }}s{% endblock %}
 
 {% block breadcrumb %}
-    <div class="row mb-2">
-        <div class="col-12 text-right">
-            {{ btn.link_button(
-                'Ajouter',
-                path(route_add),
-                'fa fa-edit',
-                'success',
-                'success'
-            ) }}
+    {% if is_granted('ROLE_GESTIONNAIRE') %}
+        <div class="row mb-2">
+            <div class="col-12 text-right">
+                {{ btn.link_button(
+                    'Ajouter',
+                    path(route_add),
+                    'fa fa-edit',
+                    'success',
+                    'success'
+                ) }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
 {% endblock %}
 
@@ -37,7 +39,8 @@
         <tr>
             <td>{{ item.id }}</td>
             <td>
-                <a href="{{ path(route_show,{id:item.id}) }}" class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
+                <a href="{{ path(route_show,{id:item.id}) }}"
+                   class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
                     {{ item.name }}
                 </a>
             </td>
@@ -51,13 +54,15 @@
 
             </td>
             <td class=" d-flex  justify-content-end ">
-                {{ btn.link_button(
-                    'Modifier',
-                    path(route_edit,{id:item.id}),
-                    'fa fa-edit',
-                    'purple',
-                    'primary btn-sm'
-                ) }}
+                {% if is_granted('ROLE_GESTIONNAIRE') %}
+                    {{ btn.link_button(
+                        'Modifier',
+                        path(route_edit,{id:item.id}),
+                        'fa fa-edit',
+                        'purple',
+                        'primary btn-sm'
+                    ) }}
+                {% endif %}
             </td>
         </tr>
     {% else %}
