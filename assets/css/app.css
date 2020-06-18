@@ -23,3 +23,8 @@
     padding: 10px 0 50px 10px;
     margin-bottom: 30px;
 }
+
+.navbar-badge {
+    right: -7px;
+    top: 1px;
+}

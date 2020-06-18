@@ -24,22 +24,28 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
     {
         $menu = $event->getMenu();
 
-        $menu->addChild('Administration', [
+        $menu->addChild('admin', [
             'route' => 'admin',
             'label' => 'Administration',
             'childOptions' => $event->getChildOptions()
         ])->setLabelAttribute('icon', 'fas fa-cog');
 
-        $menu->getChild('Administration')->addChild('Organisme', [
-            'route' => 'organisme_list',
-            'label' => 'Organisme',
-            'childOptions' => $event->getChildOptions()
-        ])->setLabelAttribute('icon', 'fas fa-building');
-
         $menu->addChild('documentation', [
             'route' => 'documentation',
-            'label' => 'Consulter',
+            'label' => 'Documentation',
             'childOptions' => $event->getChildOptions()
         ])->setLabelAttribute('icon', 'fas fa-file-pdf');
+
+        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $menu->addChild(
+                'logout',
+                ['route' => 'user_logout', 'label' => 'Déconnexion', 'childOptions' => $event->getChildOptions()]
+            )->setLabelAttribute('icon', 'fas fa-sign-out-alt');
+        } else {
+            $menu->addChild(
+                'login',
+                ['route' => 'user_login', 'label' => 'Connexion', 'childOptions' => $event->getChildOptions()]
+            )->setLabelAttribute('icon', 'fas fa-sign-in-alt');
+        }
     }
 }

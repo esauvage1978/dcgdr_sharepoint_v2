@@ -1,0 +1,187 @@
+{% if item is defined %}
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-8 col-lg-8 col-xl-6">
+
+            {% import "macros/delele.html.twig" as del %}
+            {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+
+            <div class="card card-secondary card-outline">
+                <div class="card-body box-profile">
+
+                    <div class="text-center">
+                        <img class="profile-user-img img-fluid img-circle"
+
+                             alt="User profile picture">
+                    </div>
+
+                    <h3 class="profile-username text-center">{{ item.name }}</h3>
+
+                    <p class="text-muted text-center">{{ item.email }}</p>
+
+                    <small class="float-right">
+                        {% if item.isEnable %}
+                            <span class="text-success">Visible</span>
+                        {% else %}
+                            <span class="text-danger">Masquée</span>
+                        {% endif %}
+                    </small>
+
+                </div>
+                <div class="card-footer">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="text-left">
+                                {{ btn.link_button(
+                                    'Liste',
+                                    path(route_list),
+                                    'fa fa-list',
+                                    'secondary',
+                                    'secondary'
+                                ) }}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                {{ del.delete_btn('show') }}
+                                {{ btn.link_button(
+                                    'Modifier',
+                                    path(route_edit,{id:item.id}),
+                                    'fa fa-edit',
+                                    'purple',
+                                    'primary'
+                                ) }}
+                            </div>
+                        </div>
+                    </div>
+                    {{ del.delete_form(route_del,item.id, 'show') }}
+                </div>
+
+            </div>
+
+            <div class="card border border-info">
+                <div class="card-body text-center">
+                    {% if item.subscription %}
+                        <span class="text-success">
+                            <i class="fa fa-check-circle"></i> L'utilisateur est abonné
+                        </span>
+                    {% else %}
+                        <span class="text-danger">
+                            <i class="fa fa-times-circle"></i> L'utilisateur n'est pas encore abonné
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-footer">
+                    données
+                </div>
+                <div class="card-body">
+                    {% if item.phone %}
+                        <div class="row">
+                            <div class="col-3">
+                                <b>Téléphone</b>
+                            </div>
+                            <div class="col-9">
+                                {{ item.phone }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if item.loginat %}
+                        <div class="row">
+                            <div class="col-3">
+                                <b>Dernière connexion</b>
+                            </div>
+                            <div class="col-9">
+                                {{ item.loginat?user.loginat|date("d/m/Y", "Europe/Paris") }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if item.createdat %}
+                        <div class="row">
+                            <div class="col-3">
+                                <b>Date de création</b>
+                            </div>
+                            <div class="col-9">
+                                {{ item.createdat?item.createdat|date("d/m/Y", "Europe/Paris") }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if item.modifiedat %}
+                        <div class="row">
+                            <div class="col-3">
+                                <b>Dernière modification</b>
+                            </div>
+                            <div class="col-9">
+                                {{ item.modifiedat?item.modifiedat|date("d/m/Y", "Europe/Paris") }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if item.content %}
+                        <div class="row">
+                            <div class="col-3">
+                                <b>Description</b>
+                            </div>
+                            <div class="col-9">
+                                {{ item.content }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-footer" id="anchor_habilitations">
+                    Habilitations
+                </div>
+                <div class="list-group list-group-flush dropright">
+                    <div class="list-group-item list-group-item-action">
+                        {% if 'ROLE_ADMIN' in item.roles %}
+                            <span class="text-success"><i class="fas fa-check"></i> Administrateur</span>
+                        {% else %}
+                            <span class="text-danger"><i class="fas fa-times"></i> Administrateur</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item list-group-item-action">
+                        {% if 'ROLE_GESTIONNAIRE' in item.roles %}
+                            <span class="text-success"><i class="fas fa-check"></i> Gestionnaire</span>
+                        {% else %}
+                            <span class="text-danger"><i class="fas fa-times"></i> Gestionnaire</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item list-group-item-action">
+                        {% if 'ROLE_USER' in item.roles %}
+                            <span class="text-success"><i class="fas fa-check"></i> Utilisateur</span>
+                        {% else %}
+                            <span class="text-danger"><i class="fas fa-times"></i> Utilisateur</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-4">
+            <div class="card mt-3">
+                <div class="card-footer d-flex">
+                    Organismes
+                </div>
+                <div class="card-body">
+                </div>
+
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-footer d-flex">
+                    Corbeilles
+                </div>
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

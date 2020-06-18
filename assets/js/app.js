@@ -18,22 +18,31 @@ require('../../vendor/kevinpapst/adminlte-bundle/Resources/assets/admin-lte');
 // import $ from 'jquery';
 const $ = require('jquery');
 
+
+//iCheck
 require('icheck');
+
 $('input').iCheck({
     checkboxClass: 'icheckbox_square-blue',
     radioClass: 'iradio_square-blue',
-    increaseArea: '20%'
+    increaseArea: '20%' // optional
 });
 
-require('summernote');
+
 // Summernote
+require('summernote');
+
 $('.textarea').summernote({
     lang: 'fr-FR'
 });
 
+
+//JSTREE
 require('jstree');
 require('jstree/dist/themes/default/style.min.css');
+
 var tree = true;
+
 
 // DATATABLES
 require('datatables.net-bs4');

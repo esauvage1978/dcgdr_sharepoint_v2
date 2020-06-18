@@ -3,16 +3,16 @@
 {% block page_content %}
 
     <div class="row">
-        <div class="col-md-6 offset-md-3" >
+        <div class="col-md-2 offset-md-3" >
             {# ... box widget with defaults ... #}
             {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
 
                 {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
 
                 {% block box_body %}
-                    {% for entry in entries %}
+                    {% for entry in general_entries %}
                         <div class="row ">
-                            <div class="col-sm-8">
+                            <div class="col-sm-12">
                                 <a href="{{ path(entry.route)}}" target="_blank">
                                     <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
                                 </a>
