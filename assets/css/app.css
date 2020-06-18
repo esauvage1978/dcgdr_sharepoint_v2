@@ -25,6 +25,7 @@
 }
 
 .navbar-badge {
-    right: -7px;
-    top: 1px;
+    right: -5px;
+    top: -3px;
+    font-size: 70%;
 }

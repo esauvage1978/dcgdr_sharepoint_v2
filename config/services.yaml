@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     directory_import : '%kernel.project_dir%/data/importFixtures/'
-
+    directory_avatar : '%kernel.project_dir%/public/avatar/'
 services:
     # default configuration for services in *this* file
     _defaults:
