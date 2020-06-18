@@ -43,14 +43,16 @@
                         </div>
                         <div class="col-6">
                             <div class="text-right">
-                                {{ del.delete_btn('show') }}
-                                {{ btn.link_button(
-                                    'Modifier',
-                                    path(route_edit,{id:item.id}),
-                                    'fa fa-edit',
-                                    'purple',
-                                    'primary'
-                                ) }}
+                                {% if is_granted('ROLE_GESTIONNAIRE') %}
+                                    {{ del.delete_btn('show') }}
+                                    {{ btn.link_button(
+                                        'Modifier',
+                                        path(route_edit,{id:item.id}),
+                                        'fa fa-edit',
+                                        'purple',
+                                        'primary'
+                                    ) }}
+                                {% endif %}
                             </div>
                         </div>
                     </div>

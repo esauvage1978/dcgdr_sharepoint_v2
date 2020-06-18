@@ -20,18 +20,19 @@
 {% block page_subtitle %}Liste des {{ domaine }}s{% endblock %}
 
 {% block breadcrumb %}
-    <div class="row mb-2">
-        <div class="col-12 text-right">
-            {{ btn.link_button(
-                'Ajouter',
-                path(route_add),
-                'fa fa-edit',
-                'success',
-                'success'
-            ) }}
+    {% if is_granted('ROLE_GESTIONNAIRE') %}
+        <div class="row mb-2">
+            <div class="col-12 text-right">
+                {{ btn.link_button(
+                    'Ajouter',
+                    path(route_add),
+                    'fa fa-edit',
+                    'success',
+                    'success'
+                ) }}
+            </div>
         </div>
-    </div>
-
+    {% endif %}
 {% endblock %}
 
 {% block page_content %}
@@ -45,11 +46,13 @@
         <tr>
             <td class="align-middle">
                 <div class="image">
-                    <img src="{{ asset('avatar/' ~ item.id ~ '.png') }}" class="img-circle elevation-2 direct-chat-img"  alt="{{ item.id }}">
+                    <img src="{{ asset('avatar/' ~ item.id ~ '.png') }}" class="img-circle elevation-2 direct-chat-img"
+                         alt="{{ item.id }}">
                 </div>
             </td>
             <td class="align-middle">
-                <a href="{{ path(route_show,{id:item.id}) }}" class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
+                <a href="{{ path(route_show,{id:item.id}) }}"
+                   class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
                     {{ item.name }}
                 </a>
                 <br/>
@@ -57,22 +60,27 @@
             </td>
             <td class="align-middle">{{ item.content | raw }}</td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_ADMIN' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ 'ROLE_ADMIN' in item.roles ? 'info' : 'light' }} "><i
+                            class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_GESTIONNAIRE' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ 'ROLE_GESTIONNAIRE' in item.roles ? 'info' : 'light' }} "><i
+                            class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_GESTIONNAIRE_LOCAL' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ 'ROLE_GESTIONNAIRE_LOCAL' in item.roles ? 'info' : 'light' }} "><i
+                            class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_USER' in item.roles ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ 'ROLE_USER' in item.roles ? 'info' : 'light' }} "><i
+                            class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ not item.emailvalidated ? 'danger' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ not item.emailvalidated ? 'danger' : 'light' }} "><i
+                            class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ item.subscription ? 'info' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ item.subscription ? 'info' : 'light' }} "><i class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
 
@@ -81,13 +89,15 @@
 
             </td>
             <td class=" align-middle text-right">
-                {{ btn.link_button(
-                    'Modifier',
-                    path(route_edit,{id:item.id}),
-                    'fa fa-edit',
-                    'purple',
-                    'primary btn-sm'
-                ) }}
+                {% if is_granted('ROLE_GESTIONNAIRE') %}
+                    {{ btn.link_button(
+                        'Modifier',
+                        path(route_edit,{id:item.id}),
+                        'fa fa-edit',
+                        'purple',
+                        'primary btn-sm'
+                    ) }}
+                {% endif %}
             </td>
         </tr>
     {% else %}
