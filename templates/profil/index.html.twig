@@ -1,6 +1,17 @@
 {% extends 'base.html.twig' %}
+{% import "macros/submit.html.twig" as sub %}
 
 {% block page_title %}Votre compte{% endblock %}
+
+
+{% block breadcrumb %}
+<div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+    {{ sub.submit_btn() }}
+    </div>
+</div>
+{% endblock %}
+
 
 {% block page_content %}
     <div class="row justify-content-center">
@@ -75,18 +86,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col  d-flex justify-content-between align-items-center">
 
-                            <button class="btn btn-info " name="update" id="update"><i class="fas fa-pencil-alt"></i>
-                                Modifier
-                            </button>
-
-                        </div>
-                    </div>
-                </div>
             </div>
+            <div class="d-none">
+                {{ sub.submit_btn_hidden() }}
+                {{ form_rest(form) }}
+            </div>
+
             {{ form_end(form) }}
 
             <div class="row mt-5">

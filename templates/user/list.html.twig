@@ -57,6 +57,10 @@
                 </a>
                 <br/>
                 <small>{{ item.email }}</small>
+                {% if item.phone is defined %}
+                    <br/>
+                    <small>{{ item.phone }}</small>
+                {% endif %}
             </td>
             <td class="align-middle">{{ item.content | raw }}</td>
             <td class="align-middle text-center">

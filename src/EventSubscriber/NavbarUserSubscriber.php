@@ -64,8 +64,9 @@ class NavbarUserSubscriber implements EventSubscriberInterface
             ->setTitle('')
             ->setAvatar($myUser->getAvatar())
             ->setMemberSince($myUser->getCreatedAt());
-
-        //$event->setShowProfileLink(false);
+        
+        $event->setShowLogoutLink(true);
+        $event->setShowProfileLink(true);
         //$event->addLink(new NavBarUserLink('Followers', 'home'));
 
         $event->setUser($user);
