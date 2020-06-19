@@ -15,6 +15,7 @@ use KevinPapst\AdminLTEBundle\Helper\Constants;
 use KevinPapst\AdminLTEBundle\Model\NotificationModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class NotificationSubscriber adds notification messages to the top bar.
@@ -24,14 +25,18 @@ class NotificationSubscriber implements EventSubscriberInterface
     /**
      * @var AuthorizationCheckerInterface
      */
-    private $security;
-
+    private $auth;
     /**
-     * @param AuthorizationCheckerInterface $security
+     * @var Security
      */
-    public function __construct(AuthorizationCheckerInterface $security)
+    private $security;
+    /**
+     * @param AuthorizationCheckerInterface $auth
+     */
+    public function __construct(AuthorizationCheckerInterface $auth, Security $security)
     {
-        $this->security = $security;
+        $this->auth = $auth;
+        $this->security=$security;
     }
 
     /**
@@ -50,13 +55,18 @@ class NotificationSubscriber implements EventSubscriberInterface
     public function onNotifications(NotificationListEvent $event)
     {
 
-        if (!$this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $event->addNotification(new NotificationModel('Vous n\'êtes pas connecté !', Constants::TYPE_ERROR));
+        if (!$this->auth->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $notification = new NotificationModel('Vous n\'êtes pas connecté !', Constants::TYPE_ERROR, 'fas fa-key');
+            $notification->setId(1);
+            $event->addNotification($notification);
             return;
         }
 
-        $notification = new NotificationModel('Vous êtes connecté!', Constants::TYPE_SUCCESS, 'fas fa-sign-in-alt');
-        $notification->setId(2);
-        $event->addNotification($notification);
+        if (!$this->security->getUser()->getEmailValidated()) {
+            $notification = new NotificationModel('Adresse mail non vérifiée !', Constants::TYPE_ERROR, 'fas fa-envelope');
+            $notification->setId(2);
+            $event->addNotification($notification);
+
+        }
     }
 }

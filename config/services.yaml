@@ -6,6 +6,17 @@
 parameters:
     directory_import : '%kernel.project_dir%/data/importFixtures/'
     directory_avatar : '%kernel.project_dir%/public/avatar/'
+
+    application.name: '%env(APPLICATION_NAME)%'
+    mailer.mail: '%env(MAILER_MAIL)%'
+    mailer.name: '%env(MAILER_NAME)%'
+    mailer.prefixe: '%env(MAILER_PREFIXE)%'
+    mailer.smtp.host: '%env(MAILER_SMTP_HOST)%'
+    mailer.smtp.port: '%env(MAILER_SMTP_PORT)%'
+    mailer.smtp.username: '%env(MAILER_SMTP_USERNAME)%'
+    mailer.smtp.password: '%env(MAILER_SMTP_PASSWORD)%'
+
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -23,6 +34,3 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
