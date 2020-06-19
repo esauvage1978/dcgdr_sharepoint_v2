@@ -4,6 +4,8 @@ namespace App\Controller\Profil;
 
 use App\Controller\AbstractGController;
 use App\Entity\User;
+use App\Event\UserRegistrationEvent;
+use App\Form\Profil\RegistrationFormType;
 use App\Mail\UserMail;
 use App\Manager\UserManager;
 use App\Repository\UserRepository;
@@ -18,7 +20,34 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class RegistrationController extends AbstractGController
 {
+    /**
+     * @Route("/registration", name="registration")
+     */
+    public function registrerAction(
+        Request $request,
+        UserManager $userManager,
+        EventDispatcherInterface $dispatcher): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($userManager->save($user)) {
+                $this->addFlash(self::SUCCESS, 'Compte créé avec succès ! Merci de valider votre compte à partir du mail envoyé !');
+
+                $event = new UserRegistrationEvent($user);
+                $dispatcher->dispatch($event, UserRegistrationEvent::NAME);
+
+                return $this->redirectToRoute('user_login');
+            }
+            $this->addFlash(self::DANGER, self::MSG_CREATE_ERROR.$userManager->getErrors($user));
+        }
+
+        return $this->render('profil/registration.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
     /**
      * @route("/email/{token}", name="profil_email_validated")
      */

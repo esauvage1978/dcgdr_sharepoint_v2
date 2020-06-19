@@ -173,7 +173,9 @@ class UserManager
     {
         $user->setEmailValidated(true);
         $user->setEmailValidatedToken(date_format(new DateTime(), 'Y-m-d H:i:s'));
-        $user->setRoles(['ROLE_USER']);
+        if(!in_array('ROLE_USER',$user->getRoles())) {
+            $user->setRoles(['ROLE_USER']);
+        }
 
         return $this;
     }
