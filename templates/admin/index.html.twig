@@ -1,19 +1,17 @@
 {% extends 'base.html.twig' %}
-
+{% block page_title %}<i class="fas fa-cog"></i> Administration{% endblock %}
 {% block page_content %}
 
     <div class="row">
-        <div class="col-md-6 offset-md-3" >
+        <div class="col-md-2 offset-md-3" >
             {# ... box widget with defaults ... #}
-            {% embed '@AdminLTE/Widgets/box-widget.html.twig' %}
+            {% embed 'widgets/card-widget.html.twig'%}
 
-                {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-
-                {% block box_body %}
-                    {% for entry in entries %}
+                {% block card_body %}
+                    {% for entry in general_entries %}
                         <div class="row ">
-                            <div class="col-sm-8">
-                                <a href="{{ path(entry.route)}}" target="_blank">
+                            <div class="col-sm-12">
+                                <a href="{{ path(entry.route)}}" target="_self">
                                     <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
                                 </a>
                             </div>

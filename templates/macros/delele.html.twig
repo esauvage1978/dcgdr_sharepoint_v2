@@ -1,6 +1,6 @@
-{% macro delete_btn(name) %}
+{% macro delete_btn(title,name) %}
     <span class="btn btn-danger " onclick="$('#delete_{{ name is defined ? name : '1' }} ').click();">
-        <i class="fas fa-trash"></i> Supprimer
+        <i class="fas fa-trash"></i> {{ title is defined ? title:'Suprrimer'}}
     </span>
 {% endmacro %}
 

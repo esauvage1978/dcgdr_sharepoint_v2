@@ -24,6 +24,8 @@ abstract class AbstractGController extends AbstractController
     CONST MSG_DELETE = 'La suppression est effectuée !';
     CONST MSG_DELETE_ERROR = 'Une erreur est intervenue, la suppression n\'a pas eu lieu !';
 
+    CONST FORM='form';
+
     /**
      * @var Request
      */
@@ -35,7 +37,7 @@ abstract class AbstractGController extends AbstractController
 
     public function listAction()
     {
-        return $this->render($this->domaine . '/index.html.twig',
+        return $this->render($this->domaine . '/list.html.twig',
             [
                 'items' => $this->repository->findAllForAdmin()
             ]);

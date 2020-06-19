@@ -12,8 +12,10 @@ class OrganismeType extends AppTypeAbstract
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = $this->buildFormName($builder);
-        $builder = $this->buildFormIsEnable($builder);
+        $this->buildFormName($builder);
+        $this->buildFormIsEnable($builder);
+        $this->buildFormUsers($builder);
+
         $builder
             ->add('ref', TextType::class, [
                 self::LABEL => 'Référence',

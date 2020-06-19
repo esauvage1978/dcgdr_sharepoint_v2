@@ -1,63 +1,37 @@
 {% if item is defined %}
 
-    {% embed '@AdminLTE/Widgets/box-widget.html.twig' with {
-        'boxtype' : ''
-    } %}
-        {% import "macros/delele.html.twig" as del %}
-        {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-
-
-        {% block box_title %}
-            {{ item.ref }} {{ item.name }}
-        {% endblock %}
-        {% block box_body %}
-
-
+    {% embed 'widgets/card-widget.html.twig' %}
+        {% block card_title %}{{ item.ref }}<span class="text-bold"> {{ item.name }}</span>{% endblock %}
+        {% block card_body %}
             <div class="row">
-                <div class="col-sm-1 shadow">
-                    <div class="mr-1 ml-1 p-3 ">
-                        <p class="text-center {{ item.isEnable ?'text-success':'text-warning' }}">
+                <div class="col-md-4 col-lg-2 ">
+                    {% embed 'widgets/card-widget.html.twig' %}
+                        {% block card_class %}border{% endblock %}
+                        {% block card_body_class %}text-center {{ item.isEnable ?'text-success':'text-warning' }}{% endblock %}
+                        {% block card_body %}
                             <i class="fas fa-{{ item.isEnable ?'check':'times' }} fa-3x"></i><br>
                             Utilisable
-                        </p>
-                    </div>
+                        {% endblock %}
+                    {% endembed %}
                 </div>
-
-                <div class="col-sm-11">
+                <div class="col-md-8 col-lg-5 ">
+                    {% embed 'widgets/card-widget.html.twig' %}
+                        {% block card_title %}Utilisateurs{% endblock %}
+                        {% block card_body %}
+                            {% import "macros/user.html.twig" as usr %}
+                            {{ usr.views(item.users) }}
+                        {% endblock %}
+                    {% endembed %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     {{ item.content | raw }}
                 </div>
             </div>
-
         {% endblock %}
-        {% block box_footer %}
-            <div class="row">
-                <div class="col-6">
-                    <div class="text-left">
-                        {{ btn.link_button(
-                            'Liste',
-                            path(route_list),
-                            'fa fa-list',
-                            'secondary',
-                            'secondary'
-                        ) }}
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="text-right">
-                        {{ del.delete_btn('show') }}
-                        {{ btn.link_button(
-                            'Modifier',
-                            path(route_edit,{id:item.id}),
-                            'fa fa-edit',
-                            'purple',
-                            'primary'
-                        ) }}
-                    </div>
-                </div>
-            </div>
-
-        {% endblock %}
-        {% block box_after %}
+        {% block card_after %}
+            {% import "macros/delele.html.twig" as del %}
             {{ del.delete_form(route_del,item.id, 'show') }}
         {% endblock %}
     {% endembed %}

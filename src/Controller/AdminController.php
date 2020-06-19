@@ -12,13 +12,16 @@ class AdminController extends AbstractController
      */
     public function index()
     {
-        $entries = [[
-            'name' => 'Organisme',
+        $general_entries = [[
+        'name' => 'Organisme',
             'route' => 'organisme_list'
+        ],[
+            'name' => 'Utilisateur',
+            'route' => 'user_list'
         ]];
 
         return $this->render('admin/index.html.twig', [
-            'entries' => $entries,
+            'general_entries' => $general_entries,
         ]);
     }
 }

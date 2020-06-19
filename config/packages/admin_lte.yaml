@@ -19,7 +19,10 @@ admin_lte:
     knp_menu:
         enable: true
         breadcrumb_menu: false
+
     routes:
         adminlte_welcome: home
-        adminlte_login: login
-        adminlte_profile: profile
+        adminlte_login: user_login
+        adminlte_notification: notification
+        adminlte_notifications: home
+        adminlte_profile: profil
