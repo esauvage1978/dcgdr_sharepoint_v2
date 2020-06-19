@@ -29,6 +29,7 @@ abstract class AppTypeAbstract extends AbstractType
     const DISABLED = 'disabled';
     const MAXLENGTH = 'maxlength';
     const PLACEHOLDER = 'placeholder';
+    const FORM = 'form';
 
     public function buildFormName(FormBuilderInterface $builder)
     {

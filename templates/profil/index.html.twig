@@ -10,10 +10,17 @@
         <div class="btn-group mr-2" role="group" aria-label="First group">
             {{ btn.link_button(
                 '',
+                path('password_change'),
+                'fas fa-key',
+                'secondary',
+                'secondary'
+            ) }}
+            {{ btn.link_button(
+                '',
                 path('avatar'),
                 'fas fa-user-circle',
-                'warning',
-                'warning'
+                'secondary',
+                'secondary'
             ) }}
             {{ sub.btn_onclick() }}
 
@@ -106,24 +113,6 @@
             </div>
 
             {{ form_end(form) }}
-
-            <div class="row mt-5">
-                <div class="col-md-12 d-flex justify-content-center">
-                    <h5>
-                        <a href=""
-                           title="Changer de mot de passe">
-                            Changer de mot de passe
-                        </a>
-                    </h5>
-                    <label class="ml-3 mr-3">|</label>
-                    <h5>
-                        <a id="forget"
-                           href="" title="Changer d'avatar">
-                            Changer d'avatar
-                        </a>
-                    </h5>
-                </div>
-            </div>
 
         </div>
         <div class="{{ col_2_2 }} ">
