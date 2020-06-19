@@ -9,6 +9,8 @@
 import '../css/app.css';
 import 'icheck/skins/all.css';
 import 'summernote/dist/summernote-bs4.min.css';
+import 'select2/dist/css/select2.min.css';
+import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css';
 
 
 //adminLte https://github.com/kevinpapst/AdminLTEBundle/blob/5af0b6cb66f709504b529e96d3d27741336ca220/Resources/docs/extend_webpack_encore.md
@@ -47,3 +49,13 @@ var tree = true;
 // DATATABLES
 require('datatables.net-bs4');
 require('datatables.net-bs4/css/dataTables.bootstrap4.min.css');
+
+
+// SELECT2
+require('select2');
+$('.select2')
+    .removeClass('form-control')
+    .select2({
+        language: "fr",
+        width: "100%"
+    }).addClass('col');

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrganismeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,17 @@ class Organisme implements EntityInterface
      * @ORM\Column(type="boolean")
      */
     private $isEnable;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="organismes")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -93,6 +106,32 @@ class Organisme implements EntityInterface
     public function setIsEnable(bool $isEnable): self
     {
         $this->isEnable = $isEnable;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+        }
 
         return $this;
     }

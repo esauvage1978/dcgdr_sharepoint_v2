@@ -30,31 +30,62 @@ abstract class AppTypeAbstract extends AbstractType
     const MAXLENGTH = 'maxlength';
     const PLACEHOLDER = 'placeholder';
 
-    public function buildFormName(FormBuilderInterface $builder): FormBuilderInterface
+    public function buildFormName(FormBuilderInterface $builder)
     {
-        return $builder
+        $builder
             ->add('name', TextType::class, [
                 self::LABEL => 'Nom',
                 self::REQUIRED => true,
                 self::ATTR=>[self::MAXLENGTH=>255],
             ]);
     }
-    public function buildFormIsEnable(FormBuilderInterface $builder): FormBuilderInterface
+    public function buildFormIsEnable(FormBuilderInterface $builder)
     {
-        return $builder
+        $builder
             ->add('isEnable', CheckboxType::class,
                 [
                     self::LABEL => ' ',
                     self::REQUIRED => false,
                 ]);
     }
-    public function buildFormContent(FormBuilderInterface $builder): FormBuilderInterface
+    public function buildFormContent(FormBuilderInterface $builder)
     {
-        return $builder
+        $builder
             ->add('content', TextareaType::class, [
                 self::LABEL => 'Description',
                 self::REQUIRED => false,
                 self::ATTR => [self::ROWS => 3, self::CSS_CLASS => 'textarea'],
+            ]);
+    }
+    public function buildFormOrganismes(FormBuilderInterface $builder)
+    {
+        $builder
+            ->add('organismes', EntityType::class, [
+                'class' => Organisme::class,
+                self::CHOICE_LABEL => 'name',
+                self::MULTIPLE => true,
+                self::ATTR => ['class' => 'select2'],
+                self::REQUIRED => false,
+                self::QUERY_BUILDER => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.name', 'ASC');
+                },
+            ]);
+    }
+    public function buildFormUsers(FormBuilderInterface $builder)
+    {
+        $builder
+            ->add('users', EntityType::class, [
+                'class' => User::class,
+                self::LABEL=>'Utilisateurs',
+                self::CHOICE_LABEL => 'name',
+                self::MULTIPLE => true,
+                self::ATTR => ['class' => 'select2'],
+                self::REQUIRED => false,
+                self::QUERY_BUILDER => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->orderBy('u.name', 'ASC');
+                },
             ]);
     }
 

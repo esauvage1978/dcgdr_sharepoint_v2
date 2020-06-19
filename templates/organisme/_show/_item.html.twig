@@ -4,16 +4,28 @@
         {% block card_title %}{{ item.ref }}<span class="text-bold"> {{ item.name }}</span>{% endblock %}
         {% block card_body %}
             <div class="row">
-                <div class="col-sm-1 shadow">
-                    <div class="mr-1 ml-1 p-3 ">
-                        <p class="text-center {{ item.isEnable ?'text-success':'text-warning' }}">
+                <div class="col-md-4 col-lg-2 ">
+                    {% embed 'widgets/card-widget.html.twig' %}
+                        {% block card_class %}border{% endblock %}
+                        {% block card_body_class %}text-center {{ item.isEnable ?'text-success':'text-warning' }}{% endblock %}
+                        {% block card_body %}
                             <i class="fas fa-{{ item.isEnable ?'check':'times' }} fa-3x"></i><br>
                             Utilisable
-                        </p>
-                    </div>
+                        {% endblock %}
+                    {% endembed %}
                 </div>
-
-                <div class="col-sm-11">
+                <div class="col-md-8 col-lg-5 ">
+                    {% embed 'widgets/card-widget.html.twig' %}
+                        {% block card_title %}Utilisateurs{% endblock %}
+                        {% block card_body %}
+                            {% import "macros/user.html.twig" as usr %}
+                            {{ usr.views(item.users) }}
+                        {% endblock %}
+                    {% endembed %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
                     {{ item.content | raw }}
                 </div>
             </div>

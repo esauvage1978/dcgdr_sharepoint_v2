@@ -1,7 +1,7 @@
-{% macro submit_btn(label, size,name) %}
+{% macro btn_onclick(label, size,name) %}
     {% set _size = size|default('') %}
     <span class="btn bg-gradient-success btn-success {{ _size }}"
-          onclick="$('#submit_{{ name is defined ? name : '1' }} ').click();">
+          onclick="$('#submit{{ name is not null ? '_'~name : '_1' }}').click();">
             <i class="fas fa-save"></i>
         {% if label %}
             <span>{{ label }}</span>
@@ -9,8 +9,8 @@
     </span>
 {% endmacro %}
 
-{% macro submit_btn_hidden(name) %}
-    <button class="btn btn-success bg-gradient-success  " type="submit" id="submit_{{ name is defined ? name : '1' }}">
+{% macro btn(name) %}
+    <button class="btn btn-success bg-gradient-success" type="submit" id="submit{{ name is not null ? '_'~name : '_1' }}">
         <i class="fas fa-save"></i> Enregistrer
     </button>
 {% endmacro %}

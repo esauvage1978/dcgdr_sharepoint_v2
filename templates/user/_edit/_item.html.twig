@@ -70,7 +70,7 @@
                 {% block card_title %}Organismes{% endblock %}
                 {% block card_body_class %}select2-primary{% endblock %}
                 {% block card_body %}
-                    {{ form_widget(form.roles) }}
+                    {{ form_widget(form.organismes) }}
                 {% endblock %}
             {% endembed %}
 
@@ -78,7 +78,7 @@
         </div>
 
         <div class="d-none">
-            {{ sub.submit_btn_hidden() }}
+            {{ sub.btn() }}
             {{ form_rest(form) }}
         </div>
     </div>

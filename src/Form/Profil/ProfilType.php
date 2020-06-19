@@ -15,8 +15,9 @@ class ProfilType extends AppTypeAbstract
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = $this->buildFormName($builder);
-        $builder = $this->buildFormContent($builder);
+        $this->buildFormName($builder);
+        $this->buildFormContent($builder);
+
         $builder
             ->add('email', EmailType::class, [
                 self::LABEL => 'Mail',

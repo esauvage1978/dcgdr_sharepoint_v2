@@ -3,21 +3,21 @@
 {% set columns = {
     '#': {'class': 'all', 'orderBy': true},
     'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
-    'Référence': {'class': 'alwaysVisible', 'orderBy': true},
+    'Référence': {'class': 'alwaysVisible text-center', 'orderBy': true},
     'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'alwaysVisible', 'orderBy': false},
-    '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible', 'orderBy': false},
+    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-{% block page_subtitle %}Liste des {{ domaine }}s{% endblock %}
+{% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
     {% if is_granted('ROLE_GESTIONNAIRE') %}
         <div class="row mb-2">
             <div class="col-12 text-right">
                 {{ btn.link_button(
-                    'Ajouter',
+                    '',
                     path(route_add),
                     'fa fa-plus',
                     'success',
@@ -51,7 +51,11 @@
 
             </td>
             <td class="text-center">
-
+                {% if   item.users.count==0 %}
+                    <span class="text-light"><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge  bg-info">{{ item.users.count }}</small>
+                {% endif %}
             </td>
             <td class=" d-flex  justify-content-end ">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}

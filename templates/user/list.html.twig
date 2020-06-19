@@ -17,14 +17,14 @@
 } %}
 
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-{% block page_subtitle %}Liste des utilisateurs{% endblock %}
+{% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
     {% if is_granted('ROLE_GESTIONNAIRE') %}
         <div class="row mb-2">
             <div class="col-12 text-right">
                 {{ btn.link_button(
-                    'Ajouter',
+                    '',
                     path(route_add),
                     'fa fa-plus',
                     'success',
@@ -87,7 +87,11 @@
                 <span class="text-{{ item.subscription ? 'info' : 'light' }} "><i class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
-
+                {% if   item.organismes.count==0 %}
+                    <span class="text-light"><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge  bg-info">{{ item.organismes.count }}</small>
+                {% endif %}
             </td>
             <td class="align-middle text-center">
 

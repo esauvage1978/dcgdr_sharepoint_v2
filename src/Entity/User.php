@@ -102,8 +102,15 @@ class User implements UserInterface, EntityInterface
      */
     private $subscription;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Organisme", mappedBy="users")
+     * @ORM\OrderBy({"name" = "ASC"})
+     */
+    private $organismes;
+
     public function __construct()
     {
+        $this->organismes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -346,5 +353,33 @@ class User implements UserInterface, EntityInterface
     public function getAvatar(): string
     {
         return 'avatar/' .$this->getId() . '.png';
+    }
+
+    /**
+     * @return Collection|Organisme[]
+     */
+    public function getOrganismes(): Collection
+    {
+        return $this->organismes;
+    }
+
+    public function addOrganisme(Organisme $organisme): self
+    {
+        if (!$this->organismes->contains($organisme)) {
+            $this->organismes[] = $organisme;
+            $organisme->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisme(Organisme $organisme): self
+    {
+        if ($this->organismes->contains($organisme)) {
+            $this->organismes->removeElement($organisme);
+            $organisme->removeUser($this);
+        }
+
+        return $this;
     }
 }

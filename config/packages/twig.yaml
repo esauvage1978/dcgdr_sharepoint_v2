@@ -8,3 +8,4 @@ twig:
         app_name: '%env(APPLICATION_NAME)%'
         col_1_2: 'col-sm-12 col-md-12 col-lg-8 col-xl-6'
         col_2_2: 'col-sm-12 col-md-12 col-lg-4'
+        row_lst: 'row row-cols-1 row-cols-md-2 row-cols-lg-3'

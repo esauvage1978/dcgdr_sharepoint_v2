@@ -15,9 +15,10 @@ class UserType extends AppTypeAbstract
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder = $this->buildFormName($builder);
-        $builder = $this->buildFormIsEnable($builder);
-        $builder = $this->buildFormContent($builder);
+        $this->buildFormName($builder);
+        $this->buildFormIsEnable($builder);
+        $this->buildFormContent($builder);
+        $this->buildFormOrganismes($builder);
 
         $roles = [
             'Utilisateur' => 'ROLE_USER',

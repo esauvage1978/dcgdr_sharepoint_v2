@@ -24,7 +24,9 @@ class OrganismeRepository extends ServiceEntityRepository
     public function findAllForAdmin()
     {
         return $this->createQueryBuilder(self::ALIAS)
-            ->select( self::ALIAS)
+            ->select( self::ALIAS,
+                UserRepository::ALIAS)
+            ->leftJoin(self::ALIAS.'.users',UserRepository::ALIAS)
             ->orderBy(self::ALIAS . '.ref', 'ASC')
             ->addOrderBy(self::ALIAS. '.name','ASC')
             ->getQuery()
@@ -32,22 +34,17 @@ class OrganismeRepository extends ServiceEntityRepository
             ;
     }
 
-    // /**
-    //  * @return Organisme[] Returns an array of Organisme objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findAllForUser(string $userId)
     {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder(self::ALIAS)
+            ->select(self::ALIAS)
+            ->leftJoin(self::ALIAS . '.users' , UserRepository::ALIAS )
+            ->where(UserRepository::ALIAS . '.id = :user')
+            ->setParameter('user', $userId)
+            ->orderBy(self::ALIAS . '.name', 'ASC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Organisme

@@ -7,7 +7,7 @@
 {% block breadcrumb %}
     <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
-            {{ sub.submit_btn() }}
+            {{ sub.btn_onclick() }}
         </div>
     </div>
 {% endblock %}
@@ -91,7 +91,7 @@
             {% endembed %}
 
             <div class="d-none">
-                {{ sub.submit_btn_hidden() }}
+                {{ sub.btn() }}
                 {{ form_rest(form) }}
             </div>
 
@@ -156,11 +156,9 @@
                         </small>
                     {% endif %}
                 {% endblock %}
-
-                {% block card_body_class %}p-0{% endblock %}
                 {% block card_body %}
-
-
+                    {% import "macros/organisme.html.twig" as org %}
+                    {{ org.views(item.organismes,true) }}
                 {% endblock %}
             {% endembed %}
 
@@ -173,11 +171,8 @@
                         </small>
                     {% endif %}
                 {% endblock %}
-
                 {% block card_body_class %}p-0{% endblock %}
                 {% block card_body %}
-
-
                 {% endblock %}
             {% endembed %}
         </div>

@@ -4,6 +4,8 @@ namespace App\Manager;
 
 use App\Entity\Avatar;
 use App\Entity\User;
+use App\Helper\ToolCollecion;
+use App\Repository\OrganismeRepository;
 use App\Repository\UserRepository;
 use App\Validator\UserValidator;
 use DateTime;
@@ -40,16 +42,23 @@ class UserManager
      */
     private $userRepository;
 
+    /**
+     * @var OrganismeRepository
+     */
+    private $organismeRepository;
+
     public function __construct(
         EntityManagerInterface $manager,
         UserValidator $validator,
         UserPasswordEncoderInterface $passwordEncoder,
         UserRepository $userRepository,
-        ParameterBagInterface $params
+        ParameterBagInterface $params,
+        OrganismeRepository $organismeRepository
     )
     {
         $this->manager = $manager;
         $this->validator = $validator;
+        $this->organismeRepository = $organismeRepository;
         $this->passwordEncoder = $passwordEncoder;
         $this->userRepository = $userRepository;
         $this->params = $params;
@@ -91,6 +100,13 @@ class UserManager
 
         $this->checkAvatar($user);
 
+        if (!empty($user->getId())) {
+            $this->setRelation(
+                $user,
+                $this->organismeRepository->findAllForUser($user->getId()),
+                $user->getOrganismes()
+            );
+        }
 
         return true;
     }
@@ -178,4 +194,16 @@ class UserManager
         return true;
     }
 
+    public function setRelation(User $user, $entitysOld, $entitysNew)
+    {
+        $em = new ToolCollecion($entitysOld, $entitysNew->toArray());
+
+        foreach ($em->getDeleteDiff() as $entity) {
+            $entity->removeUser($user);
+        }
+
+        foreach ($em->getInsertDiff() as $entity) {
+            $entity->addUser($user);
+        }
+    }
 }
