@@ -124,6 +124,21 @@ class UserManager
         return true;
     }
 
+    public function changeAvatar(User $user, $image)
+    {
+        $image = str_replace(' ', '+', $image);
+        list($type, $data) = explode(';', $image);
+        list(, $data) = explode(',', $data);
+        $data = base64_decode($data);
+        if (file_exists($this->params->get('directory_avatar') .'/' . $user->getId() . '.png')) {
+            unlink($this->params->get('directory_avatar') .'/' . $user->getId() . '.png');
+        }
+        file_put_contents(
+            $this->params->get('directory_avatar') .'/' . $user->getId() . '.png',
+            $data
+        );
+    }
+
     public function checkPassword($user, $pwd): bool
     {
         return $this->passwordEncoder->isPasswordValid($user, $pwd);
