@@ -88,6 +88,21 @@ abstract class AppTypeAbstract extends AbstractType
                 },
             ]);
     }
+    public function buildFormCorbeilles(FormBuilderInterface $builder): FormBuilderInterface
+    {
+        return $builder
+            ->add('corbeilles', EntityType::class, [
+                'class' => Corbeille::class,
+                self::CHOICE_LABEL => 'name',
+                self::MULTIPLE => true,
+                self::ATTR => ['class' => 'select2'],
+                self::REQUIRED => false,
+                self::QUERY_BUILDER => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.name', 'ASC');
+                },
+            ]);
+    }
     public function buildFormUsers(FormBuilderInterface $builder)
     {
         $builder
