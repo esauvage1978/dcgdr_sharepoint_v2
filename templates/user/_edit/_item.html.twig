@@ -75,6 +75,13 @@
             {% endembed %}
 
 
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Corbeilles{% endblock %}
+                {% block card_body_class %}select2-primary{% endblock %}
+                {% block card_body %}
+                    {{ form_widget(form.corbeilles) }}
+                {% endblock %}
+            {% endembed %}
         </div>
 
         <div class="d-none">

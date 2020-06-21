@@ -19,7 +19,7 @@ class UserType extends AppTypeAbstract
         $this->buildFormIsEnable($builder);
         $this->buildFormContent($builder);
         $this->buildFormOrganismes($builder);
-
+        $this->buildFormCorbeilles($builder);
         $roles = [
             'Utilisateur' => 'ROLE_USER',
             'Gestionnaire' => 'ROLE_GESTIONNAIRE',

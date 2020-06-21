@@ -63,13 +63,14 @@ abstract class AppTypeAbstract extends AbstractType
         $builder
             ->add('organismes', EntityType::class, [
                 'class' => Organisme::class,
-                self::CHOICE_LABEL => 'name',
+                self::CHOICE_LABEL => 'fullname',
                 self::MULTIPLE => true,
                 self::ATTR => ['class' => 'select2'],
                 self::REQUIRED => false,
                 self::QUERY_BUILDER => function (EntityRepository $er) {
                     return $er->createQueryBuilder('o')
-                        ->orderBy('o.name', 'ASC');
+                        ->orderBy('o.ref', 'ASC')
+                        ->addOrderBy('o.name', 'ASC');
                 },
             ]);
     }
@@ -84,7 +85,23 @@ abstract class AppTypeAbstract extends AbstractType
                 self::REQUIRED => true,
                 self::QUERY_BUILDER => function (EntityRepository $er) {
                     return $er->createQueryBuilder('o')
-                        ->orderBy('o.ref', 'ASC');
+                        ->orderBy('o.ref', 'ASC')
+                        ->addOrderBy('o.name', 'ASC');
+                },
+            ]);
+    }
+    public function buildFormCorbeilles(FormBuilderInterface $builder): FormBuilderInterface
+    {
+        return $builder
+            ->add('corbeilles', EntityType::class, [
+                'class' => Corbeille::class,
+                self::CHOICE_LABEL => 'name',
+                self::MULTIPLE => true,
+                self::ATTR => ['class' => 'select2'],
+                self::REQUIRED => false,
+                self::QUERY_BUILDER => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.name', 'ASC');
                 },
             ]);
     }

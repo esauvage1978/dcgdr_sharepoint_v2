@@ -104,12 +104,13 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Organisme", mappedBy="users")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\OrderBy({"ref" = "ASC"})
      */
     private $organismes;
 
     /**
      * @ORM\ManyToMany(targetEntity=Corbeille::class, mappedBy="users")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $corbeilles;
 
