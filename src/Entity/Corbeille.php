@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\OrganismeRepository;
+use App\Repository\CorbeilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=OrganismeRepository::class)
+ * @ORM\Entity(repositoryClass=CorbeilleRepository::class)
  */
-class Organisme implements EntityInterface
+class Corbeille implements EntityInterface
 {
     /**
      * @ORM\Id()
@@ -20,14 +20,14 @@ class Organisme implements EntityInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=40)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\Column(type="boolean")
      */
-    private $ref;
+    private $isEnable;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -37,36 +37,39 @@ class Organisme implements EntityInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isEnable;
+    private $isShowRead;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="organismes")
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @ORM\Column(type="boolean")
+     */
+    private $isShowWrite;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="corbeilles")
      */
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity=Corbeille::class, mappedBy="organisme")
+     * @ORM\ManyToOne(targetEntity=Organisme::class, inversedBy="corbeilles")
      */
-    private $corbeilles;
+    private $organisme;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->corbeilles = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function setId(int $id): self
     {
-        $this->id=$id;
+        $this->id = $id;
+
         return $this;
     }
-
 
     public function getName(): ?string
     {
@@ -80,14 +83,14 @@ class Organisme implements EntityInterface
         return $this;
     }
 
-    public function getRef(): ?string
+    public function getIsEnable(): ?bool
     {
-        return $this->ref;
+        return $this->isEnable;
     }
 
-    public function setRef(string $ref): self
+    public function setIsEnable(bool $isEnable): self
     {
-        $this->ref = $ref;
+        $this->isEnable = $isEnable;
 
         return $this;
     }
@@ -104,14 +107,26 @@ class Organisme implements EntityInterface
         return $this;
     }
 
-    public function getIsEnable(): ?bool
+    public function getIsShowRead(): ?bool
     {
-        return $this->isEnable;
+        return $this->isShowRead;
     }
 
-    public function setIsEnable(bool $isEnable): self
+    public function setIsShowRead(bool $isShowRead): self
     {
-        $this->isEnable = $isEnable;
+        $this->isShowRead = $isShowRead;
+
+        return $this;
+    }
+
+    public function getIsShowWrite(): ?bool
+    {
+        return $this->isShowWrite;
+    }
+
+    public function setIsShowWrite(bool $isShowWrite): self
+    {
+        $this->isShowWrite = $isShowWrite;
 
         return $this;
     }
@@ -142,39 +157,15 @@ class Organisme implements EntityInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Corbeille[]
-     */
-    public function getCorbeilles(): Collection
+    public function getOrganisme(): ?Organisme
     {
-        return $this->corbeilles;
+        return $this->organisme;
     }
 
-    public function addCorbeille(Corbeille $corbeille): self
+    public function setOrganisme(?Organisme $organisme): self
     {
-        if (!$this->corbeilles->contains($corbeille)) {
-            $this->corbeilles[] = $corbeille;
-            $corbeille->setOrganisme($this);
-        }
+        $this->organisme = $organisme;
 
         return $this;
-    }
-
-    public function removeCorbeille(Corbeille $corbeille): self
-    {
-        if ($this->corbeilles->contains($corbeille)) {
-            $this->corbeilles->removeElement($corbeille);
-            // set the owning side to null (unless already changed)
-            if ($corbeille->getOrganisme() === $this) {
-                $corbeille->setOrganisme(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getFullName(): ?string
-    {
-        return $this->getRef() . ' - ' . $this->getName();
     }
 }

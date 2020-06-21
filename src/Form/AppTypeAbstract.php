@@ -73,6 +73,21 @@ abstract class AppTypeAbstract extends AbstractType
                 },
             ]);
     }
+    public function buildFormOrganisme(FormBuilderInterface $builder): FormBuilderInterface
+    {
+        return $builder
+            ->add('organisme', EntityType::class, [
+                'class' => Organisme::class,
+                self::CHOICE_LABEL => 'fullname',
+                self::MULTIPLE => false,
+                self::ATTR => ['class' => 'select2'],
+                self::REQUIRED => true,
+                self::QUERY_BUILDER => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('o')
+                        ->orderBy('o.ref', 'ASC');
+                },
+            ]);
+    }
     public function buildFormUsers(FormBuilderInterface $builder)
     {
         $builder

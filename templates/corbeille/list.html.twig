@@ -1,11 +1,14 @@
-{% extends 'organisme/layout.html.twig' %}
+{% extends 'corbeille/layout.html.twig' %}
 {% import "macros/datatables.html.twig" as tables %}
 {% set columns = {
     'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
-    'Référence': {'class': 'alwaysVisible text-center', 'orderBy': true},
+    'Nom de la corbeille': {'class': 'alwaysVisible ', 'orderBy': true},
     'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-eye"  data-toggle="tooltip" data-placement="top" title="Corbeille pour la consultation"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-bullhorn"  data-toggle="tooltip" data-placement="top" title="Corbeille pour le pilotage"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
@@ -36,30 +39,40 @@
     {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
     {% for item in items %}
         <tr>
-            <td>
+            <td class="align-middle">
+                <a href="{{ path('organisme_show',{id:item.organisme.id}) }}"
+                   class="text-{{ item.organisme.isEnable ? 'primary' : 'danger text-bold' }}">
+                    {{ item.organisme.ref }} - {{ item.organisme.name }}
+                </a>
+            </td>
+            <td class="align-middle">
                 <a href="{{ path(route_show,{id:item.id}) }}"
                    class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
                     {{ item.name }}
                 </a>
             </td>
-            <td class="text-center ">{{ item.ref }}</td>
-            <td>{{ item.content | raw }}</td>
-
-            <td class="text-center">
-                {% if   item.corbeilles.count==0 %}
-                    <span class="text-light"><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge  bg-info">{{ item.corbeilles.count }}</small>
-                {% endif %}
+            <td class="align-middle col-4">{{ item.content | raw }}</td>
+            <td class="align-middle text-center">
+                <span class="text-{{ item.isShowRead ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
             </td>
-            <td class="text-center">
+            <td class="align-middle text-center">
+                <span class="text-{{ item.isShowWrite ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
+            </td>
+
+            <td class="align-middle text-center">
                 {% if   item.users.count==0 %}
                     <span class="text-light"><i class="fas fa-circle"></i></span>
                 {% else %}
-                    <small class="badge  bg-info">{{ item.users.count }}</small>
+                    <small class="badge bg-info">{{ item.users.count }}</small>
                 {% endif %}
             </td>
-            <td class=" d-flex  justify-content-end ">
+            <td class="align-middle text-center">
+
+            </td>
+            <td class="align-middle text-center">
+
+            </td>
+            <td class=" align-middle text-right">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
                     {{ btn.link_button(
                         'Modifier',
@@ -80,5 +93,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ tables.datatable_javascript(tableName,1,columns) }}
+    {{ tables.datatable_javascript(tableName,2,columns) }}
 {% endblock %}
