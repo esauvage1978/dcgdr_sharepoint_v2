@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\Avatar;
 use App\Entity\User;
 use App\Helper\ToolCollecion;
+use App\Repository\CorbeilleRepository;
 use App\Repository\OrganismeRepository;
 use App\Repository\UserRepository;
 use App\Validator\UserValidator;
@@ -47,12 +48,19 @@ class UserManager
      */
     private $organismeRepository;
 
+    /**
+     * @var CorbeilleRepository
+     */
+    private $corbeilleRepository;
+
+
     public function __construct(
         EntityManagerInterface $manager,
         UserValidator $validator,
         UserPasswordEncoderInterface $passwordEncoder,
         UserRepository $userRepository,
         ParameterBagInterface $params,
+        CorbeilleRepository $corbeilleRepository,
         OrganismeRepository $organismeRepository
     )
     {
@@ -61,6 +69,7 @@ class UserManager
         $this->organismeRepository = $organismeRepository;
         $this->passwordEncoder = $passwordEncoder;
         $this->userRepository = $userRepository;
+        $this->corbeilleRepository = $corbeilleRepository;
         $this->params = $params;
     }
 
@@ -105,6 +114,11 @@ class UserManager
                 $user,
                 $this->organismeRepository->findAllForUser($user->getId()),
                 $user->getOrganismes()
+            );
+            $this->setRelation(
+                $user,
+                $this->corbeilleRepository->findAllForUser($user->getId()),
+                $user->getCorbeilles()
             );
         }
 

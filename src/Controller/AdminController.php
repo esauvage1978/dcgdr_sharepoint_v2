@@ -18,6 +18,9 @@ class AdminController extends AbstractController
         ],[
             'name' => 'Utilisateur',
             'route' => 'user_list'
+        ],[
+            'name' => 'Corbeille',
+            'route' => 'corbeille_list'
         ]];
 
         return $this->render('admin/index.html.twig', [

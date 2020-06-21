@@ -26,9 +26,11 @@ class UserRepository extends ServiceEntityRepository
         return $this->createQueryBuilder(self::ALIAS)
             ->select(
                 self::ALIAS,
-                OrganismeRepository::ALIAS
+                OrganismeRepository::ALIAS,
+                CorbeilleRepository::ALIAS
             )
             ->leftJoin(self::ALIAS.'.organismes',OrganismeRepository::ALIAS)
+            ->leftJoin(self::ALIAS.'.corbeilles',CorbeilleRepository::ALIAS)
             ->orderBy(self::ALIAS . '.name', 'ASC')
             ->getQuery()
             ->getResult()

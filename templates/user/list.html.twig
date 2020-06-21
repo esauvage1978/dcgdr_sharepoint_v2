@@ -11,7 +11,7 @@
     '<i class="fa fa-user"  data-toggle="tooltip" data-placement="top" title="Utilisateur"></i>': {'class': 'text-center', 'orderBy': false},
     '<i class="fa fa-envelope-open-text"  data-toggle="tooltip" data-placement="top" title="Mail non vérifié"></i>': {'class': 'text-center', 'orderBy': false},
     '<i class="fa fa-rss"  data-toggle="tooltip" data-placement="top" title="Abonné"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-globe"  data-toggle="tooltip" data-placement="top" title="Nombre d\'organismes"></i>': {'class': 'text-center', 'orderBy': false},
+    '<i class="fa fa-building"  data-toggle="tooltip" data-placement="top" title="Nombre d\'organismes"></i>': {'class': 'text-center', 'orderBy': false},
     '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'text-center', 'orderBy': false},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
@@ -94,7 +94,11 @@
                 {% endif %}
             </td>
             <td class="align-middle text-center">
-
+                {% if   item.corbeilles.count==0 %}
+                    <span class="text-light"><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge  bg-info">{{ item.corbeilles.count }}</small>
+                {% endif %}
             </td>
             <td class=" align-middle text-right">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
