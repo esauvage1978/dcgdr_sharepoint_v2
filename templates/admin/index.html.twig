@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% block title %}{{ app_name }} - Administration{% endblock %}
 {% block page_title %}<i class="fas fa-cog"></i> Administration{% endblock %}
 {% block page_content %}
 
@@ -9,6 +10,24 @@
 
                 {% block card_body %}
                     {% for entry in general_entries %}
+                        <div class="row ">
+                            <div class="col-sm-12">
+                                <a href="{{ path(entry.route)}}" target="_self">
+                                    <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+            {% endembed %}
+        </div>
+
+        <div class="col-md-2 offset-md-1" >
+            {# ... box widget with defaults ... #}
+            {% embed 'widgets/card-widget.html.twig'%}
+
+                {% block card_body %}
+                    {% for entry in app_entries %}
                         <div class="row ">
                             <div class="col-sm-12">
                                 <a href="{{ path(entry.route)}}" target="_self">
