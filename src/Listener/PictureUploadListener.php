@@ -69,7 +69,6 @@ class PictureUploadListener
 
             $targetDir = $this->directory;
 
-
             $this->uploader->setTargetDir($targetDir);
             $this->uploader->upload($picture->getFile(), $picture->getFileName());
 

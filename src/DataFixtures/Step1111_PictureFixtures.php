@@ -106,7 +106,6 @@ class Step1111_PictureFixtures extends Fixture implements FixtureGroupInterface
                 ->setContent($data['visuel'])
                 ->setFileName(md5(uniqid()))
                 ->setFileExtension($dataFile[1]);
-                dump($data['visuel']);
                 $this->moveFile($data['visuel'], $instance->getFullName());
         } else {
             return null;

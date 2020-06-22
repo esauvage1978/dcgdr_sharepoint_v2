@@ -26,6 +26,9 @@ class AdminController extends AbstractController
         $app_entries = [[
             'name' => 'Image de présentation',
             'route' => 'picture_list'
+        ],[
+            'name' => 'Thématique des rubriques',
+            'route' => 'thematic_list'
         ]];
 
         return $this->render('admin/index.html.twig', [
