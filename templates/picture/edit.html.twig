@@ -1,4 +1,4 @@
-{% extends 'organisme/layout.html.twig' %}
+{% extends 'picture/layout.html.twig' %}
 
 {% block page_subtitle %}Modification{% endblock %}
 
@@ -8,4 +8,25 @@
 
 {% block page_content %}
     {{ include(domaine ~ '/_edit/_item.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+
+            $(document).on('change', '.custom-file-input', function () {
+                let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+                $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+            });
+
+            $('#picture_updateAt_date_month').val(new Date().getMonth());
+            $('#picture_updateAt_date_day').val(new Date().getDay());
+            $('#picture_updateAt_date_year').val(new Date().getFullYear());
+            $('#picture_updateAt_time_hour').val(new Date().getHours());
+            $('#picture_updateAt_time_minute').val(new Date().getMinutes());
+
+
+        })
+    </script>
 {% endblock %}

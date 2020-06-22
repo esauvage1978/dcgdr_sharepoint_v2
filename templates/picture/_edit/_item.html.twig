@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="{{ col_1_2 }}">
             {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}{{ item.ref }}<span class="text-bold"> {{ item.name }}</span>{% endblock %}
+                {% block card_title %}{{ item.name }}{% endblock %}
                 {% block card_body %}
                     <div class="row">
                         <div class=" col-12">
@@ -18,13 +18,6 @@
                                 <div class="col">
                                     {{ form_errors(form.name) }}
                                     {{ form_widget(form.name) }}
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                {{ form_label(form.ref,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
-                                <div class="col-xs-3 col-md-2">
-                                    {{ form_errors(form.ref) }}
-                                    {{ form_widget(form.ref) }}
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -38,26 +31,39 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        {{ form_label(form.file,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                        <div class="col">
+                            {{ form_errors(form.file) }}
+                            {{ form_widget(form.file) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         {{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
                         <div class="col">
                             {{ form_errors(form.content) }}
                             {{ form_widget(form.content) }}
                         </div>
                     </div>
-
+                    <div class="">
+                        {{ form_rest(form) }}
+                    </div>
                 {% endblock %}
 
             {% endembed %}
         </div>
         <div class="{{ col_2_2 }}">
             {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Utilisateurs{% endblock %}
-                {% block card_body_class %}select2-primary{% endblock %}
+                {% block card_body_class %} box-profile{% endblock %}
                 {% block card_body %}
-                    {{ form_widget(form.users) }}
+                    <div class=" text-center">
+                        <img src="{{ absolute_url( asset(item.Href)) }}" class="card-img-top rounded shadow " id="anchor_picture"
+                             alt="{{ item.name }}">
+                    </div>
                 {% endblock %}
             {% endembed %}
         </div>
+
     </div>
     {% import "macros/submit.html.twig" as sub %}
     <div class="d-none">{{ sub.btn() }}</div>
@@ -65,4 +71,6 @@
     {% if item.id is not null %}
         {{ del.delete_form(route_del,item.id, 'show') }}
     {% endif %}
+
 {% endif %}
+
