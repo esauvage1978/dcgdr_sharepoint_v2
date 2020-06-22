@@ -59,3 +59,4 @@ $('.select2')
         width: "100%"
     }).addClass('col');
 
+

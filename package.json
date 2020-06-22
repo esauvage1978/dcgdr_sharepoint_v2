@@ -27,7 +27,6 @@
     },
     "dependencies": {
         "bootstrap-combobox": "^1.0.2",
-
         "datatables.net-bs4": "^1.10.21",
         "icheck-bootstrap": "^3.0.1",
         "select2": "^4.0.13",
