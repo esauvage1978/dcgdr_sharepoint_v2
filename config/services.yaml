@@ -6,6 +6,8 @@
 parameters:
     directory_import : '%kernel.project_dir%/data/importFixtures/'
     directory_avatar : '%kernel.project_dir%/public/avatar/'
+    directory_picture : '%kernel.project_dir%/public/picture'
+    directory_data_picture : '%kernel.project_dir%/data/bg'
 
     application.name: '%env(APPLICATION_NAME)%'
     mailer.mail: '%env(MAILER_MAIL)%'
@@ -16,6 +18,8 @@ parameters:
     mailer.smtp.username: '%env(MAILER_SMTP_USERNAME)%'
     mailer.smtp.password: '%env(MAILER_SMTP_PASSWORD)%'
 
+    image.resize.x: 480
+    image.resize.y: 320
 
 services:
     # default configuration for services in *this* file
@@ -34,3 +38,9 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
+
+    App\Listener\PictureUploadListener:
+        arguments:
+            $directory: '%directory_picture%'
+        tags:
+            - { name: doctrine.orm.entity_listener }

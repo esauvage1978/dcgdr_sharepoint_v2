@@ -23,8 +23,14 @@ class AdminController extends AbstractController
             'route' => 'corbeille_list'
         ]];
 
+        $app_entries = [[
+            'name' => 'Image de présentation',
+            'route' => 'picture_list'
+        ]];
+
         return $this->render('admin/index.html.twig', [
             'general_entries' => $general_entries,
+            'app_entries' => $app_entries,
         ]);
     }
 }

@@ -43,7 +43,7 @@ class CorbeilleController extends AbstractGController
      */
     public function add(Request $request)
     {
-        return $this->editAction($request, new Organisme(), CorbeilleType::class,false);
+        return $this->editAction($request, new Corbeille(), CorbeilleType::class,false);
     }
 
     /**
