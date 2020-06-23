@@ -2,11 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Thematic;
-use App\Form\Admin\ThematicType;
-use App\Manager\ThematicManager;
-use App\Repository\BackpackRepository;
-use App\Repository\ThematicRepository;
+use App\Entity\Rubric;
+use App\Form\Admin\RubricType;
+use App\Manager\RubricManager;
+use App\Repository\RubricRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,23 +14,22 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class ThematicController
  * @package App\Controller
- * @route("/thematic")
  */
-class ThematicController extends AbstractGController
+class RubricController extends AbstractGController
 {
     public function __construct
     (
-        ThematicRepository $repository,
-        ThematicManager $manager
+        RubricRepository $repository,
+        RubricManager $manager
     )
     {
         $this->repository = $repository;
         $this->manager = $manager;
-        $this->domaine = 'thematic';
+        $this->domaine = 'rubric';
     }
 
     /**
-     * @Route("/", name="thematic_list", methods={"GET"})
+     * @Route("/admin/rubric", name="admin_rubric_list", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
     public function list()
@@ -40,7 +38,7 @@ class ThematicController extends AbstractGController
     }
 
     /**
-     * @Route("/sort", name="thematic_sort", methods={"GET"})
+//     * @Route("/admin/rubric/sort", name="admin_rubric_sort", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
     public function sort()
@@ -52,7 +50,7 @@ class ThematicController extends AbstractGController
     }
 
     /**
-     * @Route("/sort/apply", name="thematic_sort_apply", methods={"GET"})
+     * @Route("/admin/rubric/sort/apply", name="admin_rubric_sort_apply", methods={"GET"})
      *
      * @return Response
      * @IsGranted("ROLE_USER")
@@ -71,39 +69,39 @@ class ThematicController extends AbstractGController
     }
 
     /**
-     * @Route("/add", name="thematic_add", methods={"GET","POST"})
+     * @Route("/admin/rubric/add", name="admin_rubric_add", methods={"GET","POST"})
      * @IsGranted("ROLE_GESTIONNAIRE")
      */
     public function add(Request $request)
     {
-        return $this->editAction($request, new Thematic(), ThematicType::class,false);
+        return $this->editAction($request, new Rubric(), RubricType::class,false);
     }
 
     /**
-     * @Route("/{id}", name="thematic_del", methods={"DELETE"})
+     * @Route("/admin/rubric/{id}", name="admin_rubric_del", methods={"DELETE"})
      * @IsGranted("ROLE_GESTIONNAIRE")
      */
-    public function delete(Request $request, Thematic $item)
+    public function delete(Request $request, Rubric $item)
     {
         return $this->deleteAction($request, $item);
     }
 
     /**
-     * @Route("/{id}", name="thematic_show", methods={"GET"})
+     * @Route("/admin/rubric/{id}", name="admin_rubric_show", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function show(Request $request, Thematic $item)
+    public function show(Request $request, Rubric $item)
     {
         return $this->showAction($request, $item);
     }
 
 
     /**
-     * @Route("/{id}/edit", name="thematic_edit", methods={"GET","POST"})
+     * @Route("/admin/rubric/{id}/edit", name="admin_rubric_edit", methods={"GET","POST"})
      * @IsGranted("ROLE_GESTIONNAIRE")
      */
-    public function edit(Request $request, Thematic $item)
+    public function edit(Request $request, Rubric $item)
     {
-        return $this->editAction($request, $item, ThematicType::class);
+        return $this->editAction($request, $item, RubricType::class);
     }
 }

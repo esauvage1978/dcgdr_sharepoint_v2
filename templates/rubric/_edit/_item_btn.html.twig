@@ -1,0 +1,26 @@
+{% import "macros/delele.html.twig" as del %}
+{% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+{% import "macros/submit.html.twig" as sub %}
+
+<div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        {{ btn.link_button(
+            '',
+            path(route_list),
+            'fa fa-list',
+            'secondary',
+            'secondary'
+        ) }}
+        {% if item.id is not null %}
+            {{ del.delete_btn('','show') }}
+            {{ btn.link_button(
+                '',
+                path(route_show,{id:item.id}),
+                'fa fa-eye',
+                'primary',
+                'primary'
+            ) }}
+        {% endif %}
+        {{ sub.btn_onclick() }}
+    </div>
+</div>

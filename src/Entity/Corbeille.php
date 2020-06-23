@@ -56,9 +56,24 @@ class Corbeille implements EntityInterface
      */
     private $organisme;
 
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Rubric", mappedBy="readers")
+     * @ORM\JoinTable("rubricreader_corbeille")
+     */
+    private $rubricReaders;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Rubric", mappedBy="writers")
+     * @ORM\JoinTable("rubricwriter_corbeille")
+     */
+    private $rubricWriters;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->rubricReaders = new ArrayCollection();
+        $this->rubricWriters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,4 +185,61 @@ class Corbeille implements EntityInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Rubric[]
+     */
+    public function getRubricReaders(): Collection
+    {
+        return $this->rubricReaders;
+    }
+
+    public function addRubricReader(Rubric $rubricReaders): self
+    {
+        if (!$this->rubricReaders->contains($rubricReaders)) {
+            $this->rubricReaders[] = $rubricReaders;
+            $rubricReaders->addReader($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRubricReader(Rubric $rubricReaders): self
+    {
+        if ($this->rubricReaders->contains($rubricReaders)) {
+            $this->rubricReaders->removeElement($rubricReaders);
+            $rubricReaders->removeReader($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rubric[]
+     */
+    public function getRubricWriters(): Collection
+    {
+        return $this->rubricWriters;
+    }
+
+    public function addRubricWriter(Rubric $rubricWriters): self
+    {
+        if (!$this->rubricWriters->contains($rubricWriters)) {
+            $this->rubricWriters[] = $rubricWriters;
+            $rubricWriters->addWriter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRubricWriter(Rubric $rubricWriters): self
+    {
+        if ($this->rubricWriters->contains($rubricWriters)) {
+            $this->rubricWriters->removeElement($rubricWriters);
+            $rubricWriters->removeWriter($this);
+        }
+
+        return $this;
+    }
+
 }

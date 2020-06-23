@@ -38,8 +38,15 @@ class Thematic implements EntityInterface
      */
     private $showOrder;
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rubric", mappedBy="thematic")
+     */
+    private $rubrics;
+
     public function __construct()
     {
+        $this->rubrics = new ArrayCollection();
         $this->showOrder=0;
     }
 
@@ -67,6 +74,36 @@ class Thematic implements EntityInterface
         return $this;
     }
 
+    /**
+     * @return Collection|Rubric[]
+     */
+    public function getRubrics(): Collection
+    {
+        return $this->rubrics;
+    }
+
+    public function addRubric(Rubric $rubric): self
+    {
+        if (!$this->rubrics->contains($rubric)) {
+            $this->rubrics[] = $rubric;
+            $rubric->setThematic($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRubric(Rubric $rubric): self
+    {
+        if ($this->rubrics->contains($rubric)) {
+            $this->rubrics->removeElement($rubric);
+            // set the owning side to null (unless already changed)
+            if ($rubric->getThematic() === $this) {
+                $rubric->setThematic(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function getIsEnable(): ?bool
     {
