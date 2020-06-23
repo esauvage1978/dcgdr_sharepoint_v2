@@ -1,0 +1,43 @@
+{% macro thematics_anchor(items) %}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                {% set the_courant="" %}
+                {% set the_precedent="" %}
+                {% for item in items %}
+                    {% set the_courant=item.thematic.name %}
+                    {% if the_precedent=="" or the_precedent !=the_courant %}
+                        <a href="#anchor_thematic_{{ item.thematic.id }}" title="accès rapide"
+                           class="btn btn-outline-primary">
+                            <small>{{ item.thematic.name }}</small>
+                        </a>
+                    {% endif %}
+                    {% set the_precedent=item.thematic.name %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro thematic_anchor(item) %}
+    {% embed 'widgets/card-widget.html.twig' %}
+        {% block card_id %}anchor_thematic_{{ item.id }}{% endblock %}
+        {% block card_class %}border-light bg-light shadow{% endblock %}
+        {% block card_body_class %} text-center{% endblock %}
+        {% block card_body %}
+            <h5 class="text-muted  text-center d-lg-none">
+                <span class="text-purple {{ item.isEnable?'':'text-danger' }}">
+                     {{ item.name }}
+                </span>
+                <a class="float-right text-primary " href="#top"><i class="fas fa-arrow-up"></i></a>
+            </h5>
+            <h3 class="text-muted d-none d-lg-block showOver" id="title_{{ item.id }}">
+            <span class="text-purple {{ item.isEnable?'':'text-danger' }}">
+                {{ item.name }}
+            </span>
+                <a class="float-right btn btn-outline-primary" href="#top"><i class="fas fa-arrow-up"></i></a>
+            </h3>
+        {% endblock %}
+    {% endembed %}
+{% endmacro %}

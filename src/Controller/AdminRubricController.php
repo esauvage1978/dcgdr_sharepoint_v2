@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class ThematicController
  * @package App\Controller
  */
-class RubricController extends AbstractGController
+class AdminRubricController extends AbstractGController
 {
     public function __construct
     (
@@ -25,7 +25,7 @@ class RubricController extends AbstractGController
     {
         $this->repository = $repository;
         $this->manager = $manager;
-        $this->domaine = 'rubric';
+        $this->domaine = 'admin_rubric';
     }
 
     /**
@@ -65,7 +65,7 @@ class RubricController extends AbstractGController
             $thematic->setShowOrder($key);
             $this->manager->save($thematic);
         }
-        return $this->list();
+        return $this->redirectToRoute('admin_rubric_list');
     }
 
     /**

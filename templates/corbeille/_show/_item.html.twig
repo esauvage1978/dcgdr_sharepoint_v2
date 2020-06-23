@@ -32,37 +32,72 @@
                 {% endembed %}
             {% endif %}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Habilitations{% endblock %}
-                {% block card_body_class %}p-0{% endblock %}
-                {% block card_body %}
-                    <div class="list-group list-group-flush dropright">
-                        <div class="list-group-item list-group-item-action">
-                            {% if item.isShowRead %}
-                                <span class="text-success"><i class="fas fa-check"></i> Lecture</span>
-                            {% else %}
-                                <span class="text-danger"><i class="fas fa-times"></i> Lecture</span>
-                            {% endif %}
-                        </div>
-                        <div class="list-group-item list-group-item-action">
-                            {% if item.isShowWrite %}
-                                <span class="text-success"><i class="fas fa-check"></i> Ecriture</span>
-                            {% else %}
-                                <span class="text-danger"><i class="fas fa-times"></i> Ecriture</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endblock %}
-            {% endembed %}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Utilisateurs{% endblock %}
-                {% block card_body %}
-                    {% import "macros/user.html.twig" as usr %}
-                    {{ usr.views(item.users) }}
-                {% endblock %}
-            {% endembed %}
+            {% if item.rubricReaders |length >0 %}
+                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:false} %}
+                    {% block card_title %}Rubriques en lecture : {{ item.rubricReaders |length }}{% endblock %}
+                    {% block card_body %}
+                        {% import "macros/rubric.html.twig" as rbc %}
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                            {% for rubric in item.rubricReaders %}
+                                <div class="col mb-4">
+                                    {{ rbc.vignette(rubric,'admin_rubric_show','thematic_show') }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% endblock %}
+                {% endembed %}
+            {% endif %}
+            {% if item.rubricWriters |length >0 %}
+                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:false} %}
+                    {% block card_title %}Rubriques en écriture : {{ item.rubricWriters |length }}{% endblock %}
+                    {% block card_body %}
+                        {% import "macros/rubric.html.twig" as rbc %}
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                            {% for rubric in item.rubricWriters %}
+                                <div class="col mb-4">
+                                    {{ rbc.vignette(rubric,'admin_rubric_show','thematic_show') }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% endblock %}
+                {% endembed %}
+            {% endif %}
         </div>
+    <div class="{{ col_2_2 }}">
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% block card_title %}Habilitations{% endblock %}
+            {% block card_body_class %}p-0{% endblock %}
+            {% block card_body %}
+                <div class="list-group list-group-flush dropright">
+                    <div class="list-group-item list-group-item-action">
+                        {% if item.isShowRead %}
+                            <span class="text-success"><i class="fas fa-check"></i> Lecture</span>
+                        {% else %}
+                            <span class="text-danger"><i class="fas fa-times"></i> Lecture</span>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item list-group-item-action">
+                        {% if item.isShowWrite %}
+                            <span class="text-success"><i class="fas fa-check"></i> Ecriture</span>
+                        {% else %}
+                            <span class="text-danger"><i class="fas fa-times"></i> Ecriture</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endblock %}
+        {% endembed %}
+
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% block card_title %}Utilisateurs{% endblock %}
+            {% block card_body %}
+                {% import "macros/user.html.twig" as usr %}
+                {{ usr.views(item.users) }}
+            {% endblock %}
+        {% endembed %}
+    </div>
     </div>
 
 {% endif %}

@@ -26,12 +26,12 @@ class RubricType extends AppTypeAbstract
         $builder
             ->add('showall', CheckboxType::class,
                 [
-                    self::LABEL => '  Visible par tous',
+                    self::LABEL => ' ',
                     self::REQUIRED => false,
                 ])
             ->add('picture', EntityType::class, [
                 self::CSS_CLASS => Picture::class,
-                self::LABEL=>'Image de présentaion',
+                self::LABEL=>'Image de présentation',
                 self::CHOICE_LABEL => 'href',
                 self::MULTIPLE => false,
                 self::ATTR => [self::CSS_CLASS => 'select2'],
@@ -44,8 +44,7 @@ class RubricType extends AppTypeAbstract
             ->add('thematic', EntityType::class, [
                 self::CSS_CLASS => Thematic::class,
                 self::CHOICE_LABEL => 'name',
-                self::LABEL=>'
-                ',
+                self::LABEL=>'Thématique',
                 self::MULTIPLE => false,
                 self::ATTR => [self::CSS_CLASS => 'select2'],
                 self::REQUIRED => true,

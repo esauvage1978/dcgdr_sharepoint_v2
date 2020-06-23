@@ -121,7 +121,7 @@ class Step1120_RubricFixtures extends Fixture implements FixtureGroupInterface
         $instance
             ->setId($data['n0_num'])
             ->setName($data['nom'])
-            ->setEnable($data['afficher'])
+            ->setIsEnable($data['afficher'])
             ->setContent($data['description'])
             ->setShowOrder($data['ordre'])
             ->setShowAll($data['consultation_all']=='1'?true:false);

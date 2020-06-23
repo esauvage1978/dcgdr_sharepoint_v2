@@ -37,6 +37,7 @@ class RubricRepository extends ServiceEntityRepository
             ->leftJoin(self::ALIAS . '.readers', CorbeilleRepository::ALIAS_RUBRIC_READERS)
             ->orderBy(ThematicRepository::ALIAS.'.showOrder', 'ASC')
             ->addOrderBy(ThematicRepository::ALIAS.'.name', 'ASC')
+            ->addOrderBy(self::ALIAS.'.showOrder', 'ASC')
             ->addOrderBy(self::ALIAS.'.name', 'ASC')
             ->getQuery()
             ->getResult();

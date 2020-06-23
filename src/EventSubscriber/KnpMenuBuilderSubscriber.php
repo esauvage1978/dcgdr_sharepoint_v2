@@ -23,6 +23,12 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
     public function onSetupMenu(KnpMenuEvent $event)
     {
         $menu = $event->getMenu();
+        $menu->addChild('home', [
+            'route' => 'home',
+            'label' => 'Page d\'accueil',
+            'childOptions' => $event->getChildOptions()
+        ])->setLabelAttribute('icon', 'fas fa-home');
+
         if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $menu->addChild('profil', [
                 'route' => 'profil',

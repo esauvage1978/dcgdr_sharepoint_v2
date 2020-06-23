@@ -1,4 +1,4 @@
-{% extends 'rubric/layout.html.twig' %}
+{% extends 'admin_rubric/layout.html.twig' %}
 {% import "macros/datatables.html.twig" as tables %}
 {% set columns = {
     'Image de présentation': {'class': 'alwaysVisible', 'orderBy': false},
@@ -12,45 +12,33 @@
     '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Corbeille d\'écriture"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
-    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+
+{% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {% if is_granted('ROLE_GESTIONNAIRE') %}
-        <div class="row mb-2">
-            <div class="col-12 text-right">
-                <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group mr-2" role="group" aria-label="First group">
-                        {{ btn.link_button(
-                            '',
-                            path(route_sort),
-                            'fas fa-sort-alpha-down',
-                            'secondary',
-                            'secondary'
-                        ) }}
-                        {{ btn.link_button(
-                            '',
-                            path(route_add),
-                            'fa fa-plus',
-                            'success',
-                            'success'
-                        ) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
+    {{ include('default/_list/_item_btn_sort.html.twig') }}
 {% endblock %}
 
 {% block page_content %}
-
-
     {% import "@AdminLTE/Macros/default.html.twig" as macro %}
 
     {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
     {% for item in items %}
         <tr>
+            <td class="text-center ">
+                {% if item.picture %}
+                <img src="{{ absolute_url( asset(item.picture.Href)) }}" class="card-img-top rounded-top rounded-lg " style="width:100px"
+                     alt="{{ item.picture.name }}">
+                {% endif %}
+            </td>
+            <td class="align-middle">
+                <a href="{{ path('thematic_show',{id:item.thematic.id}) }}"
+                   class="text-{{ item.thematic.isEnable ? 'primary' : 'danger text-bold' }}">
+                    {{ item.thematic.name }} ({{ item.thematic.showOrder }})
+                </a>
+            </td>
             <td class="align-middle">
                 <a href="{{ path(route_show,{id:item.id}) }}"
                    class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
@@ -61,7 +49,23 @@
             <td class="align-middle text-center">{{ item.showOrder }}</td>
             <td class="align-middle text-center">
             </td>
-
+            <td class="align-middle text-center">
+                <span class="text-{{ item.showAll ? 'primary' : 'light' }} " ><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="align-middle text-center">
+                {% if   item.readers.count==0 %}
+                    <span class="text-light" ><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge bg-info">{{ item.readers.count}}</small>
+                {% endif %}
+            </td>
+            <td class="align-middle text-center">
+                {% if   item.writers.count==0 %}
+                    <span class="text-light" ><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge bg-info">{{ item.writers.count}}</small>
+                {% endif %}
+            </td>
             <td class="  align-middle text-right ">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
                     {{ btn.link_button(
@@ -77,7 +81,7 @@
     {% else %}
         {{ tables.datatable_data_else(columns) }}
     {% endfor %}
-    {{ tables.datatable_footer(tableName,1) }}
+    {{ tables.datatable_footer(tableName,4) }}
 
 {% endblock %}
 

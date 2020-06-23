@@ -26,8 +26,10 @@ class PictureRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder(self::ALIAS)
             ->select(
-                self::ALIAS
+                self::ALIAS,
+                    RubricRepository::ALIAS
                 )
+            ->leftJoin(self::ALIAS.'.rubrics',RubricRepository::ALIAS)
             ->orderBy(self::ALIAS.'.name', 'ASC')
             ->getQuery()
             ->getResult();

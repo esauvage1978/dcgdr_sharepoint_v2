@@ -1,4 +1,4 @@
-{% extends 'rubric/layout.html.twig' %}
+{% extends 'admin_rubric/layout.html.twig' %}
 
 {% block page_subtitle %}Tri des listes{% endblock %}
 
@@ -30,7 +30,9 @@
         {% block card_body %}
             <ul class="list-group" id="liste">
                 {% for item in items %}
-                    <li class="list-group-item" id="{{ item.id }}">{{ item.name }}</li>
+                    <li class="list-group-item" id="{{ item.id }}">
+                        {{ item.thematic.name }} ({{ item.thematic.showOrder }}) - {{ item.name }}
+                    </li>
                 {% endfor %}
             </ul>
         {% endblock %}

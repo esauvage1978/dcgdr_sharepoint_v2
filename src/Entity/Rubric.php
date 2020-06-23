@@ -26,7 +26,7 @@ class Rubric implements EntityInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $enable;
+    private $isEnable;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -98,14 +98,14 @@ class Rubric implements EntityInterface
         return $this;
     }
 
-    public function getEnable(): ?bool
+    public function getIsEnable(): ?bool
     {
-        return $this->enable;
+        return $this->isEnable;
     }
 
-    public function setEnable(bool $enable): self
+    public function setIsEnable(bool $isEnable): self
     {
-        $this->enable = $enable;
+        $this->isEnable = $isEnable;
 
         return $this;
     }
