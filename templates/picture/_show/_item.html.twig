@@ -32,6 +32,23 @@
                 {% endembed %}
             {% endif %}
 
+            {% if item.rubrics |length >0 %}
+                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:false} %}
+                    {% block card_title %}Rubriques : {{ item.rubrics |length }}{% endblock %}
+                    {% block card_body %}
+                        {% import "macros/rubric.html.twig" as rbc %}
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                            {% for rubric in item.rubrics %}
+                                <div class="col mb-4">
+                                    {{ rbc.vignette(rubric,'admin_rubric_show','thematic_show') }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% endblock %}
+                {% endembed %}
+            {% endif %}
+
         </div>
     </div>
 

@@ -103,10 +103,12 @@ abstract class AppTypeAbstract extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->select('c', 'o')
                         ->leftJoin('c.organisme', 'o')
-                        ->where('o.enable = true')
-                        ->andWhere('c.enable = true')
-                        ->andWhere('c.showRead = true')
-                        ->orderBy('c.name', 'ASC');
+                        ->where('o.isEnable = true')
+                        ->andWhere('c.isEnable = true')
+                        ->andWhere('c.isShowRead = true')
+                        ->orderBy('o.ref', 'ASC')
+                        ->addOrderBy('c.name', 'ASC');
+
                 },
             ]);
     }
@@ -124,10 +126,11 @@ abstract class AppTypeAbstract extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->select('c', 'o')
                         ->leftJoin('c.organisme', 'o')
-                        ->where('o.enable = true')
-                        ->andWhere('c.enable = true')
-                        ->andWhere('c.showWrite = true')
-                        ->orderBy('c.name', 'ASC');
+                        ->where('o.isEnable = true')
+                        ->andWhere('c.isEnable = true')
+                        ->andWhere('c.isShowWrite = true')
+                        ->orderBy('o.ref', 'ASC')
+                        ->addOrderBy('c.name', 'ASC');
                 },
             ]);
     }

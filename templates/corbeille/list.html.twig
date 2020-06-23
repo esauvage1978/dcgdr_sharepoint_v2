@@ -4,11 +4,13 @@
     'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
     'Nom de la corbeille': {'class': 'alwaysVisible ', 'orderBy': true},
     'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fa fa-eye"  data-toggle="tooltip" data-placement="top" title="Corbeille pour la consultation"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-bullhorn"  data-toggle="tooltip" data-placement="top" title="Corbeille pour le pilotage"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-eye"  data-toggle="tooltip" data-placement="top" title="Corbeille pour la consultation"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
     '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-bullhorn"  data-toggle="tooltip" data-placement="top" title="Corbeille pour le pilotage"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i> ': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i> ': {'class': 'alwaysVisible text-center', 'orderBy': false},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
@@ -51,14 +53,8 @@
                     {{ item.name }}
                 </a>
             </td>
-            <td class="align-middle col-4">{{ item.content | raw }}</td>
-            <td class="align-middle text-center">
-                <span class="text-{{ item.isShowRead ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
-            </td>
-            <td class="align-middle text-center">
-                <span class="text-{{ item.isShowWrite ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
-            </td>
 
+            <td class="align-middle col-4">{{ item.content | raw }}</td>
             <td class="align-middle text-center">
                 {% if   item.users.count==0 %}
                     <span class="text-light"><i class="fas fa-circle"></i></span>
@@ -67,7 +63,29 @@
                 {% endif %}
             </td>
             <td class="align-middle text-center">
+                <span class="text-{{ item.isShowRead ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
+            </td>
+            <td class="align-middle text-center">
+                {% if  item.rubricReaders.count ==0 %}
+                    <span class="text-light" ><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge bg-info">{{ item.rubricReaders.count}}</small>
+                {% endif %}
+            </td>
+            <td class="align-middle text-center">
 
+            </td>
+            <td class="align-middle text-center">
+                <span class="text-{{ item.isShowWrite ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
+            </td>
+
+
+            <td class="align-middle text-center">
+                {% if  item.rubricWriters.count==0 %}
+                    <span class="text-light" ><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge bg-info">{{ item.rubricWriters.count}}</small>
+                {% endif %}
             </td>
             <td class="align-middle text-center">
 

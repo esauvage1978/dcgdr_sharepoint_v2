@@ -100,6 +100,13 @@ class Corbeille implements EntityInterface
         return $this;
     }
 
+    public function getFullName(): ?string
+    {
+        return (null !== $this->organisme) ?
+            $this->getOrganisme()->getRef().' - '.$this->getName() :
+            $this->getName();
+    }
+
     public function getIsEnable(): ?bool
     {
         return $this->isEnable;

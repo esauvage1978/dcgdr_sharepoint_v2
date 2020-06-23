@@ -11,31 +11,7 @@
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    <div class="row mb-2">
-        <div class="col-12 text-right">
-            {% embed 'widgets/button-widget.html.twig' %}
-                {% block btn_group %}
-                    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-                    {% if is_granted('ROLE_GESTIONNAIRE') %}
-                        {{ btn.link_button(
-                            '',
-                            path(route_sort),
-                            'fas fa-sort-alpha-down',
-                            'secondary',
-                            'secondary'
-                        ) }}
-                        {{ btn.link_button(
-                            '',
-                            path(route_add),
-                            'fa fa-plus',
-                            'success',
-                            'success'
-                        ) }}
-                    {% endif %}
-                {% endblock %}
-            {% endembed %}
-        </div>
-    </div>
+    {{ include('default/_list/_item_btn_sort.html.twig') }}
 {% endblock %}
 
 {% block page_content %}
@@ -55,6 +31,11 @@
             <td class="align-middle">{{ item.content | raw }}</td>
             <td class="align-middle text-center">{{ item.showOrder }}</td>
             <td class="align-middle text-center">
+                {% if   item.rubrics.count==0 %}
+                    <span class="text-light" ><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge bg-info">{{ item.rubrics.count}}</small>
+                {% endif %}
             </td>
 
             <td class="  align-middle text-right ">

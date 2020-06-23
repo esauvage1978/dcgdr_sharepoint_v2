@@ -15,6 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
 class UserRepository extends ServiceEntityRepository
 {
     const ALIAS = 'u';
+    const ALIAS_RUBRIC_WRITERS='urw';
+    const ALIAS_RUBRIC_READERS='urr';
 
     public function __construct(ManagerRegistry $registry)
     {

@@ -6,5 +6,11 @@
     {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         {% import "macros/default.html.twig" as dft %}
         {{ dft.no_connexion() }}
+    {% else %}
+        {% import "macros/thematic.html.twig" as tmt %}
+        {{ tmt.thematics_anchor(rubrics) }}
+
+        {% import "macros/rubric.html.twig" as rbc %}
+        {{ rbc.vignettes_by_thematic(rubrics,'admin_rubric_show','thematic_show') }}
     {% endif %}
 {% endblock %}
