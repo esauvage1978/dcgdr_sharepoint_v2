@@ -29,6 +29,9 @@ class AdminController extends AbstractController
         ],[
             'name' => 'Thématique des rubriques',
             'route' => 'thematic_list'
+        ],[
+            'name' => 'Rubriques',
+            'route' => 'admin_rubric_list'
         ]];
 
         return $this->render('admin/index.html.twig', [

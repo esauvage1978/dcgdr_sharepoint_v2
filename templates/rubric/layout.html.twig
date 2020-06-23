@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 
-{% set domaine = 'thematic' %}
-{% set domaineTitle = 'Thématique' %}
+{% set domaine = 'admin_rubric' %}
+{% set domaineTitle = 'Rubrique' %}
 {% set tableName = domaine %}
 {% set route_add = domaine ~ '_add' %}
 {% set route_show = domaine ~ '_show' %}
@@ -13,4 +13,4 @@
 {% set route_list = domaine ~ '_list' %}
 
 {% block title %}{{ app_name }} - {{domaineTitle}}{% endblock %}
-{% block page_title %}<i class="fas fa-building"></i> {{domaineTitle}}{% endblock %}
+{% block page_title %}<i class="fas fa-project-diagram"></i> {{domaineTitle}}{% endblock %}
