@@ -11,11 +11,12 @@
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {% if is_granted('ROLE_GESTIONNAIRE') %}
-        <div class="row mb-2">
-            <div class="col-12 text-right">
-                <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group mr-2" role="group" aria-label="First group">
+    <div class="row mb-2">
+        <div class="col-12 text-right">
+            {% embed 'widgets/button-widget.html.twig' %}
+                {% block btn_group %}
+                    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+                    {% if is_granted('ROLE_GESTIONNAIRE') %}
                         {{ btn.link_button(
                             '',
                             path(route_sort),
@@ -30,17 +31,16 @@
                             'success',
                             'success'
                         ) }}
-                    </div>
-                </div>
-            </div>
+                    {% endif %}
+                {% endblock %}
+            {% endembed %}
         </div>
-    {% endif %}
-
+    </div>
 {% endblock %}
 
 {% block page_content %}
 
-
+    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
     {% import "@AdminLTE/Macros/default.html.twig" as macro %}
 
     {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
