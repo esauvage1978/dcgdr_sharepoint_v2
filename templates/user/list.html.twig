@@ -16,23 +16,12 @@
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
 
-    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+{% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {% if is_granted('ROLE_GESTIONNAIRE') %}
-        <div class="row mb-2">
-            <div class="col-12 text-right">
-                {{ btn.link_button(
-                    '',
-                    path(route_add),
-                    'fa fa-plus',
-                    'success',
-                    'success'
-                ) }}
-            </div>
-        </div>
-    {% endif %}
+    {{ include('default/_list/_item_btn.html.twig') }}
 {% endblock %}
 
 {% block page_content %}

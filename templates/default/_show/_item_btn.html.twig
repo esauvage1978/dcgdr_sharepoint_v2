@@ -1,7 +1,7 @@
-{% import "macros/delele.html.twig" as del %}
-{% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-<div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group mr-2" role="group" aria-label="First group">
+{% embed 'widgets/button-widget.html.twig' %}
+    {% block btn_group %}
+        {% import "macros/delele.html.twig" as del %}
+        {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
         {{ btn.link_button(
             '',
             path(route_list),
@@ -20,5 +20,5 @@
             ) }}
         {% endif %}
         {{ del.delete_form(route_del,item.id, 'show') }}
-    </div>
-</div>
+    {% endblock %}
+{% endembed %}
