@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+
+{% set domaine = 'admin_underrubric' %}
+{% set domaineTitle = 'Sous-rubrique' %}
+{% set tableName = domaine %}
+{% set route_add = domaine ~ '_add' %}
+{% set route_show = domaine ~ '_show' %}
+{% set route_edit = domaine ~ '_edit' %}
+{% set route_sort = domaine ~ '_sort' %}
+{% set route_sort_apply = domaine ~ '_sort_apply' %}
+{% set route_del = domaine ~ '_del' %}
+{% set route_list = domaine ~ '_list' %}
+
+{% block title %}{{ app_name }} - {{domaineTitle}}{% endblock %}
+{% block page_title %}<i class="fas fa-project-diagram"></i> {{domaineTitle}}{% endblock %}

@@ -17,6 +17,8 @@ class UserRepository extends ServiceEntityRepository
     const ALIAS = 'u';
     const ALIAS_RUBRIC_WRITERS='urw';
     const ALIAS_RUBRIC_READERS='urr';
+    const ALIAS_UNDERRUBRIC_WRITERS='uurw';
+    const ALIAS_UNDERRUBRIC_READERS='uurr';
 
     public function __construct(ManagerRegistry $registry)
     {

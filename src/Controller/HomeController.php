@@ -16,21 +16,20 @@ class HomeController extends AbstractController
      */
     public function index(
         RubricDto $rubricDto,
-        RubricDtoRepository $rubricDtoRepository,
-        RubricRepository $rp
+        RubricDtoRepository $rubricDtoRepository
     )
     {
         $rubricDto
             ->setIsEnable(RubricDto::TRUE)
             ->thematicDto->setIsEnable(RubricDto::TRUE);
 
-        if (!$this->isgranted('ROLE_GESTIONNAIRE')) {
+        if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
             $rubricDto
                 ->userDto->setName($this->getUser()->getName());
         }
 
         return $this->render('home/index.html.twig', [
-            'rubrics' => $rubricDtoRepository->findAllForDto($rubricDto, RubricDtoRepository::FILTRE_DTO_INIT_HOME)
+            'items' => $rubricDtoRepository->findAllForDto($rubricDto, RubricDtoRepository::FILTRE_DTO_INIT_HOME)
         ]);
     }
 }

@@ -69,11 +69,26 @@ class Corbeille implements EntityInterface
      */
     private $rubricWriters;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\UnderRubric", mappedBy="readers")
+     * @ORM\JoinTable("underrubricreader_corbeille")
+     */
+    private $underrubricReaders;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\UnderRubric", mappedBy="writers")
+     * @ORM\JoinTable("underrubricwriter_corbeille")
+     */
+    private $underrubricWriters;
+
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->rubricReaders = new ArrayCollection();
         $this->rubricWriters = new ArrayCollection();
+        $this->underrubricReaders = new ArrayCollection();
+        $this->underrubricWriters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -249,4 +264,59 @@ class Corbeille implements EntityInterface
         return $this;
     }
 
+    /**
+     * @return Collection|UnderRubric[]
+     */
+    public function getUnderRubricReaders(): Collection
+    {
+        return $this->underrubricReaders;
+    }
+
+    public function addUnderRubricReader(UnderRubric $underrubricReaders): self
+    {
+        if (!$this->underrubricReaders->contains($underrubricReaders)) {
+            $this->underrubricReaders[] = $underrubricReaders;
+            $underrubricReaders->addReader($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnderRubricReader(UnderRubric $underrubricReaders): self
+    {
+        if ($this->underrubricReaders->contains($underrubricReaders)) {
+            $this->underrubricReaders->removeElement($underrubricReaders);
+            $underrubricReaders->removeReader($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UnderRubric[]
+     */
+    public function getUnderRubricWriters(): Collection
+    {
+        return $this->underrubricWriters;
+    }
+
+    public function addUnderRubricWriter(UnderRubric $underrubricWriters): self
+    {
+        if (!$this->underrubricWriters->contains($underrubricWriters)) {
+            $this->underrubricWriters[] = $underrubricWriters;
+            $underrubricWriters->addWriter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnderRubricWriter(UnderRubric $underrubricWriters): self
+    {
+        if ($this->underrubricWriters->contains($underrubricWriters)) {
+            $this->underrubricWriters->removeElement($underrubricWriters);
+            $underrubricWriters->removeWriter($this);
+        }
+
+        return $this;
+    }
 }

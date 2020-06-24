@@ -30,7 +30,9 @@
         {% block card_body %}
             <ul class="list-group" id="liste">
                 {% for item in items %}
-                    <li class="list-group-item" id="{{ item.id }}">{{ item.name }}</li>
+                    <li class="list-group-item" id="{{ item.id }}">
+                        [<strong>{{ item.showOrder }}</strong>] {{ item.name }}
+                    </li>
                 {% endfor %}
             </ul>
         {% endblock %}

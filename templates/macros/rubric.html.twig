@@ -56,7 +56,7 @@
             {{ t_open ?'</div>':'' }}
             {% set t_open=true %}
             {% import "macros/thematic.html.twig" as tmt %}
-            {{ tmt.thematic_anchor(item.thematic) }}
+            {{ tmt.anchor(item.thematic) }}
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
 
         {% endif %}

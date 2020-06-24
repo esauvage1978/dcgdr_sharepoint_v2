@@ -64,14 +64,19 @@ class Rubric implements EntityInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $showAll;
+    private $isShowAll;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UnderRubric", mappedBy="rubric", orphanRemoval=true)
+     */
+    private $underRubrics;
 
     public function __construct()
     {
         $this->showOrder=0;
         $this->readers = new ArrayCollection();
         $this->writers = new ArrayCollection();
+        $this->underRubrics = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -210,14 +215,46 @@ class Rubric implements EntityInterface
         return $this;
     }
 
-    public function getShowAll(): ?bool
+    public function getIsShowAll(): ?bool
     {
-        return $this->showAll;
+        return $this->isShowAll;
     }
 
-    public function setShowAll(bool $showAll): self
+    public function setIsShowAll(bool $isShowAll): self
     {
-        $this->showAll = $showAll;
+        $this->isShowAll = $isShowAll;
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|UnderRubric[]
+     */
+    public function getUnderRubrics(): Collection
+    {
+        return $this->underRubrics;
+    }
+
+    public function addUnderRubric(UnderRubric $underRubric): self
+    {
+        if (!$this->underRubrics->contains($underRubric)) {
+            $this->underRubrics[] = $underRubric;
+            $underRubric->setRubric($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnderRubric(UnderRubric $underRubric): self
+    {
+        if ($this->underRubrics->contains($underRubric)) {
+            $this->underRubrics->removeElement($underRubric);
+            // set the owning side to null (unless already changed)
+            if ($underRubric->getRubric() === $this) {
+                $underRubric->setRubric(null);
+            }
+        }
 
         return $this;
     }

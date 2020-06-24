@@ -30,7 +30,8 @@ class ThematicRepository extends ServiceEntityRepository
                 RubricRepository::ALIAS
                 )
             ->leftJoin(self::ALIAS.'.rubrics',RubricRepository::ALIAS)
-            ->orderBy(self::ALIAS.'.name', 'ASC')
+            ->orderBy(self::ALIAS.'.showOrder', 'ASC')
+            ->addOrderBy(self::ALIAS.'.name', 'ASC')
             ->getQuery()
             ->getResult();
     }

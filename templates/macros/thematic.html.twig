@@ -1,43 +1,62 @@
-{% macro thematics_anchor(items) %}
+{% macro anchors(items) %}
     <div class="row mb-5">
         <div class="col-12 text-center">
             <div class="btn-group" role="group" aria-label="Basic example">
-                {% set the_courant="" %}
-                {% set the_precedent="" %}
+                {% set nbr=1 %}
+                {% set t_c="" %}
+                {% set t_p="" %}
+                {% set t_open=false %}
+                {% set t_same=false %}
+                {% set t_present=false %}
+
                 {% for item in items %}
-                    {% set the_courant=item.thematic.name %}
-                    {% if the_precedent=="" or the_precedent !=the_courant %}
+                    {% set t_c=item.thematic.name %}
+
+                    {% set t_same=  t_c == t_p ? true : false %}
+                    {% set t_present=  t_c is empty ? false : true %}
+
+                    {% if t_same == false and t_present==true %}
+                        {% if t_open %}
+                            <span class="badge  badge-light">{{nbr}}</span></small></a>
+                        {% endif %}
+
+                        {% set t_open=true %}
+                        {% set nbr=1 %}
+
                         <a href="#anchor_thematic_{{ item.thematic.id }}" title="accès rapide"
                            class="btn btn-outline-primary">
-                            <small>{{ item.thematic.name }}</small>
-                        </a>
+                            <small>{{ item.thematic.name }}
+
+                    {% else %}
+                        {% set nbr=nbr+1 %}
                     {% endif %}
-                    {% set the_precedent=item.thematic.name %}
+                    {% set t_p=item.thematic.name %}
                 {% endfor %}
+                {% if t_open %}
+                            <span class="badge  badge-light">{{nbr}}</span></small></a>
+                {% endif %}
             </div>
         </div>
     </div>
 
 {% endmacro %}
 
-{% macro thematic_anchor(item) %}
-    {% embed 'widgets/card-widget.html.twig' %}
-        {% block card_id %}anchor_thematic_{{ item.id }}{% endblock %}
-        {% block card_class %}border-light bg-light shadow{% endblock %}
-        {% block card_body_class %} text-center{% endblock %}
-        {% block card_body %}
+{% macro anchor(item) %}
+    <hr/>
+    <div class="row" id="anchor_thematic_{{ item.id }}">
+        <div class="col-12 mb-3">
             <h5 class="text-muted  text-center d-lg-none">
-                <span class="text-purple {{ item.isEnable?'':'text-danger' }}">
+                <span class="text-secondary {{ item.isEnable?'':'text-danger' }}">
                      {{ item.name }}
                 </span>
-                <a class="float-right text-primary " href="#top"><i class="fas fa-arrow-up"></i></a>
+                <a class="float-right btn btn-outline-primary " href="#top"><i class="fas fa-arrow-up"></i></a>
             </h5>
             <h3 class="text-muted d-none d-lg-block showOver" id="title_{{ item.id }}">
-            <span class="text-purple {{ item.isEnable?'':'text-danger' }}">
+            <span class="text-secondary {{ item.isEnable?'':'text-danger' }}">
                 {{ item.name }}
             </span>
                 <a class="float-right btn btn-outline-primary" href="#top"><i class="fas fa-arrow-up"></i></a>
             </h3>
-        {% endblock %}
-    {% endembed %}
+        </div>
+    </div>
 {% endmacro %}
