@@ -27,7 +27,7 @@
     {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
     {% for item in items %}
         <tr>
-            <td class="text-center ">
+            <td class="align-middle text-center ">
                 {% if item.picture %}
                 <img src="{{ absolute_url( asset(item.picture.Href)) }}" class="card-img-top rounded-top rounded-lg " style="width:100px"
                      alt="{{ item.picture.name }}">
@@ -48,9 +48,14 @@
             <td class="align-middle">{{ item.content | raw }}</td>
             <td class="align-middle text-center">{{ item.showOrder }}</td>
             <td class="align-middle text-center">
+                {% if   item.underrubrics.count==0 %}
+                    <span class="text-light" ><i class="fas fa-circle"></i></span>
+                {% else %}
+                    <small class="badge bg-info">{{ item.underrubrics.count}}</small>
+                {% endif %}
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ item.showAll ? 'primary' : 'light' }} " ><i class="fas fa-circle"></i></span>
+                <span class="text-{{ item.isShowAll ? 'primary' : 'light' }} " ><i class="fas fa-circle"></i></span>
             </td>
             <td class="align-middle text-center">
                 {% if   item.readers.count==0 %}

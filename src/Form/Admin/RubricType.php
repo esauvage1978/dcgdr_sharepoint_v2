@@ -24,7 +24,7 @@ class RubricType extends AppTypeAbstract
         $this->buildFormReaders($builder);
         $this->buildFormWriters($builder);
         $builder
-            ->add('showall', CheckboxType::class,
+            ->add('isShowall', CheckboxType::class,
                 [
                     self::LABEL => ' ',
                     self::REQUIRED => false,

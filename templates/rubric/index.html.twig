@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ app_name }} - Page d'accueil{% endblock %}
+{% block page_title %}<i class="fas fa-project-diagram"></i> {{ item.thematic.name }} > {{ item.name }}{% endblock %}
+
+{% block breadcrumb %}
+    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+    <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            {{ btn.link_button(
+                '',
+                path('home'),
+                'fas fa-arrow-left',
+                'outline-primary',
+                'outline-primary'
+            ) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_content %}
+    {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        {% import "macros/default.html.twig" as dft %}
+        {{ dft.no_connexion() }}
+    {% else %}
+        {% import "macros/underthematic.html.twig" as utmt %}
+        {{ utmt.anchors(items) }}
+
+        {% import "macros/underrubric.html.twig" as urbc %}
+        {{ urbc.vignettes_by_underthematic(items,'admin_rubric_show','underthematic_show') }}
+    {% endif %}
+{% endblock %}

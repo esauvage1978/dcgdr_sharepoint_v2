@@ -57,10 +57,15 @@ class Picture implements EntityInterface
      */
     private $rubrics;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UnderRubric", mappedBy="picture")
+     */
+    private $underRubrics;
 
     public function __construct()
     {
         $this->rubrics = new ArrayCollection();
+        $this->underRubrics = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,4 +226,35 @@ class Picture implements EntityInterface
         return $this;
     }
 
+
+    /**
+     * @return Collection|UnderRubric[]
+     */
+    public function getUnderRubrics(): Collection
+    {
+        return $this->underRubrics;
+    }
+
+    public function addUnderRubric(UnderRubric $underRubric): self
+    {
+        if (!$this->underRubrics->contains($underRubric)) {
+            $this->underRubrics[] = $underRubric;
+            $underRubric->setPicture($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnderRubric(UnderRubric $underRubric): self
+    {
+        if ($this->underRubrics->contains($underRubric)) {
+            $this->underRubrics->removeElement($underRubric);
+            // set the owning side to null (unless already changed)
+            if ($underRubric->getPicture() === $this) {
+                $underRubric->setPicture(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -31,7 +31,8 @@
             <ul class="list-group" id="liste">
                 {% for item in items %}
                     <li class="list-group-item" id="{{ item.id }}">
-                        {{ item.thematic.name }} ({{ item.thematic.showOrder }}) - {{ item.name }}
+                        [<strong>{{ item.thematic.showOrder }}</strong>] {{ item.thematic.name }}<br/>
+                        [<strong>{{ item.showOrder }}</strong>] {{ item.name }}
                     </li>
                 {% endfor %}
             </ul>

@@ -1,6 +1,9 @@
 App\Entity\Rubric:
   constraints:
-    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: name
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: [thematic, name]
+        errorPath: name
+        message: 'Le nom de la rubrique "{{ value }}" est déjà déclaré pour cette thématique.'
   properties:
     name:
       - NotBlank: ~

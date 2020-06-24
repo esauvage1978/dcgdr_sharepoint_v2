@@ -32,6 +32,12 @@ class AdminController extends AbstractController
         ],[
             'name' => 'Rubriques',
             'route' => 'admin_rubric_list'
+        ],[
+            'name' => 'Thématique des sous-rubriques',
+            'route' => 'underthematic_list'
+        ],[
+            'name' => 'Sous-rubriques',
+            'route' => 'admin_underrubric_list'
         ]];
 
         return $this->render('admin/index.html.twig', [

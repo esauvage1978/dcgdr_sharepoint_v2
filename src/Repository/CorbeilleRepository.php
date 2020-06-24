@@ -17,6 +17,8 @@ class CorbeilleRepository extends ServiceEntityRepository
     const ALIAS = 'c';
     const ALIAS_RUBRIC_WRITERS='crw';
     const ALIAS_RUBRIC_READERS='crr';
+    const ALIAS_UNDERRUBRIC_WRITERS='curw';
+    const ALIAS_UNDERRUBRIC_READERS='curr';
 
     public function __construct(ManagerRegistry $registry)
     {

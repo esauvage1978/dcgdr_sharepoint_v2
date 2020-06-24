@@ -1,53 +1,69 @@
 {% if item is defined %}
 
     <div class="row justify-content-center">
-        <div class="{{ col_1_2 }}">
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_class %} card-primary card-outline{% endblock %}
-                {% block card_body_class %} box-profile{% endblock %}
-                {% block card_body %}
-                    <h3 class="profile-username text-center">{{ item.name }}</h3>
-                    <h5 class="text-center">
-                        <a href="{{ path('thematic_show',{id:item.thematic.id}) }}">{{ item.thematic.name }}</a>
-                    </h5>
+    <div class="{{ col_1_2 }}">
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% block card_class %} card-primary card-outline{% endblock %}
+            {% block card_body_class %} box-profile{% endblock %}
+            {% block card_body %}
+                <h3 class="profile-username text-center">{{ item.name }}</h3>
+                <h5 class="text-center">
+                    <a href="{{ path('thematic_show',{id:item.thematic.id}) }}">{{ item.thematic.name }}</a>
+                </h5>
 
-                    <small class="float-right">
-                        {% if item.isEnable %}
-                            <span class="text-success">Visible</span>
-                        {% else %}
-                            <span class="text-danger">Masquée</span>
-                        {% endif %}
-                    </small>
+                <small class="float-right">
+                    {% if item.isEnable %}
+                        <span class="text-success">Visible</span>
+                    {% else %}
+                        <span class="text-danger">Masquée</span>
+                    {% endif %}
+                </small>
+            {% endblock %}
+        {% endembed %}
+
+        {% if item.content %}
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_body %}
+                    {{ item.content |raw }}
                 {% endblock %}
             {% endembed %}
+        {% endif %}
 
-            {% if item.content %}
-                {% embed 'widgets/card-widget.html.twig' %}
-                    {% block card_body %}
-                        {{ item.content |raw }}
-                    {% endblock %}
-                {% endembed %}
-            {% endif %}
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% block card_title %}Corbeille de lecture{% endblock %}
+            {% block card_body %}
+                {% import "macros/corbeille.html.twig" as cor %}
+                {{ cor.views(item.readers) }}
+            {% endblock %}
+        {% endembed %}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Corbeille de lecture{% endblock %}
-                {% block card_body %}
-                    {% import "macros/corbeille.html.twig" as cor %}
-                    {{ cor.views(item.readers) }}
-                {% endblock %}
-            {% endembed %}
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% block card_title %}Corbeille d'écriture{% endblock %}
+            {% block card_body %}
+                {% import "macros/corbeille.html.twig" as cor %}
+                {{ cor.views(item.writers) }}
+            {% endblock %}
+        {% endembed %}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Corbeille d'écriture{% endblock %}
-                {% block card_body %}
-                    {% import "macros/corbeille.html.twig" as cor %}
-                    {{ cor.views(item.writers) }}
-                {% endblock %}
-            {% endembed %}
-        </div>
-        <div class="{{ col_2_2 }}">
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% block card_title %}Sous-rubriques{% endblock %}
+            {% block card_body %}
+                {% import "macros/underrubric.html.twig" as urbc %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+                    {% for underrubric in item.underrubrics %}
+                        <div class="col mb-4">
+                            {{ urbc.vignette(underrubric,'admin_underrubric_show','underthematic_show') }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endblock %}
+        {% endembed %}
+    </div>
+    <div class="{{ col_2_2 }}">
+        <div class="col-8">
             {% import "macros/rubric.html.twig" as rbc %}
             {{ rbc.vignette(item,route_show,'thematic_show') }}
+        </div>
     </div>
 
 
