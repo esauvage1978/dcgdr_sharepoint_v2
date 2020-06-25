@@ -98,7 +98,7 @@ class NotificationSubscriber implements EventSubscriberInterface
         if (!$this->auth->isGranted('GESTIONNAIRE')) {
             $nbr=$this->backpackDtoRepository->countForDto($dto);
             if($nbr!="0") {
-                $notification = new NotificationModel($nbr . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+                $notification = new NotificationModel($nbr . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_INFO, 'fas fa-suitcase');
                 $notification->setId(3);
                 $event->addNotification($notification);
             }
@@ -108,7 +108,7 @@ class NotificationSubscriber implements EventSubscriberInterface
         $dto->setUserDto((new UserDto())->setId($this->security->getUser()->getId()));
         $nbr=$this->backpackDtoRepository->countForDto($dto);
         if($nbr!="0") {
-            $notification = new NotificationModel(($nbr=="1"?'Votre ':'vos '. $nbr)  . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+            $notification = new NotificationModel(($nbr=="1"?'Votre ':'vos '. $nbr)  . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_INFO, 'fas fa-suitcase');
             $notification->setId(4);
             $event->addNotification($notification);
         }

@@ -101,3 +101,12 @@
         >{% if title is not null %}{{ title }}{% else %}{{ macro.icon(icon) }}{% endif %}</a>
     {% endapply %}
 {% endmacro %}
+
+
+{% macro badge_state(state) %}
+    {%- import _self as macro -%}
+    {{ macro.badge(state | workflowGetNameOfState , state | workflowGetColorOfState) }}
+{% endmacro %}
+{% macro badge(title, color) %}
+    <span class="badge" style="background-color:{{ color }}">{{ title }}</span>
+{% endmacro %}

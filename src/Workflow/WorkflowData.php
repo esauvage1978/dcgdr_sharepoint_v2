@@ -101,10 +101,10 @@ class WorkflowData
                 $stateColor = '#d4edda';
                 break;
             case self::STATE_DRAFT:
-                $stateColor = '#6c757d';
+                $stateColor = '#beebff';
                 break;
             case self::STATE_ABANDONNED:
-                $stateColor = '#ff0000';
+                $stateColor = '#f8d7da';
                 break;
             case self::STATE_ARCHIVED:
                 $stateColor = '#ffc107';

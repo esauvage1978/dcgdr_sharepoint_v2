@@ -3,7 +3,7 @@
 {% block title %}Porte-document {{ state | workflowGetNameOfState }}{% endblock %}
 
 {% block page_subtitle %}
-    <span style="color:{{ state | workflowGetColorOfState }}">
+    <span class="text-muted">
     {{ count }} {{ state | workflowGetNameOfState }}{{ count>1?'s':'' }}
         {% if underrubric  %}
             dans la sous-rubrique {{ underrubric.name }}
