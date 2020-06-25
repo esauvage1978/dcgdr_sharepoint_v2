@@ -52,9 +52,6 @@ class AbstractDto implements DtoInterface
         return $this->page;
     }
 
-    /**
-     * @param mixed $page
-     */
     public function setPage($page)
     {
         $this->page = $page;
@@ -69,9 +66,6 @@ class AbstractDto implements DtoInterface
         return $this->isEnable;
     }
 
-    /**
-     * @param mixed $isEnable
-     */
     public function setIsEnable($isEnable)
     {
         $this->isEnable = $isEnable;
@@ -86,9 +80,6 @@ class AbstractDto implements DtoInterface
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     */
     public function setName($name)
     {
         $this->name = $name;
@@ -103,9 +94,6 @@ class AbstractDto implements DtoInterface
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
     public function setId($id)
     {
         $this->id = $id;

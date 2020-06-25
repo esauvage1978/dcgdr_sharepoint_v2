@@ -58,8 +58,8 @@ Attributs :
             If there is a form in the block_footer, it will be rendered when checking "is not empty". 
             Therefor we have to cache the output first and then perform the checks. 
         #}
-        {% set boxFooter = block('card_footer') %}
-        {% if boxFooter is not empty %}
+        {% set cardFooter = block('card_footer') %}
+        {% if cardFooter is not empty %}
             <div class="card-footer">{{ cardFooter|raw }}</div>
         {% endif %}
     {% endif %}

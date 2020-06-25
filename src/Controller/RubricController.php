@@ -3,16 +3,15 @@
 namespace App\Controller;
 
 use App\Dto\RubricDto;
+use App\Dto\ThematicDto;
 use App\Dto\UnderRubricDto;
+use App\Dto\UnderThematicDto;
+use App\Dto\UserDto;
 use App\Entity\Rubric;
-use App\Form\Admin\RubricType;
 use App\Manager\RubricManager;
-use App\Repository\RubricDtoRepository;
 use App\Repository\RubricRepository;
 use App\Repository\UnderRubricDtoRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -37,21 +36,33 @@ class RubricController extends AbstractGController
      * @IsGranted("ROLE_USER")
      */
     public function show(
-        UnderRubricDto $dto,
+
         UnderRubricDtoRepository $rubricDtoRepository,
         Rubric $item
-    ) {
+    )
+    {
+        $dto = new UnderRubricDto();
         $dto
             ->setIsEnable(UnderRubricDto::TRUE)
-            ->rubricDto->setIsEnable(UnderRubricDto::TRUE)
-            ->setId($item->getId())
-            ->thematicDto->setIsEnable(UnderRubricDto::TRUE);
-        $dto
-            ->underThematicDto->setIsEnable(UnderRubricDto::TRUE);
+            ->setRubricDto(
+                (new RubricDto())
+                    ->setIsEnable(RubricDto::TRUE)
+                    ->setId($item->getId())
+            )
+            ->setThematicDto(
+                (new ThematicDto())
+                    ->setIsEnable(ThematicDto::TRUE)
+            )
+            ->setUnderThematicDto(
+                (new UnderThematicDto())
+                    ->setIsEnable(underThematicDto::TRUE)
+            );
 
         if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
-            $dto
-                ->userDto->setName($this->getUser()->getName());
+            $dto->setUserDto(
+                (new UserDto())
+                    ->setId($this->getUser()->getName())
+            );
         }
 
         return $this->render('rubric/index.html.twig', [

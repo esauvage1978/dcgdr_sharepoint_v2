@@ -1,0 +1,16 @@
+
+<div class="row">
+    <div class="col-xs-12  col-sm-4 col-md-3 ">
+        <div class="div_tree table-responsive">
+            <div id="tree"></div>
+            <script>
+                var treedata ={{ items | raw }};
+            </script>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-md-9 ">
+        <div class="col-lg-12 ">
+            {% if block('tree_body') is defined %} {{ block('tree_body') }}{% endif %}
+        </div>
+    </div>
+</div>

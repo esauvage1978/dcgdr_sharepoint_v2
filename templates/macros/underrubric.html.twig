@@ -27,7 +27,7 @@
                     <span class="{{ item.underthematic.isEnable?'':'text-danger' }}">{{ item.underthematic.name }}</span>
                 </a>
                 <br/>
-                {% set nbr=0 %}
+                {% set nbr=item.backpacks | sumBackpackPublished %}
                 <small class="text-muted">{{ nbr }} PORTE-DOCUMENT{{ nbr>1?'S':'' }}</small>
             </div>
         {% endblock %}

@@ -11,17 +11,98 @@ class RubricDto extends AbstractDto
     /**
      * @var ?ThematicDto
      */
-    public $thematicDto;
+    private $thematicDto;
+
+    /**
+     * @var ?UnderThematicDto
+     */
+    private $underThematicDto;
+
+    /**
+     * @var ?UnderRubricDto
+     */
+    private $underRubricDto;
 
     /**
      * @var ?UserDto
      */
-    public $userDto;
+    private $userDto;
 
-    public function __construct()
+    /**
+     * @return mixed
+     */
+    public function getThematicDto()
     {
-        $this->thematicDto=new ThematicDto();
-        $this->userDto=new UserDto();
+        return $this->thematicDto;
     }
+
+    /**
+     * @param mixed $thematicDto
+     * @return RubricDto
+     */
+    public function setThematicDto($thematicDto)
+    {
+        $this->thematicDto = $thematicDto;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserDto()
+    {
+        return $this->userDto;
+    }
+
+    /**
+     * @param mixed $userDto
+     * @return RubricDto
+     */
+    public function setUserDto($userDto)
+    {
+        $this->userDto = $userDto;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnderThematicDto()
+    {
+        return $this->underThematicDto;
+    }
+
+    /**
+     * @param mixed $underThematicDto
+     * @return RubricDto
+     */
+    public function setUnderThematicDto($underThematicDto)
+    {
+        $this->underThematicDto = $underThematicDto;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnderRubricDto()
+    {
+        return $this->underRubricDto;
+    }
+
+    /**
+     * @param mixed $underRubricDto
+     * @return RubricDto
+     */
+    public function setUnderRubricDto($underRubricDto)
+    {
+        $this->underRubricDto = $underRubricDto;
+        return $this;
+    }
+
+
+
+
+
 
 }

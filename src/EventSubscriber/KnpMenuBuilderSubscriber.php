@@ -1,6 +1,7 @@
 <?php
 namespace App\EventSubscriber;
 
+use App\Workflow\WorkflowData;
 use KevinPapst\AdminLTEBundle\Event\KnpMenuEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Security;
@@ -28,6 +29,49 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             'label' => 'Page d\'accueil',
             'childOptions' => $event->getChildOptions()
         ])->setLabelAttribute('icon', 'fas fa-home');
+
+        $menu->addChild(
+            'backpack',
+            [
+                'route'=>'home',
+                'label' => 'Porte-documents',
+                'childOptions' => $event->getChildOptions(),
+                'options' => ['branch_class' => 'treeview']]
+        )->setLabelAttribute('icon', 'nav-icon fas fa-suitcase');
+
+        $menu->getChild('backpack')->addChild(
+            'backpack-add',
+            [
+                'route' => 'backpack_add',
+                'label' => 'Création',
+                'childOptions' => $event->getChildOptions()]
+        )->setLabelAttribute('icon', 'fas fa-plus-circle');
+
+        $menu->getChild('backpack')->addChild(
+            'backpack-'. WorkflowData::STATE_DRAFT,
+            [
+                'route' => 'backpacks_show_draft',
+                'label' => WorkflowData::getNameOfState(WorkflowData::STATE_DRAFT),
+                'childOptions' => $event->getChildOptions()]
+        )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-secondary');
+
+
+
+        $menu->getChild('backpack')->addChild(
+            'backpack-'. WorkflowData::STATE_ARCHIVED,
+            [
+                'route' => 'backpacks_show_archived',
+                'label' => WorkflowData::getNameOfState(WorkflowData::STATE_ARCHIVED),
+                'childOptions' => $event->getChildOptions()]
+        )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-warning');
+
+        $menu->getChild('backpack')->addChild(
+            'backpack-'. WorkflowData::STATE_ABANDONNED,
+            [
+                'route' => 'backpacks_show_abandonned',
+                'label' => WorkflowData::getNameOfState(WorkflowData::STATE_ABANDONNED),
+                'childOptions' => $event->getChildOptions()]
+        )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-danger');
 
         if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $menu->addChild('profil', [

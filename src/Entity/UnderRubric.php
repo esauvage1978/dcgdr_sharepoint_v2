@@ -71,6 +71,10 @@ class UnderRubric implements EntityInterface
      */
     private $isShowAll;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Backpack", mappedBy="underRubric")
+     */
+    private $backpacks;
 
     public function __construct()
     {
@@ -241,6 +245,37 @@ class UnderRubric implements EntityInterface
     public function setIsShowAll(bool $isShowAll): self
     {
         $this->isShowAll = $isShowAll;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Backpack[]
+     */
+    public function getBackpacks(): Collection
+    {
+        return $this->backpacks;
+    }
+
+    public function addBackpack(Backpack $backpack): self
+    {
+        if (!$this->backpacks->contains($backpack)) {
+            $this->backpacks[] = $backpack;
+            $backpack->setUnderRubric($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBackpack(Backpack $backpack): self
+    {
+        if ($this->backpacks->contains($backpack)) {
+            $this->backpacks->removeElement($backpack);
+            // set the owning side to null (unless already changed)
+            if ($backpack->getUnderRubric() === $this) {
+                $backpack->setUnderRubric(null);
+            }
+        }
 
         return $this;
     }

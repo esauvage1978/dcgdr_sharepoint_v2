@@ -20,11 +20,6 @@ trait  TraitDtoRepository
      */
     private $params;
 
-    /**
-     * @var DtoInterface
-     */
-    private $dto;
-
     private function addParams($key, $value)
     {
         $onevalue = [$key => $value];

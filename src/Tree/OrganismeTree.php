@@ -27,6 +27,7 @@ class OrganismeTree extends AbstractTree
     public function getTree()
     {
         $this->getTreeCheck();
+
         foreach ($this->items as $item) {
 
             $open = $this->item->getId() === $item->getId();

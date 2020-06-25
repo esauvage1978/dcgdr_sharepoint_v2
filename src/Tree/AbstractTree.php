@@ -14,7 +14,7 @@ abstract class AbstractTree implements InterfaceTree
      */
     protected $idName;
 
-
+    protected $nbrItems=0;
 
     /**
      * @var array
@@ -44,7 +44,7 @@ abstract class AbstractTree implements InterfaceTree
     /**
      * @var boolean
      */
-    private $developed;
+    protected $developed;
 
     /**
      * @var string
@@ -59,7 +59,7 @@ abstract class AbstractTree implements InterfaceTree
         $this->container = $container;
         $this->request = $request;
 
-        $this->idName='id';
+        $this->idName='idItem';
         $tree = null;
         $this->developed = false;
         $this->parameter = [];
@@ -68,7 +68,7 @@ abstract class AbstractTree implements InterfaceTree
     public function initialise($items): self
     {
         $this->items = $items;
-
+        $this->nbrItems=count($this->items);
         if(!isset($this->item)) {
             if ($this->request->query->has($this->idName)) {
                 $this->itemRequestId = $this->request->query->get($this->idName);
@@ -129,6 +129,11 @@ abstract class AbstractTree implements InterfaceTree
         return $this->items;
     }
 
+    public function getCountItems()
+    {
+        return $this->nbrItems;
+    }
+
     public function getItem()
     {
         return $this->item;
@@ -142,11 +147,27 @@ abstract class AbstractTree implements InterfaceTree
 
     protected function getTreeCheck()
     {
-        if (!isset($this->items)) {
-            throw new InvalidParameterException('Vous devez initialiser la classe avec la fonction initialise');
-        }
-        if (!isset($this->item)) {
-            throw new InvalidParameterException('La variable item n\'est pas définie');
+        if($this->nbrItems==0) {
+            $this->tree[] = [
+                'id' => '0',
+                'parent' => '#',
+                'text' => '<span class="text-info">Aucun élément à afficher</span> ',
+                'icon' => 'fas fa-empty text-info ',
+                'a_attr' => [
+                    'href' => '',
+                ],
+                'state' => [
+                    'selected' => true,
+                    'opened' => true,
+                ],
+            ];
+        } else {
+            if (!isset($this->items)) {
+                throw new InvalidParameterException('Vous devez initialiser la classe avec la fonction initialise');
+            }
+            if (!isset($this->item)) {
+                throw new InvalidParameterException('La variable item n\'est pas définie');
+            }
         }
     }
 

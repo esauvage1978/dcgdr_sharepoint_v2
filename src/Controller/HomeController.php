@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Dto\RubricDto;
+use App\Dto\ThematicDto;
+use App\Dto\UserDto;
 use App\Repository\MessageRepository;
 use App\Repository\RubricDtoRepository;
 use App\Repository\RubricRepository;
@@ -15,21 +17,20 @@ class HomeController extends AbstractController
      * @Route("/", name="home")
      */
     public function index(
-        RubricDto $rubricDto,
-        RubricDtoRepository $rubricDtoRepository
+        RubricDtoRepository $repo
     )
     {
-        $rubricDto
-            ->setIsEnable(RubricDto::TRUE)
-            ->thematicDto->setIsEnable(RubricDto::TRUE);
+        $dto=new RubricDto ();
+
+        $dto->setIsEnable(RubricDto::TRUE)
+            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE));
 
         if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
-            $rubricDto
-                ->userDto->setName($this->getUser()->getName());
+            $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));
         }
 
         return $this->render('home/index.html.twig', [
-            'items' => $rubricDtoRepository->findAllForDto($rubricDto, RubricDtoRepository::FILTRE_DTO_INIT_HOME)
+            'items' => $repo->findAllForDto($dto, RubricDtoRepository::FILTRE_DTO_INIT_HOME)
         ]);
     }
 }

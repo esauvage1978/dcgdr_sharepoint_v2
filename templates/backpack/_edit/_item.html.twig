@@ -1,0 +1,158 @@
+{% if item is defined %}
+
+    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+    {% import "macros/delele.html.twig" as del %}
+    {% import "macros/submit.html.twig" as sub %}
+    {{ form_start(form) }}
+
+
+    <div class="row justify-content-center ">
+
+
+        <div class="{{ col_1_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_class %}h-100{% endblock %}
+                {% block card_body %}
+                    <div class="row">
+                        <div class=" col-12">
+                            <div class="form-group row">
+                                {{ form_label(form.underrubric,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                                <div class="col">
+                                    {{ form_errors(form.underrubric) }}
+                                    {{ form_widget(form.underrubric) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.name,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                                <div class="col">
+                                    {{ form_errors(form.name) }}
+                                    {{ form_widget(form.name) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        {{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                        <div class="col">
+                            {{ form_errors(form.content) }}
+                            {{ form_widget(form.content) }}
+                        </div>
+                    </div>
+
+                {% endblock %}
+
+            {% endembed %}
+        </div>
+        <div class="{{ col_2_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_class %}h-100 {% endblock %}
+                {% block card_body %}
+
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="cmb_dir1" id="lbl_dir1">Niveau 1</label>
+                        <div class="col">
+                            <select aria-label="lbl_dir1" name="cmb_dir1" id="cmb_dir1" class="form-control">
+                            </select>
+                        </div>
+                        <button type="button" class="btn  float-right" data-toggle="modal" data-target="#addDir"
+                                data-whatever="cmb_dir1">
+                            <i class="fa fa-plus-circle text-success"></i>
+                        </button>
+                    </div>
+                    <div class="form-group row d-none" id="div_dir2">
+                        <label for="cmb_dir2" id="lbl_dir2" class="col-sm-3 col-form-label">
+                            Niveau 2
+                        </label>
+                        <div class="col">
+                            <select aria-label="lbl_dir2" name="cmb_dir2" id="cmb_dir2" class="form-control">
+                            </select>
+                        </div>
+                        <button type="button" class="btn  float-right" data-toggle="modal" data-target="#addDir"
+                                data-whatever="cmb_dir2">
+                            <i class="fa fa-plus-circle text-success"></i>
+                        </button>
+                    </div>
+                    <div class="form-group row d-none" id="div_dir3">
+                        <label for="cmb_dir3" id="lbl_dir3" class="col-sm-3 col-form-label">
+                            Niveau 3
+                        </label>
+
+                        <div class="col">
+                            <select aria-label="lbl_dir3" name="cmb_dir3" id="cmb_dir3" class="form-control">
+                            </select>
+                        </div>
+                        <button type="button" class="btn  float-right" data-toggle="modal" data-target="#addDir"
+                                data-whatever="cmb_dir3">
+                            <i class="fa fa-plus-circle text-success"></i>
+                        </button>
+                    </div>
+                    <div class="form-group row d-none" id="div_dir4">
+                        <label for="cmb_dir4" id="lbl_dir4" class="col-sm-3 col-form-label">
+                            Niveau 4
+                        </label>
+                        <div class="col">
+                            <select aria-label="lbl_dir4" name="cmb_dir4" id="cmb_dir4" class="form-control">
+                            </select>
+                        </div>
+                        <button type="button" class="btn  float-right" data-toggle="modal" data-target="#addDir"
+                                data-whatever="cmb_dir4">
+                            <i class="fa fa-plus-circle text-success"></i>
+                        </button>
+                    </div>
+                    <div class="form-group row d-none" id="div_dir5">
+                        <label for="cmb_dir5" id="lbl_dir5" class="col-sm-3 col-form-label">
+                            Niveau 5
+                        </label>
+                        <div class="col">
+                            <select aria-label="lbl_dir5" name="cmb_dir5" id="cmb_dir5" class="form-control">
+                            </select>
+                        </div>
+                        <button type="button" class="btn  float-right" data-toggle="modal" data-target="#addDir"
+                                data-whatever="cmb_dir5">
+                            <i class="fa fa-plus-circle text-success"></i>
+                        </button>
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    <div class="row  justify-content-center">
+        <div class="col-12 -sm mt-5 p-3 text-muted">
+            <small>Créé par <strong>{{ item.owner.name }}</strong> Mise à jour le <strong>{{ item.updateAt | date("d M yy à i:H") }}</strong></small>
+        </div>
+    </div>
+    {% import "macros/submit.html.twig" as sub %}
+    <div class="d-none">{{ form_rest(form) }}{{ sub.btn() }}</div>
+    {{ form_end(form) }}
+    {% if item.id is not null %}
+        {{ del.delete_form(route_del,item.id, 'show') }}
+    {% endif %}
+    <div class="modal fade" id="addDir" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ajoute un libellé</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="addDir_field_new" class="col-form-label">Libellé</label>
+                            <input type="text" class="form-control d-none" id="addDir_field">
+                            <input type="text" class="form-control" id="addDir_field_new">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" id="btn_addDir" class="btn btn-success">Ajouter le libellé</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}

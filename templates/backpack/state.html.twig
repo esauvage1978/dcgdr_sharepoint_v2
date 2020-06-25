@@ -1,0 +1,47 @@
+{% extends 'backpack/layout.html.twig' %}
+
+{% block title %}Porte-document {{ state | workflowGetNameOfState }}{% endblock %}
+
+{% block page_subtitle %}
+    <span style="color:{{ state | workflowGetColorOfState }}">
+    {{ count }} {{ state | workflowGetNameOfState }}{{ count>1?'s':'' }}
+        {% if underrubric  %}
+            dans la sous-rubrique {{ underrubric.name }}
+        {% endif %}
+    </span>
+{% endblock %}
+
+
+{% import "backpack/actions.html.twig" as actions %}
+{% block breadcrumb %}
+    {{ actions.backpack('state',state,owner,item, underrubric  ? underrubric:null) }}
+{% endblock %}
+
+
+{% block page_content %}
+    {% embed 'widgets/tree-widget.html.twig' %}
+        {% block tree_body %}
+            {{ include('backpack/_show/_item.html.twig') }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $('#tree').jstree(
+                {
+                    'core':
+                        {
+                            'data': treedata
+                        }
+                }
+            ).on('changed.jstree', function (e, data) {
+                if (data.node) {
+                    document.location = data.node.a_attr.href;
+                }
+            })
+        });
+    </script>
+{% endblock %}

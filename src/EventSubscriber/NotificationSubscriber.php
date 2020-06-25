@@ -9,7 +9,15 @@
 
 namespace App\EventSubscriber;
 
+use App\Dto\BackpackDto;
+use App\Dto\RubricDto;
+use App\Dto\ThematicDto;
+use App\Dto\UnderRubricDto;
+use App\Dto\UnderThematicDto;
+use App\Dto\UserDto;
 use App\Entity\User;
+use App\Repository\BackpackDtoRepository;
+use App\Workflow\WorkflowData;
 use KevinPapst\AdminLTEBundle\Event\NotificationListEvent;
 use KevinPapst\AdminLTEBundle\Helper\Constants;
 use KevinPapst\AdminLTEBundle\Model\NotificationModel;
@@ -30,13 +38,22 @@ class NotificationSubscriber implements EventSubscriberInterface
      * @var Security
      */
     private $security;
+
+    /**
+     * @var BackpackDtoRepository
+     */
+    private $backpackDtoRepository;
     /**
      * @param AuthorizationCheckerInterface $auth
      */
-    public function __construct(AuthorizationCheckerInterface $auth, Security $security)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $auth,
+        Security $security,
+        BackpackDtoRepository $dto
+        ){
         $this->auth = $auth;
         $this->security=$security;
+        $this->backpackDtoRepository=$dto;
     }
 
     /**
@@ -67,6 +84,33 @@ class NotificationSubscriber implements EventSubscriberInterface
             $notification->setId(2);
             $event->addNotification($notification);
 
+        }
+
+        $dto=new BackpackDto();
+
+        $dto
+            ->setCurrentPlace(WorkflowData::STATE_DRAFT)
+            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
+            ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
+            ->setUnderRubricDto((new UnderRubricDto())->setIsEnable(RubricDto::TRUE))
+            ->setRubricDto((new RubricDto())->setIsEnable(RubricDto::TRUE));
+
+        if (!$this->auth->isGranted('GESTIONNAIRE')) {
+            $nbr=$this->backpackDtoRepository->countForDto($dto);
+            if($nbr!="0") {
+                $notification = new NotificationModel($nbr . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+                $notification->setId(3);
+                $event->addNotification($notification);
+            }
+        }
+
+        $dto->setOwnerDto((new UserDto())->setId($this->security->getUser()->getId()));
+        $dto->setUserDto((new UserDto())->setId($this->security->getUser()->getId()));
+        $nbr=$this->backpackDtoRepository->countForDto($dto);
+        if($nbr!="0") {
+            $notification = new NotificationModel(($nbr=="1"?'Votre ':'vos '. $nbr)  . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+            $notification->setId(4);
+            $event->addNotification($notification);
         }
     }
 }
