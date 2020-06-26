@@ -1,0 +1,15 @@
+{% import "macros/workflow.html.twig" as workflow %}
+<div class="timeline">
+    {% if block('timeline_title') is defined %}
+        <div class="time-label">
+        <span class="{% if block('timeline_title_class') is defined %}{{ block('timeline_title_class') }}{% endif %}">
+            {{ block('timeline_title') }}</span>
+        </div>
+    {% endif %}
+    {% for state in item.backpackStates %}
+        {{ workflow.timeline(state) }}
+    {% endfor %}
+    <div>
+        <i class="fas fa-clock {% if block('timeline_end_class') is defined %}{{ block('timeline_end_class') }}{% endif %}"></i>
+    </div>
+</div>

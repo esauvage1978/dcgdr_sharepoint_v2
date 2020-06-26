@@ -96,6 +96,7 @@ final class IconExtension extends AbstractExtension
         'user' => 'fas fa-user-friends',
         'visibility' => 'far fa-eye',
         'warning' => 'fas fa-exclamation-triangle',
+        'workflow'=>'fas fa-bezier-curve',
         'xlsx' => 'fas fa-file-excel',
 
     ];

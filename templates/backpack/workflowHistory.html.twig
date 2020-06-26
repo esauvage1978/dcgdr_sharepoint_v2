@@ -1,10 +1,12 @@
 {% extends 'backpack/layout.html.twig' %}
 
+{% import "backpack/actions.html.twig" as actions %}
+
 {% block page_subtitle %}Historique des changements d'état{% endblock %}
 
 {% block breadcrumb %}
     {{ actions.backpack(
-        'edit',
+        'workflow',
         item.currentState,
         item.owner==app.user,
         item,
@@ -14,96 +16,29 @@
 
 {% block page_content %}
 
-        <div class="row justify-content-start ">
-            {{ include('action/_show/_name.html.twig') }}
-            <div class="card  col-12">
+    <div class="row justify-content-center ">
+        <div class="col-10">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% import "macros/widgets.html.twig" as widgets %}
+                {% block card_title_class %} text-info{% endblock %}
+                {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
+                {% block card_tools %}
+                    <small class="text-muted">
+                        Créé par <strong>{{ item.owner.name }}</strong>
+                        Mise à jour le <strong>{{ item.updateAt | date("d M Y à m:i") }}</strong>
+                        {{ widgets.badge_state(item.currentState) }}
+                    </small>
+                {% endblock %}
+                {% block card_body_class %}h-100 bg-light shadow{% endblock %}
+                {% block card_body %}
 
-                <div class="card-body">
+                    {% embed 'widgets/timeline-widget.html.twig' %}
+                        {% block timeline_title %}Création{% endblock %}
+                        {% block timeline_title_class %}bg-secondary{% endblock %}
+                    {% endembed %}
 
-                    <div class="timeline">
-                        <!-- timeline time label -->
-                        <div class="time-label">
-                            <span class="bg-secondary">Création</span>
-                        </div>
-                        <!-- /.timeline-label -->
-                        {% for actionState in action.actionStates %}
-
-                            <!-- timeline item -->
-                            <div>
-                                <i class="fas fa-external-link-alt " {{ include('workflow/_color/_style_background.html.twig',{'state': actionState.stateNew}) }} ></i>
-                                <div class="timeline-item">
-
-
-                                    <div class=" user-block p-2">
-                                        <img class="img-circle img-bordered-sm"
-                                             src="{{ actionState.user.avatar.image }}"
-                                             alt="user image">
-                                        <span class="username">
-                                                          <a href="{{ path('user_show',{'id':actionState.user.id }) }}">{{ actionState.user.name }}</a>
-                                                        </span>
-                                        <span class="description ">
-                                                            <span class="time"><i
-                                                                        class="fas fa-clock"></i> {{ actionState.changeAt | date('d-m-Y') }}</span>
-                                                        </span>
-                                    </div>
-                                    <div class="timeline-header pb-5">
-
-                                    </div>
-                                    <div class="timeline-body mt-1">
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-6 col-lg-4">
-                                                <div class="row">
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class=" info-box bg-light">
-                                                            <div class="info-box-content">
-                                                                <span class="info-box-text text-center text-muted">De</span>
-                                                                <span class="info-box-number text-center  text-lg mb-0">
-                                                                        {{ include('workflow/_state.html.twig' , {'state': actionState.stateOld} ) }}
-                                                                    </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-
-                                                        <div class=" info-box bg-light">
-                                                            <div class="info-box-content">
-                                                                <span class="info-box-text text-center text-muted">Vers</span>
-                                                                <span class="info-box-number text-center  text-lg mb-0">
-                                                                        {{ include('workflow/_state.html.twig' , {'state': actionState.stateNew} ) }}
-                                                                    </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12 col-md-6 col-lg-8">
-                                                {{ actionState.content | raw }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <!-- END timeline item -->
-
-                        {% endfor %}
-                        <!-- timeline item -->
-
-                        <!-- END timeline item -->
-                        <div>
-                            <i class="fas fa-clock bg-gray"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
         </div>
-
-
-
-    {% endblock %}
-
-
-
-{% block javascripts %}
-    <script src="{{ absolute_url( asset('js/add_sidebar.js')) }}"></script>
+    </div>
 {% endblock %}

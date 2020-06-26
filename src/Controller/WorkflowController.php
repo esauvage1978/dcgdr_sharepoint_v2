@@ -18,37 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WorkflowController extends AbstractGController
 {
-    /**
-     * @Route("/{id}/{transition}", name="workflow_backpack_apply_transition", methods={"GET","POST"})
-     *
-     * @param Request $request
-     * @param Backpack $item
-     * @param WorkflowBackpackManager $workflowBackpackManager
-     * @param string $transition
-     *
-     * @return Response
-     *
-     * @IsGranted("ROLE_USER")
-     */
-    public function applyTransitionBackpack(Request $request, Backpack $item, WorkflowBackpackManager $workflowBackpackManager, string $transition): Response
-    {
-       if ($this->isCsrfTokenValid($transition . $item->getId(), $request->request->get('_token'))) {
-
-            $content=$request->request->get($transition . '_content');
-
-            $result = $workflowBackpackManager->applyTransition($item, $transition,$content);
-
-            if ($result) {
-                $this->addFlash(self::SUCCESS, 'Le changement d\'état est effectué');
-
-                return $this->redirectToRoute('backpack_edit', ['id' => $item->getId()]);
-            }
-            $this->addFlash(self::DANGER, 'Le changement d\'état n\'a pas abouti. Les conditions ne sont pas remplies.');
-        }
-
-        return $this->redirectToRoute('backpack_edit', ['id' => $item->getId()]);
-    }
-
 
 
     /**
@@ -98,10 +67,41 @@ class WorkflowController extends AbstractGController
      */
     public function showHistoryBackpack(BackpackStateRepository $repository, Backpack $backpack): Response
     {
-        return $this->render('workflow/history.html.twig', [
+        return $this->render('backpack/workflowHistory.html.twig', [
             'items' => $repository->findAllForBackpack($backpack->getId()),
             'item' => $backpack,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/{transition}", name="workflow_backpack_apply_transition", methods={"GET","POST"})
+     *
+     * @param Request $request
+     * @param Backpack $item
+     * @param WorkflowBackpackManager $workflowBackpackManager
+     * @param string $transition
+     *
+     * @return Response
+     *
+     * @IsGranted("ROLE_USER")
+     */
+    public function applyTransitionBackpack(Request $request, Backpack $item, WorkflowBackpackManager $workflowBackpackManager, string $transition): Response
+    {
+        if ($this->isCsrfTokenValid($transition . $item->getId(), $request->request->get('_token'))) {
+
+            $content=$request->request->get($transition . '_content');
+
+            $result = $workflowBackpackManager->applyTransition($item, $transition,$content);
+
+            if ($result) {
+                $this->addFlash(self::SUCCESS, 'Le changement d\'état est effectué');
+
+                return $this->redirectToRoute('backpack_edit', ['id' => $item->getId()]);
+            }
+            $this->addFlash(self::DANGER, 'Le changement d\'état n\'a pas abouti. Les conditions ne sont pas remplies.');
+        }
+
+        return $this->redirectToRoute('backpack_edit', ['id' => $item->getId()]);
     }
 
 

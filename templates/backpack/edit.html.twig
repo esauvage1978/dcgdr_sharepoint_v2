@@ -5,8 +5,6 @@
 {% import "backpack/actions.html.twig" as actions %}
 
 {% block breadcrumb %}
-
-
     {{ actions.backpack(
         'edit',
         item.currentState,
@@ -22,7 +20,11 @@
 
 
     {% if item.currentState in [workflow_archived,workflow_abandonned] %}
-        {{ include(domaine ~ '/_show/_item.html.twig') }}
+        <div class="row justify-content-center ">
+            <div class="col-10">
+                {{ include(domaine ~ '/_show/_item.html.twig') }}
+            </div>
+        </div>
     {% else %}
         {{ include(domaine ~ '/_edit/_item.html.twig') }}
     {% endif %}
