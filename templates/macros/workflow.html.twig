@@ -1,9 +1,10 @@
 {% macro cards(item,choice) %}
-    <div class="row justify-content-center ">
+    <div class="row justify-content-center mt-4">
         <div class="col-10">
             {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
                 {% import "macros/workflow.html.twig" as macro %}
-                {% block card_title %}Etat du porte-document{% endblock %}
+                {% block card_title_class %}text-secondary{% endblock %}
+                {% block card_title %}Changer l'état du porte-document{% endblock %}
                 {% block card_body_class %} {% endblock %}
                 {% block card_body %}
                     <div class="d-flex flex-row">

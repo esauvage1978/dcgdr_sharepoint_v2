@@ -23,11 +23,22 @@ class BackpackManager extends AbstractManager
     public function initialise(EntityInterface $entity): void
     {
         $entity->setUpdateAt(new \DateTime());
+
         if(empty( $entity->getId())) {
             $entity
                 ->setOwner( $this->security->getUser())
                 ->setCurrentPlace(WorkflowData::STATE_DRAFT);
-            }
+        }
+
+        foreach ($entity->getBackpackFiles() as $backpackFile)
+        {
+            $backpackFile->setBackpack($entity);
+        }
+
+        foreach ($entity->getBackpackLinks() as $backpackLink)
+        {
+            $backpackLink->setBackpack($entity);
+        }
     }
 
 

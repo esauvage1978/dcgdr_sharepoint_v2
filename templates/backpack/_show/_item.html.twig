@@ -1,24 +1,55 @@
 {% if item %}
     {% embed 'widgets/card-widget.html.twig' %}
         {% import "macros/widgets.html.twig" as widgets %}
+        {% import "macros/file.html.twig" as file %}
         {% block card_class %}h-100 card-light  card-outline shadow{% endblock %}
+        {% block card_title_class %} text-info{% endblock %}
         {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
         {% block card_tools %}
-            {{  widgets.badge_state(item.currentState)  }}
+            {{ widgets.badge_state(item.currentState) }}
             <small class="text-muted">{{ item.updateAt  | date('d/m/Y H:i:s') }}</small>
         {% endblock %}
-
+        {% block card_body_class %}h-100 card-light  card-outline shadow{% endblock %}
         {% block card_body %}
-
-
-                {% if item.content %}
-
-                        <small class="text-muted ">
-                            {{ item.content | raw }}
-                        </small>
-
-                {% endif %}
-
+            {% if item.content %}
+                <small class="text-muted ">
+                    {{ item.content | raw }}
+                </small>
+            {% endif %}
+        {% endblock %}
+        {% block card_liste %}
+            {% set nbrL=item.backpackLinks | length %}
+            {% set nbrF=item.backpackFiles | length %}
+            {% if nbrL>0 or nbrF>0 %}
+                <div class=" list-blk">
+                    <table class="table table-hover">
+                        <colgroup>
+                            <col class="col-lg-1">
+                            <col class="col-lg-9">
+                            <col class="col-lg-1">
+                            <col class="col-lg-1">
+                        </colgroup>
+                        <thead class="thead-default">
+                        <tr>
+                            <th></th>
+                            <th>
+                                Nom
+                            </th>
+                            <th class="hidden-xs text-center">
+                                Date
+                            </th>
+                            <th class="hidden-xs">
+                                Taille
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {{ file.showFiles(item.backpackFiles,item,'backpack_file_show') }}
+                            {{ file.showLinks(item.backpackLinks) }}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
         {% endblock %}
 
         {% block card_footer %}

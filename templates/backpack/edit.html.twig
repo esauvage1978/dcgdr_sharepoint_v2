@@ -17,17 +17,20 @@
 {% block page_content %}
     {% import "macros/workflow.html.twig" as wfl %}
     {{ include('backpack/_edit/_etat_modal.html.twig') }}
-    {{ wfl.cards(item) }}
+
 
     {% if item.currentState in [workflow_archived,workflow_abandonned] %}
         {{ include(domaine ~ '/_show/_item.html.twig') }}
     {% else %}
         {{ include(domaine ~ '/_edit/_item.html.twig') }}
     {% endif %}
+
+    {{ wfl.cards(item) }}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ absolute_url( asset('js/backpack_file.js')) }}"></script>
     <script src="{{ absolute_url( asset('js/arborescence.js')) }}"></script>
     <script type="text/javascript">
         $(function () {

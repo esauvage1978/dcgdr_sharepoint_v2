@@ -5,6 +5,7 @@ Block :
     card_img
     card_title | card_id | card_class | card_attributes | card_tools_attributes  | card_tools
     card-body | card_body_class
+    card_liste
     card_footer
 Attributs :
     collapsed : true/false
@@ -63,6 +64,8 @@ Attributs :
         {{ block('card_body') }}
 
     </div><!--FIN CARD BODY-->
+    {% if block('card_liste') is defined %} {{ block('card_liste') }}{% endif %}
+
     {% if block('card_footer') is defined %}
         {# 
             If there is a form in the block_footer, it will be rendered when checking "is not empty". 

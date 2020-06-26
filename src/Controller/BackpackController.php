@@ -15,10 +15,13 @@ use App\Form\Backpack\BackpackNewType;
 use App\Form\Backpack\BackpackType;
 use App\Manager\BackpackManager;
 use App\Repository\BackpackDtoRepository;
+use App\Repository\BackpackFileRepository;
 use App\Repository\BackpackRepository;
+use App\Security\BackpackVoter;
 use App\Tree\BackpackTree;
 use App\Workflow\WorkflowData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -216,4 +219,22 @@ class BackpackController extends AbstractGController
         return $repo->findAllForDto($dto, BackpackDtoRepository::FILTRE_DTO_INIT_HOME);
     }
 
+    /**
+     * @Route("/backpack/{id}/file/{fileId}", name="backpack_file_show", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function actionFileShowAction(
+        Request $request,
+        Backpack $backpack,
+        string $fileId,
+        BackpackFileRepository $backpackFileRepository): Response
+    {
+        //$this->denyAccessUnlessGranted(BackpackVoter::READ, $backpack);
+
+        $actionFile = $backpackFileRepository->find($fileId);
+
+        $file = new File($actionFile->getHref());
+
+        return $this->file($file, $actionFile->getTitle() . '.' . $actionFile->getFileExtension());
+    }
 }

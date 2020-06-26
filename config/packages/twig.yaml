@@ -14,3 +14,4 @@ twig:
         workflow_published: 'published'
         workflow_abandonned: 'abandonned'
         workflow_draft: 'draft'
+        news_time: '%env(NEWS_TIME)%'

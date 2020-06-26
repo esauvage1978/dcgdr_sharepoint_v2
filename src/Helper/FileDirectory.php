@@ -27,11 +27,15 @@ class FileDirectory
 
         $new_dir_path = $chemin . "/" . $directory;
         if (!$this->fsObject->exists($new_dir_path)) {
-            $old = umask(0);
-            $this->fsObject->mkdir($new_dir_path, 0775);
-            $this->fsObject->chown($new_dir_path, "www-data");
-            $this->fsObject->chgrp($new_dir_path, "www-data");
-            umask($old);
+            try {
+                $old = umask(0);
+                $this->fsObject->mkdir($new_dir_path, 0775);
+                $this->fsObject->chown($new_dir_path, "www-data");
+                $this->fsObject->chgrp($new_dir_path, "www-data");
+                umask($old);
+            } catch (\Exception $e) {
+                dump($e->getMessage());
+            }
         }
 
     }

@@ -5,14 +5,20 @@
     {% import "macros/submit.html.twig" as sub %}
 
 
-
-
-
     {{ form_start(form) }}
     <div class="row justify-content-center ">
 
         <div class="{{ col_1_2 }}">
             {% embed 'widgets/card-widget.html.twig' %}
+                {% import "macros/widgets.html.twig" as widgets %}
+                {% block card_title_class %} text-info{% endblock %}
+                {% block card_title %}{{ widgets.icon('backpack') }}Porte-document{% endblock %}
+                {% block card_tools %}
+                    <small class="text-muted">
+                        Créé par <strong>{{ item.owner.name }}</strong>
+                        Mise à jour le <strong>{{ item.updateAt | date("d M Y à m:i") }}</strong>
+                    </small>
+                {% endblock %}
                 {% block card_class %}h-100{% endblock %}
                 {% block card_body %}
                     <div class="row">
@@ -49,9 +55,6 @@
             {% embed 'widgets/card-widget.html.twig' %}
                 {% block card_class %}h-100 {% endblock %}
                 {% block card_body %}
-
-
-
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label" for="cmb_dir1" id="lbl_dir1">Niveau 1</label>
                         <div class="col">
@@ -120,10 +123,8 @@
             {% endembed %}
         </div>
     </div>
-    <div class="row  justify-content-center">
-        <div class="col-12 -sm mt-5 p-3 text-muted">
-            <small>Créé par <strong>{{ item.owner.name }}</strong> Mise à jour le <strong>{{ item.updateAt | date("d M Y à i:H") }}</strong></small>
-        </div>
+    <div class="row justify-content-center ">
+        {{ include('backpack/_edit/_files.html.twig') }}
     </div>
     {% import "macros/submit.html.twig" as sub %}
     <div class="d-none">{{ form_rest(form) }}{{ sub.btn() }}</div>

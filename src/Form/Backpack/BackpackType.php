@@ -62,7 +62,16 @@ class BackpackType extends AppTypeAbstract
                     self::LABEL			=> 'dater',
                     self::REQUIRED=>false
                 ])
-            ;
+            ->add('backpackFiles', CollectionType::class, [
+                'entry_type' => BackpackFileType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+            ])
+            ->add('backpackLinks', CollectionType::class, [
+                'entry_type' => BackpackLinkType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

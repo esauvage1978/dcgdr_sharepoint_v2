@@ -35,4 +35,8 @@ h1 > small {
     color:gray;
 }
 
+.thead-default th {
+    color: #464a4c;
+    background-color: #eceeef;
+}
 
