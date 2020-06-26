@@ -17,6 +17,7 @@
                     <small class="text-muted">
                         Créé par <strong>{{ item.owner.name }}</strong>
                         Mise à jour le <strong>{{ item.updateAt | date("d M Y à m:i") }}</strong>
+                        {{ widgets.badge_state(item.currentState) }}
                     </small>
                 {% endblock %}
                 {% block card_class %}h-100{% endblock %}
@@ -55,7 +56,7 @@
             {% embed 'widgets/card-widget.html.twig' %}
                 {% block card_class %}h-100 {% endblock %}
                 {% block card_body %}
-                    <div class="form-group row">
+                    <div class="form-group row col-12">
                         <label class="col-sm-3 col-form-label" for="cmb_dir1" id="lbl_dir1">Niveau 1</label>
                         <div class="col">
                             <select aria-label="lbl_dir1" name="cmb_dir1" id="cmb_dir1" class="form-control">
@@ -66,7 +67,7 @@
                             <i class="fa fa-plus-circle text-success"></i>
                         </button>
                     </div>
-                    <div class="form-group row d-none" id="div_dir2">
+                    <div class="form-group row d-none col-12" id="div_dir2">
                         <label for="cmb_dir2" id="lbl_dir2" class="col-sm-3 col-form-label">
                             Niveau 2
                         </label>
@@ -79,7 +80,7 @@
                             <i class="fa fa-plus-circle text-success"></i>
                         </button>
                     </div>
-                    <div class="form-group row d-none" id="div_dir3">
+                    <div class="form-group row d-none col-12" id="div_dir3">
                         <label for="cmb_dir3" id="lbl_dir3" class="col-sm-3 col-form-label">
                             Niveau 3
                         </label>

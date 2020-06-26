@@ -3,15 +3,17 @@
 {% block page_subtitle %}Modification{% endblock %}
 
 {% import "backpack/actions.html.twig" as actions %}
+
 {% block breadcrumb %}
+
+
     {{ actions.backpack(
         'edit',
         item.currentState,
         item.owner==app.user,
         item,
         item.underrubric
-        )
-    }}
+    ) }}
 {% endblock %}
 
 {% block page_content %}
@@ -133,8 +135,8 @@
             $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
         });
 
-        $('#backpack_underrubric').on("select2:selecting", function(e) {
-            arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}",e.params.args.data.id, true, '#backpack_dir1');
+        $('#backpack_underrubric').on("select2:selecting", function (e) {
+            arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", e.params.args.data.id, true, '#backpack_dir1');
         });
     </script>
 {% endblock %}
