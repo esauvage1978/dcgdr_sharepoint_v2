@@ -24,7 +24,6 @@ class Backpack implements EntityInterface
     private $name;
 
 
-
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -69,7 +68,17 @@ class Backpack implements EntityInterface
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $currentPlace;
+    private $currentState;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $stateAt;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $contentState;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="backpacks")
@@ -77,9 +86,14 @@ class Backpack implements EntityInterface
      */
     private $owner;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BackpackState", mappedBy="backpack")
+     */
+    private $backpackStates;
 
     public function __construct()
     {
+        $this->backpackStates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,14 +216,14 @@ class Backpack implements EntityInterface
         return $this;
     }
 
-    public function getCurrentPlace(): ?string
+    public function getCurrentState(): ?string
     {
-        return $this->currentPlace;
+        return $this->currentState;
     }
 
-    public function setCurrentPlace(string $currentPlace): self
+    public function setCurrentState(string $currentState): self
     {
-        $this->currentPlace = $currentPlace;
+        $this->currentState = $currentState;
 
         return $this;
     }
@@ -225,5 +239,63 @@ class Backpack implements EntityInterface
 
         return $this;
     }
+
+    public function getStateAt(): ?\DateTimeInterface
+    {
+        return $this->stateAt;
+    }
+
+    public function setStateAt(\DateTimeInterface $stateAt): self
+    {
+        $this->stateAt = $stateAt;
+
+        return $this;
+    }
+
+    public function getContentState(): ?string
+    {
+        return $this->contentState;
+    }
+
+    public function setContentState(?string $contentState): self
+    {
+        $this->contentState = $contentState;
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection|BackpackState[]
+     */
+    public function getBackpackStates(): Collection
+    {
+        return $this->backpackStates;
+    }
+
+    public function addBackpackState(BackpackState $backpackState): self
+    {
+        if (!$this->backpackStates->contains($backpackState)) {
+            $this->backpackStates[] = $backpackState;
+            $backpackState->setBackpack($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBackpackState(BackpackState $backpackState): self
+    {
+        if ($this->backpackStates->contains($backpackState)) {
+            $this->backpackStates->removeElement($backpackState);
+            // set the owning side to null (unless already changed)
+            if ($backpackState->getBackpack() === $this) {
+                $backpackState->setBackpack(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 }

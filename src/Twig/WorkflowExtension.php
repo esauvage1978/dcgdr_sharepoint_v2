@@ -5,6 +5,7 @@ namespace App\Twig;
 
 
 use App\Entity\Action;
+use App\Entity\Backpack;
 use App\Workflow\WorkflowData;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -53,17 +54,17 @@ class WorkflowExtension extends AbstractExtension
         return WorkflowData::getTransitionsForState($state);
     }
 
-    public function workflowGetExplains(Action $action,string $transition)
+    public function workflowGetExplains(Backpack $backpack,string $transition)
     {
         $object =  'App\Workflow\Transaction\Transition' . ucfirst( $transition);
-        $instance=new $object($action);
+        $instance=new $object($backpack);
         return $instance->getExplains();
     }
 
-    public function workflowGetCheckMessages(Action $action,string $transition)
+    public function workflowGetCheckMessages(Backpack $backpack,string $transition)
     {
         $object =  'App\Workflow\Transaction\Transition' . ucfirst( $transition);
-        $instance=new $object($action);
+        $instance=new $object($backpack);
         return $instance->getCheckMessages();
     }
 }

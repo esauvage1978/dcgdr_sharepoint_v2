@@ -107,6 +107,11 @@
     {%- import _self as macro -%}
     {{ macro.badge(state | workflowGetNameOfState , state | workflowGetColorOfState) }}
 {% endmacro %}
+
 {% macro badge(title, color) %}
     <span class="badge" style="background-color:{{ color }}">{{ title }}</span>
+{% endmacro %}
+
+{% macro style_bg_color(state) %}
+    style="background-color:{{ state | workflowGetColorOfState }};color:black"
 {% endmacro %}

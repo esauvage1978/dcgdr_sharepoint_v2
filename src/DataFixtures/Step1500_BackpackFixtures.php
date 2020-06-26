@@ -2,17 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Picture;
 use App\Entity\Backpack;
-use App\Entity\Thematic;
 use App\Entity\UnderRubric;
+use App\Entity\User;
 use App\Helper\FixturesImportData;
-use App\Repository\PictureRepository;
-use App\Repository\ThematicRepository;
 use App\Repository\UnderRubricRepository;
 use App\Repository\UserRepository;
 use App\Validator\BackpackValidator;
-use App\Validator\RubricValidator;
 use App\Workflow\WorkflowData;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -117,7 +113,9 @@ class Step1500_BackpackFixtures extends Fixture implements FixtureGroupInterface
             ->setDir3($data['n3'])
             ->setDir4($data['n4'])
             ->setDir5($data['n5'])
-            ->setCurrentPlace($data['afficher']=='1'?WorkflowData::STATE_DRAFT:WorkflowData::STATE_ABANDONNED)
+            ->setCurrentState($data['afficher']=='1'?WorkflowData::STATE_PUBLISHED:WorkflowData::STATE_ABANDONNED)
+            ->setStateAt($this->convertDate($data['date_create']))
+            ->setContentState('Version 1.0.0')
             ->setOwner($this->user)
             ->setUpdateAt
             (

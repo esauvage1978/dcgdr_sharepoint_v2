@@ -12,10 +12,10 @@ class WorkflowData
     const STATE_ARCHIVED = 'archived';
 
 
-    const TRANSITION_TO_PUBLISH = 'topublish';
+    const TRANSITION_TO_PUBLISH = 'toPublish';
     const TRANSITION_TO_ABANDONNE = 'toAbandonne';
     const TRANSITION_TO_ARCHIVE = 'toArchive';
-    const TRANSITION_TO_DRAFT = 'toDraft';
+    const TRANSITION_TO_DRAFT = 'toTheDraft';
 
     public static function getTransitionsForState($state)
     {
@@ -124,6 +124,11 @@ class WorkflowData
         ];
 
         switch ($transition) {
+            case self::TRANSITION_TO_DRAFT:
+                $data['state']=self::STATE_DRAFT;
+                $data['titre']='Remettre en brouillon';
+                $data['btn_label']='Basculer';
+                break;
             case self::TRANSITION_TO_PUBLISH:
                 $data['state']=self::STATE_PUBLISHED;
                 $data['titre']='Publier de porte document';
@@ -139,11 +144,7 @@ class WorkflowData
                 $data['titre']='Archiver le porte document';
                 $data['btn_label']='Archiver';
                 break;
-            case self::TRANSITION_TO_DRAFT:
-                $data['state']=self::STATE_DRAFT;
-                $data['titre']='Remettre en brouillon';
-                $data['btn_label']='Basculer';
-                break;
+
         }
 
         return $data;

@@ -119,11 +119,17 @@ class User implements UserInterface, EntityInterface
      */
     private $backpacks;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\BackpackState", mappedBy="user")
+     */
+    private $backpackStates;
+
     public function __construct()
     {
         $this->organismes = new ArrayCollection();
         $this->corbeilles = new ArrayCollection();
         $this->backpacks = new ArrayCollection();
+        $this->backpackStates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -449,6 +455,38 @@ class User implements UserInterface, EntityInterface
             // set the owning side to null (unless already changed)
             if ($backpack->getOwner() === $this) {
                 $backpack->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|backpackState[]
+     */
+    public function getbackpackStates(): Collection
+    {
+        return $this->backpackStates;
+    }
+
+    public function addbackpackState(backpackState $backpackState): self
+    {
+        if (!$this->backpackStates->contains($backpackState)) {
+            $this->backpackStates[] = $backpackState;
+            $backpackState->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removebackpackState(backpackState $backpackState): self
+    {
+        if ($this->backpackStates->contains($backpackState)) {
+            $this->backpackStates->removeElement($backpackState);
+            // set the owning side to null (unless already changed)
+            if ($backpackState->getUser() === $this) {
+                $backpackState->setUser(null);
             }
         }
 

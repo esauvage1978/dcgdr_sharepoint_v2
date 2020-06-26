@@ -26,7 +26,7 @@ class BackpackExtension extends AbstractExtension
                 if (
                     $underrubric->getIsEnable()
                     && $underrubric->getUnderThematic()->getIsEnable()
-                    && $backpack->getcurrentPlace()===WorkflowData::STATE_DRAFT
+                    && $backpack->getcurrentState()===WorkflowData::STATE_PUBLISHED
                 ) {
                     $nbr = $nbr + 1;
                 }
@@ -68,7 +68,7 @@ class BackpackExtension extends AbstractExtension
         $nbr = 0;
         foreach ($backpacks as $backpack) {
             if (
-                $backpack->getCurrentPlace()==WorkflowData::STATE_DRAFT
+                $backpack->getCurrentState()==WorkflowData::STATE_PUBLISHED
             ) {
                 $nbr = $nbr + 1;
             }

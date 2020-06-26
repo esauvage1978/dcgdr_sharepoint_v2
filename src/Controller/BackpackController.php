@@ -179,7 +179,7 @@ class BackpackController extends AbstractGController
         Request $request
     ) {
         $request->request->add(['urId'=>$underRubric->getId()]);
-        return $this->show($request,$repo,WorkflowData::STATE_DRAFT,false,$underRubric);
+        return $this->show($request,$repo,WorkflowData::STATE_PUBLISHED,false,$underRubric);
     }
 
     /**
@@ -195,7 +195,7 @@ class BackpackController extends AbstractGController
     {
         $dto = new BackpackDto();
         $dto
-            ->setCurrentPlace($state)
+            ->setCurrentState($state)
             ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
             ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
             ->setUnderRubricDto((new UnderRubricDto())->setIsEnable(RubricDto::TRUE))

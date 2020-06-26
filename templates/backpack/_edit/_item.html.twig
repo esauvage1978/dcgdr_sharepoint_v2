@@ -3,11 +3,13 @@
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
     {% import "macros/delele.html.twig" as del %}
     {% import "macros/submit.html.twig" as sub %}
+
+
+
+
+
     {{ form_start(form) }}
-
-
     <div class="row justify-content-center ">
-
 
         <div class="{{ col_1_2 }}">
             {% embed 'widgets/card-widget.html.twig' %}
@@ -120,7 +122,7 @@
     </div>
     <div class="row  justify-content-center">
         <div class="col-12 -sm mt-5 p-3 text-muted">
-            <small>Créé par <strong>{{ item.owner.name }}</strong> Mise à jour le <strong>{{ item.updateAt | date("d M yy à i:H") }}</strong></small>
+            <small>Créé par <strong>{{ item.owner.name }}</strong> Mise à jour le <strong>{{ item.updateAt | date("d M Y à i:H") }}</strong></small>
         </div>
     </div>
     {% import "macros/submit.html.twig" as sub %}

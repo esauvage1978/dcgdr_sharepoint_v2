@@ -39,7 +39,7 @@ class BackpackDto extends AbstractDto
     /**
      * @var ?string
      */
-    private $currentPlace;
+    private $currentState;
 
     /**
      * @return mixed
@@ -148,18 +148,18 @@ class BackpackDto extends AbstractDto
     /**
      * @return mixed
      */
-    public function getCurrentPlace()
+    public function getCurrentState()
     {
-        return $this->currentPlace;
+        return $this->currentState;
     }
 
     /**
-     * @param mixed $currentPlace
+     * @param mixed $currentState
      * @return BackpackDto
      */
-    public function setCurrentPlace($currentPlace)
+    public function setCurrentState($currentState)
     {
-        $this->currentPlace = $currentPlace;
+        $this->currentState = $currentState;
         return $this;
     }
 

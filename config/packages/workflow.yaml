@@ -2,26 +2,26 @@
 framework:
     workflows:
         backpack_publishing:
-            type: 'workflow' # or 'state_machine'
+            type: 'state_machine' # or 'state_machine'
             audit_trail:
                 enabled: true
             marking_store:
                 type: 'method'
-                property: 'currentPlace'
+                property: 'currentState'
             supports:
                 - App\Entity\Backpack
             initial_marking: draft
             places:
                 - draft
-                - abandonned
                 - published
+                - abandonned
                 - archived
             transitions:
                 toPublish:
                     from: draft
                     to:   published
-                toDraft:
-                    from: [published, abandonned,archived]
+                toTheDraft:
+                    from: [published, abandonned, archived]
                     to:   draft
                 toAbandonne:
                     from: [draft, published, archived]

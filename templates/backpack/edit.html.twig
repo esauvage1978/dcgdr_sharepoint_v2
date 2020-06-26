@@ -6,7 +6,7 @@
 {% block breadcrumb %}
     {{ actions.backpack(
         'edit',
-        item.currentPlace,
+        item.currentState,
         item.owner==app.user,
         item,
         item.underrubric
@@ -15,7 +15,15 @@
 {% endblock %}
 
 {% block page_content %}
-    {{ include(domaine ~ '/_edit/_item.html.twig') }}
+    {% import "macros/workflow.html.twig" as wfl %}
+    {{ include('backpack/_edit/_etat_modal.html.twig') }}
+    {{ wfl.cards(item) }}
+
+    {% if item.currentState in [workflow_archived,workflow_abandonned] %}
+        {{ include(domaine ~ '/_show/_item.html.twig') }}
+    {% else %}
+        {{ include(domaine ~ '/_edit/_item.html.twig') }}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
