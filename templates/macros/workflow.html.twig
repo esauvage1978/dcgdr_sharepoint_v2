@@ -129,7 +129,6 @@
             <img class="img-circle img-bordered-sm"
                  src=" {{ asset( data.user.avatar) }}"
                  alt="user image" style="width: 48px">
-            <span class="username">
             <a href="{{ path('user_show',{'id':data.user.id }) }}">{{ data.user.name }}</a>
         {% endblock %}
         {% block timeline_item_body %}

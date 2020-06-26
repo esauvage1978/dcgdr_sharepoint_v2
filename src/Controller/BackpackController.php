@@ -17,6 +17,7 @@ use App\Manager\BackpackManager;
 use App\Repository\BackpackDtoRepository;
 use App\Repository\BackpackFileRepository;
 use App\Repository\BackpackRepository;
+use App\Repository\UnderRubricRepository;
 use App\Security\BackpackVoter;
 use App\Tree\BackpackTree;
 use App\Workflow\WorkflowData;
@@ -32,15 +33,22 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BackpackController extends AbstractGController
 {
+    /**
+     * @var UnderRubricRepository
+     */
+    private $underRubricRepository;
+
     public function __construct
     (
         BackpackRepository $repository,
-        backpackManager $manager
+        backpackManager $manager,
+        UnderRubricRepository $underRubricRepository
     )
     {
         $this->repository = $repository;
         $this->manager = $manager;
         $this->domaine = 'backpack';
+        $this->underRubricRepository=$underRubricRepository;
     }
 
     /**
@@ -134,12 +142,16 @@ class BackpackController extends AbstractGController
         BackpackDtoRepository $repo,
         string $state,
         bool $owner = false,
-        UnderRubric $underRubric=null
+        UnderRubric $underRubric = null
     )
     {
         $owner = $request->get('owner') ? $request->get('owner') : $owner;
         $urId = $request->get('urId');
         $items = $this->getItems($state, $owner, $repo, $urId);
+
+        if (is_null($underRubric) && !empty($urId)) {
+            $underRubric = $this->underRubricRepository->find($urId);
+        }
 
         $parameter =
             [
@@ -156,7 +168,7 @@ class BackpackController extends AbstractGController
             ->setRoute('backpacks_show_state')
             ->setParameter($parameter);
 
-        if(!is_null(  $urId )){
+        if (!is_null($urId)) {
             $tree->hideUnderThematic();
         }
 
@@ -165,7 +177,7 @@ class BackpackController extends AbstractGController
                 'items' => $tree->getTree(),
                 'count' => $tree->getCountItems(),
                 'item' => $tree->getItem(),
-                'underrubric'=>$underRubric
+                'underrubric' => $underRubric
             ]);
 
         return $this->render('backpack/state.html.twig', $renderArray);
@@ -180,9 +192,10 @@ class BackpackController extends AbstractGController
         UnderRubric $underRubric,
         BackpackDtoRepository $repo,
         Request $request
-    ) {
-        $request->request->add(['urId'=>$underRubric->getId()]);
-        return $this->show($request,$repo,WorkflowData::STATE_PUBLISHED,false,$underRubric);
+    )
+    {
+        $request->request->add(['urId' => $underRubric->getId()]);
+        return $this->show($request, $repo, WorkflowData::STATE_PUBLISHED, false, $underRubric);
     }
 
     /**

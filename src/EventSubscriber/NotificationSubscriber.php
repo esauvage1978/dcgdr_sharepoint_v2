@@ -89,7 +89,7 @@ class NotificationSubscriber implements EventSubscriberInterface
         $dto=new BackpackDto();
 
         $dto
-            ->setCurrentState(WorkflowData::STATE_PUBLISHED)
+            ->setCurrentState(WorkflowData::STATE_DRAFT)
             ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
             ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
             ->setUnderRubricDto((new UnderRubricDto())->setIsEnable(RubricDto::TRUE))
