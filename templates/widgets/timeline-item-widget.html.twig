@@ -1,0 +1,28 @@
+{% import "macros/workflow.html.twig" as workflow %}
+<div>
+    <i class="fas fa-external-link-alt " {% if block('timeline_item_class') is defined %}{{ block('timeline_item_class') }}{% endif %}></i>
+    <div class="timeline-item">
+        {% if block('timeline_item_block') is defined %}
+            {{ block('timeline_item_block') }}
+        {% endif %}
+
+
+        {% if block('timeline_item_header') is defined %}
+            {% set body = block('timeline_item_header') %}
+            {% if body is not empty %}
+                <div class="timeline-body {% if block('timeline_item_header_class') is defined %}{{ block('timeline_item_header_class') }}{% endif %}">
+                    {{ body|raw }}
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if block('timeline_item_body') is defined %}
+            {% set body = block('timeline_item_body') %}
+            {% if body is not empty %}
+                <div class="timeline-body {% if block('timeline_item_body_class') is defined %}{{ block('timeline_item_body_class') }}{% endif %}">
+                    {{ body|raw }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+</div>
