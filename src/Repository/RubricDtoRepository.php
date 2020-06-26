@@ -57,7 +57,7 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
         $this->initialise_where();
 
-        $this->initialise_orderBy();
+        $this->initialise_orderByName();
 
         return $this->builder
             ->getQuery()
@@ -125,10 +125,16 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
             ->select(
                 self::ALIAS,
                 PictureRepository::ALIAS,
-                ThematicRepository::ALIAS
+                ThematicRepository::ALIAS,
+                UnderRubricRepository::ALIAS,
+                UnderThematicRepository::ALIAS,
+                BackpackRepository::ALIAS
             )
             ->leftJoin(self::ALIAS . '.picture', PictureRepository::ALIAS)
-            ->Join(self::ALIAS . '.thematic', ThematicRepository::ALIAS);
+            ->Join(self::ALIAS . '.thematic', ThematicRepository::ALIAS)
+            ->Join(self::ALIAS . '.underRubrics', UnderRubricRepository::ALIAS)
+            ->leftJoin(UnderRubricRepository::ALIAS . '.underThematic', UnderThematicRepository::ALIAS)
+            ->leftJoin(UnderRubricRepository::ALIAS . '.backpacks', BackpackRepository::ALIAS);
     }
 
     private function initialise_selectAll()
@@ -212,10 +218,10 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
     private function initialise_where_thematic()
     {
-        $id=$this->dto->thematicDto->getId();
-        if (!empty($id)) {
+        $t=$this->dto->getThematicDto();
+        if (!empty($t) && !empty($t->getId())) {
             $this->builder->andWhere(ThematicRepository::ALIAS . '.id = :thematicid');
-            $this->addParams('thematicid', $id);
+            $this->addParams('thematicid', $t->getId());
         }
     }
 
@@ -232,15 +238,32 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
             }
         }
 
-        $e=$this->dto->thematicDto->getIsEnable();
-        if (!empty($e)) {
-            if ($e == RubricDto::TRUE) {
+        $e=$this->dto->getThematicDto();
+        if (!empty($e) && !empty($e->getId())) {
+            if ($e->getIsEnable() == RubricDto::TRUE) {
                 $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= true');
-            } elseif ($e == RubricDto::FALSE) {
+            } elseif ($e->getIsEnable() == RubricDto::FALSE) {
                 $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= false');
             }
         }
 
+        $e=$this->dto->getUnderThematicDto();
+        if (!empty($e) && !empty($e->getId())) {
+            if ($e->getIsEnable() == RubricDto::TRUE) {
+                $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= true');
+            } elseif ($e->getIsEnable() == RubricDto::FALSE) {
+                $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= false');
+            }
+        }
+
+        $e=$this->dto->getUnderRubricDto();
+        if (!empty($e) && !empty($e->getId())) {
+            if ($e->getIsEnable() == RubricDto::TRUE) {
+                $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= true');
+            } elseif ($e->getIsEnable() == RubricDto::FALSE) {
+                $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= false');
+            }
+        }
     }
 
     private function initialise_where_underRubric()
@@ -265,8 +288,8 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
     private function initialise_where_user_can_show()
     {
-        $u=$this->dto->userDto->getId();
-        if (!empty($u)) {
+        $u=$this->dto->getUserDto();
+        if (!empty($u) && !empty($u->getId())) {
 
             $qRWC = $this->createQueryBuilder(self::ALIAS . '1')
                 ->select(self::ALIAS . '1.id')
@@ -280,15 +303,13 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
                 ->Join(CorbeilleRepository::ALIAS_RUBRIC_READERS . '.users', UserRepository::ALIAS_RUBRIC_READERS)
                 ->Where(UserRepository::ALIAS_RUBRIC_READERS . '.id= :idUser');
 
-
-            $this->addParams('idUser', $u);
-
+            $this->addParams('idUser', $u->getId());
 
             $this->builder
                 ->andWhere(
                     self::ALIAS . '.id IN (' . $qRWC->getDQL() . ')' .
                     ' OR ' . self::ALIAS . '.id IN (' . $qRRC->getDQL() . ')' .
-                    ' OR ' . self::ALIAS . '.showAll = 1');
+                    ' OR ' . self::ALIAS . '.isShowAll = 1');
 
         }
     }
@@ -301,6 +322,11 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
             ->addOrderBy(ThematicRepository::ALIAS . '.name', 'ASC')
             ->addOrderBy(self::ALIAS . '.showOrder', 'ASC')
             ->addOrderBy(self::ALIAS . '.name', 'ASC');
+    }
+    private function initialise_orderByName()
+    {
+        $this->builder
+            ->orderBy(self::ALIAS . '.name', 'ASC');
     }
 
 

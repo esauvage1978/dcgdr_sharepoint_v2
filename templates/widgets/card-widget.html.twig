@@ -5,6 +5,7 @@ Block :
     card_img
     card_title | card_id | card_class | card_attributes | card_tools_attributes  | card_tools
     card-body | card_body_class
+    card_liste
     card_footer
 Attributs :
     collapsed : true/false
@@ -21,11 +22,11 @@ Attributs :
 {% set _removable = removable|default(false) %}
 {% set _removable_title = removable_title|default('') %}
 
-<div class="card {% if block('card_class') is defined %} {{ block('card_class') }}{% endif %}{{ _collapsed ? ' collapsed-card' : '' }}"
+<!--debut CARD--><div class="card {% if block('card_class') is defined %} {{ block('card_class') }}{% endif %}{{ _collapsed ? ' collapsed-card' : '' }}"
         {% if block('card_attributes') is defined %} {{ block('card_attributes') }}{% endif %}{% if block('card_id') is defined %} id="{{ block('card_id') }}"{% endif %}>
     {% if block('card_img') is defined %}{{ block('card_img') }}{% endif %}
     {% if block('card_title') is defined or _collapsible or _removable %}
-        <div class="card-header">
+        <!--debut CARD HEADER--><div class="card-header">
             {% if block('card_title') is defined %}
                 <h3 class="card-title  {% if block('card_title_class') is defined %} {{ block('card_title_class') }}{% endif %}">
                     {{ block('card_title') }}
@@ -50,18 +51,30 @@ Attributs :
                     ) }}
                 {% endif %}
             </div>
-        </div>
+        </div><!--FIN CARD HEADER-->
     {% endif %}
-    <div class="card-body{% if block('card_body_class') is defined %} {{ block('card_body_class') }}{% endif %}">{{ block('card_body') }}</div>
+    <!--debut CARD BODY--> <div class="card-body{% if block('card_body_class') is defined %} {{ block('card_body_class') }}{% endif %}">
+        {% if block('card_body_ribbon_text') is defined %}
+        <div class="ribbon-wrapper {% if block('card_body_ribbon_class') is defined %} {{ block('card_body_ribbon_class') }}{% endif %}">
+            <div class="ribbon " {% if block('card_body_ribbon_attr') is defined %} {{ block('card_body_ribbon_attr') }}{% endif %} >
+                {{ block('card_body_ribbon_text') }}
+            </div>
+        </div>
+        {% endif %}
+        {{ block('card_body') }}
+
+    </div><!--FIN CARD BODY-->
+    {% if block('card_liste') is defined %} {{ block('card_liste') }}{% endif %}
+
     {% if block('card_footer') is defined %}
         {# 
             If there is a form in the block_footer, it will be rendered when checking "is not empty". 
             Therefor we have to cache the output first and then perform the checks. 
         #}
-        {% set boxFooter = block('card_footer') %}
-        {% if boxFooter is not empty %}
-            <div class="card-footer">{{ cardFooter|raw }}</div>
+        {% set cardFooter = block('card_footer') %}
+        {% if cardFooter is not empty %}
+            <!--debut CARD FOOTER--><div class="card-footer">{{ cardFooter|raw }}</div><!--FIN CARD FOOTER-->
         {% endif %}
     {% endif %}
-</div>
+</div><!--fin CARD-->
 {% if block('card_after') is defined %}{{ block('card_after') }}{% endif %}

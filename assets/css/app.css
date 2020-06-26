@@ -2,7 +2,7 @@
 .div_tree {
     background-color: #f9f9f9;
     padding: 10px 5px;
-    max-height: 80vh;
+    max-height: 75vh;
 }
 
 .dataTables_info {
@@ -34,3 +34,9 @@
 h1 > small {
     color:gray;
 }
+
+.thead-default th {
+    color: #464a4c;
+    background-color: #eceeef;
+}
+

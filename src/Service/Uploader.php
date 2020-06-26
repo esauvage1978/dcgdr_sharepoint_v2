@@ -49,10 +49,10 @@ class Uploader
      *
      * @return string
      */
-    public function getSize(UploadedFile $file): array
+    public function getSize(UploadedFile $file): string
     {
         try {
-            return getimagesize($file);
+            return filesize($file);
         } catch (\Exception $e) {
             dump($file);
         }

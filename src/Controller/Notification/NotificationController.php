@@ -20,6 +20,12 @@ class NotificationController extends AbstractController
             case "2":
                 return $this->redirectToRoute('profil_sendmail_email_validated');
                 break;
+            case "3":
+                return $this->redirectToRoute('backpacks_show_draft');
+                break;
+            case "4":
+                return $this->redirectToRoute('backpacks_show_mydraft');
+                break;
         }
     }
 }

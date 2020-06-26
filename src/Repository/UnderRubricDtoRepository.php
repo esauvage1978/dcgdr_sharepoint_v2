@@ -206,8 +206,8 @@ class UnderRubricDtoRepository extends ServiceEntityRepository implements DtoRep
 
     private function initialise_where_user_can_show()
     {
-        $u = $this->dto->userDto->getId();
-        if (!empty($u)) {
+        $u = $this->dto->getUserDto();
+        if (!empty($u) && !empty($u->getId())) {
 
             $qURWC = $this->createQueryBuilder(self::ALIAS . '1')
                 ->select(self::ALIAS . '1.id')
@@ -235,7 +235,7 @@ class UnderRubricDtoRepository extends ServiceEntityRepository implements DtoRep
                 ->Join(CorbeilleRepository::ALIAS_RUBRIC_READERS . '.users', UserRepository::ALIAS_RUBRIC_READERS)
                 ->Where(UserRepository::ALIAS_RUBRIC_READERS . '.id= :idUser');
 
-            $this->addParams('idUser', $u);
+            $this->addParams('idUser', $u->getId());
 
 
             $this->builder
@@ -244,7 +244,7 @@ class UnderRubricDtoRepository extends ServiceEntityRepository implements DtoRep
                     ' OR ' . self::ALIAS . '.id IN (' . $qRRC->getDQL() . ')' .
                     ' OR ' . self::ALIAS . '.id IN (' . $qURWC->getDQL() . ')' .
                     ' OR ' . self::ALIAS . '.id IN (' . $qURRC->getDQL() . ')' .
-                    ' OR ' . RubricRepository::ALIAS . '.showAll = 1' .
+                    ' OR ' . RubricRepository::ALIAS . '.isShowAll = 1' .
                     ' OR ' . self::ALIAS . '.isShowAll = 1');
 
         }
@@ -252,19 +252,19 @@ class UnderRubricDtoRepository extends ServiceEntityRepository implements DtoRep
 
     private function initialise_where_underThematic()
     {
-        $ut = $this->dto->underThematicDto->getId();
-        if (!empty($ut)) {
+        $ut = $this->dto->getUnderThematicDto();
+        if (!empty($ut) && !empty($ut->getId())) {
             $this->builder->andwhere(UnderThematicRepository::ALIAS . '.id = :underthematicid');
-            $this->addParams('underthematicid', $ut);
+            $this->addParams('underthematicid', $ut->getId());
         }
     }
 
     private function initialise_where_rubric()
     {
-        $r = $this->dto->rubricDto->getId();
-        if (!empty($r)) {
+        $r = $this->dto->getRubricDto();
+        if (!empty($r) && !empty($r->getId())) {
             $this->builder->andwhere(RubricRepository::ALIAS . '.id = :rubricid');
-            $this->addParams('rubricid', $r);
+            $this->addParams('rubricid', $r->getId());
         }
     }
 
@@ -278,27 +278,27 @@ class UnderRubricDtoRepository extends ServiceEntityRepository implements DtoRep
                 $this->builder->andwhere(self::ALIAS . '.isEnable= false');
             }
         }
-        $e = $this->dto->rubricDto->thematicDto->getIsEnable();
-        if (!empty($e)) {
-            if ($e == UnderRubricDto::TRUE) {
+        $e = $this->dto->getThematicDto();
+        if (!empty($e) && !empty($e->getIsEnable())) {
+            if ($e->getIsEnable() == UnderRubricDto::TRUE) {
                 $this->builder->andwhere(ThematicRepository::ALIAS . '.isEnable= true');
-            } elseif ($e == UnderRubricDto::FALSE) {
+            } elseif ($e->getIsEnable() == UnderRubricDto::FALSE) {
                 $this->builder->andwhere(ThematicRepository::ALIAS . '.isEnable= false');
             }
         }
-        $e=$this->dto->underThematicDto->getIsEnable();
-        if (!empty($e)) {
-            if ($e == UnderRubricDto::TRUE) {
+        $e = $this->dto->getUnderThematicDto();
+        if (!empty($e) && !empty($e->getIsEnable())) {
+            if ($e->getIsEnable() == UnderRubricDto::TRUE) {
                 $this->builder->andwhere(UnderThematicRepository::ALIAS . '.isEnable= true');
-            } elseif ($e == UnderRubricDto::FALSE) {
+            } elseif ($e->getIsEnable() == UnderRubricDto::FALSE) {
                 $this->builder->andwhere(UnderThematicRepository::ALIAS . '.isEnable= false');
             }
         }
-        $e=$this->dto->rubricDto->getIsEnable();
-        if (!empty($e)) {
-            if ($e == UnderRubricDto::TRUE) {
+        $e = $this->dto->getRubricDto();
+        if (!empty($e) && !empty($e->getIsEnable())) {
+            if ($e->getIsEnable() == UnderRubricDto::TRUE) {
                 $this->builder->andwhere(RubricRepository::ALIAS . '.isEnable= true');
-            } elseif ($e == UnderRubricDto::FALSE) {
+            } elseif ($e->getIsEnable() == UnderRubricDto::FALSE) {
                 $this->builder->andwhere(RubricRepository::ALIAS . '.isEnable= false');
             }
         }
