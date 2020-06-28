@@ -184,6 +184,46 @@ class BackpackController extends AbstractGController
     }
 
     /**
+     * @Route("/backpacks/hide", name="backpacks_show_hide", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function showHide(
+        Request $request,
+        BackpackDtoRepository $repo
+    ) {
+        $dto = new BackpackDto();
+        $dto->setHide(BackpackDto::TRUE);
+
+        if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
+            $dto->setUserDto((new UserDto())->setId($this->getUser()->getName()));
+        }
+
+        $items= $repo->findAllForDto($dto, BackpackDtoRepository::FILTRE_DTO_INIT_HOME);
+
+        $parameter =
+            [
+            ];
+
+        $renderArray = $parameter;
+
+        $tree = new BackpackTree($this->container, $request);
+        $tree
+            ->initialise($items)
+            ->setRoute('backpacks_show_hide')
+            ->setParameter($parameter);
+
+
+        $renderArray = array_merge($renderArray,
+            [
+                'items' => $tree->getTree(),
+                'count' => $tree->getCountItems(),
+                'item' => $tree->getItem()
+            ]);
+
+        return $this->render('backpack/hide.html.twig', $renderArray);
+    }
+
+    /**
      * @Route("/underrubric/{id}", name="underrubric_show", methods={"GET"})
      * @return Response
      * @IsGranted("ROLE_USER")
@@ -212,17 +252,18 @@ class BackpackController extends AbstractGController
         $dto = new BackpackDto();
         $dto
             ->setCurrentState($state)
-            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderRubricDto((new UnderRubricDto())->setIsEnable(RubricDto::TRUE))
-            ->setRubricDto((new RubricDto())->setIsEnable(RubricDto::TRUE));
+            ->setVisible(BackpackDto::TRUE);
 
         if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
             $dto->setUserDto((new UserDto())->setId($this->getUser()->getName()));
         }
 
         if (!is_null($underrubric)) {
-            $dto->setUnderRubricDto($dto->getUnderRubricDto()->setId($underrubric));
+            if(is_null($dto->getUnderRubricDto())) {
+                $dto->setUnderRubricDto((new UnderRubricDto())->setId($underrubric));
+            } else {
+                $dto->setUnderRubricDto($dto->getUnderRubricDto()->setId($underrubric));
+            }
         }
 
         if (!is_null($this->getUser()) && $owner == true) {

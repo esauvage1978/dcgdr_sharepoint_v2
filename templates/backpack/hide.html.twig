@@ -1,0 +1,17 @@
+{% extends 'backpack/layout_tree.html.twig' %}
+
+{% block title %}Porte-documents cachés{% endblock %}
+
+{% block page_subtitle %}
+    <span class="text-muted">
+    {{ count }} cachés
+    </span>
+{% endblock %}
+
+
+{% import "backpack/actions.html.twig" as actions %}
+{% block breadcrumb %}
+    {{ actions.backpack('state',null,null,item, null) }}
+{% endblock %}
+
+

@@ -22,8 +22,7 @@ class HomeController extends AbstractController
     {
         $dto=new RubricDto ();
 
-        $dto->setIsEnable(RubricDto::TRUE)
-            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE));
+        $dto->setVisible(RubricDto::TRUE);
 
         if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
             $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));

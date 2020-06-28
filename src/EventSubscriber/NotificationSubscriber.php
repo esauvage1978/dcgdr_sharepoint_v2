@@ -90,10 +90,7 @@ class NotificationSubscriber implements EventSubscriberInterface
 
         $dto
             ->setCurrentState(WorkflowData::STATE_DRAFT)
-            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderRubricDto((new UnderRubricDto())->setIsEnable(RubricDto::TRUE))
-            ->setRubricDto((new RubricDto())->setIsEnable(RubricDto::TRUE));
+            ->setVisible(BackpackDto::TRUE);
 
         if (!$this->auth->isGranted('GESTIONNAIRE')) {
             $nbr=$this->backpackDtoRepository->countForDto($dto);

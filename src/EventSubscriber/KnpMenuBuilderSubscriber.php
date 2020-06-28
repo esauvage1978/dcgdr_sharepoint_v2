@@ -30,6 +30,12 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             'childOptions' => $event->getChildOptions()
         ])->setLabelAttribute('icon', 'fas fa-home');
 
+        $menu->addChild('dashboard', [
+            'route' => 'dashboard',
+            'label' => 'Tableau de bord',
+            'childOptions' => $event->getChildOptions()
+        ])->setLabelAttribute('icon', 'fas fa-tachometer-alt');
+
         $menu->addChild(
             'backpack',
             [

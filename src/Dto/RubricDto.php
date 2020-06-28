@@ -5,7 +5,7 @@ namespace App\Dto;
 use App\Entity\Rubric;
 use App\Entity\Thematic;
 
-class RubricDto extends AbstractDto
+class RubricDto extends AbstractDtoIsEnable
 {
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Dto;
 
 
-class UnderThematicDto extends AbstractDto
+class UnderThematicDto extends AbstractDtoIsEnable
 {
 
 }
