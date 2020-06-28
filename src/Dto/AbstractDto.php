@@ -20,17 +20,22 @@ class AbstractDto implements DtoInterface
     /**
      * @var ?String
      */
-    protected $isEnable;
-
-    /**
-     * @var ?String
-     */
     protected $name;
 
     /**
      * @var ?String
      */
     protected $id;
+
+    /**
+     * @var ?string
+     */
+    protected $visible;
+
+    /**
+     * @var ?string
+     */
+    protected $hide;
 
     public function getWordSearch()
     {
@@ -61,20 +66,6 @@ class AbstractDto implements DtoInterface
     /**
      * @return mixed
      */
-    public function getIsEnable()
-    {
-        return $this->isEnable;
-    }
-
-    public function setIsEnable($isEnable)
-    {
-        $this->isEnable = $isEnable;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getName()
     {
         return $this->name;
@@ -99,4 +90,42 @@ class AbstractDto implements DtoInterface
         $this->id = $id;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     * @param mixed $visible
+     * @return AbstractDto
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHide()
+    {
+        return $this->hide;
+    }
+
+    /**
+     * @param mixed $hide
+     * @return AbstractDto
+     */
+    public function setHide($hide)
+    {
+        $this->hide = $hide;
+        return $this;
+    }
+
+
 }

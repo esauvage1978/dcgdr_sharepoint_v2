@@ -97,13 +97,13 @@ abstract class AbstractTree implements InterfaceTree
         return '#';
     }
 
-    protected function addBranche($id, $data_courant, $parent, $opened = true)
+    protected function addBranche($id, $data_courant, $parent, $opened = true, $isEnable=true)
     {
         $this->tree[] = [
             'id' => $id,
             'parent' => $parent,
-            'text' => $data_courant,
-            'icon' => 'far fa-folder-open',
+            'text' => '<span class="'. ($isEnable?'text-secondary':'text-danger').'">'. $data_courant . "</span>",
+            'icon' => '',
             'state' => [
                 'opened' => $opened,
             ],

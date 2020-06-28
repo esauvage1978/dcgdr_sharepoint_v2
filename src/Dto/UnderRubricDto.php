@@ -3,7 +3,7 @@
 namespace App\Dto;
 
 
-class UnderRubricDto extends AbstractDto
+class UnderRubricDto extends AbstractDtoIsEnable
 {
 
     /**

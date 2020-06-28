@@ -11,4 +11,5 @@ interface DtoInterface
 
     public function getPage();
     public function setPage($page);
+
 }

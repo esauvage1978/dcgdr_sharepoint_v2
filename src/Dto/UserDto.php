@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class UserDto extends AbstractDto
+class UserDto extends AbstractDtoIsEnable
 {
 
 }

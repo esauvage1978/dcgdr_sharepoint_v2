@@ -169,7 +169,13 @@ class BackpackTree extends AbstractTree
 
         if ($data_courant != $this->rubric_last) {
             $parent = $this->hideThematic ? '#': $this->thematic_id ;
-            $this->addBranche($this->rubric_id, $data_courant, $parent, $this->developed);
+            $this->addBranche(
+                $this->rubric_id,
+                $data_courant,
+                $parent,
+                $this->developed,
+                $backpack->getUnderRubric()->getRubric()->getIsEnable()
+            );
         }
 
         $this->rubric_last = $data_courant;
@@ -182,7 +188,8 @@ class BackpackTree extends AbstractTree
 
         if ($data_courant != $this->underThematic_last) {
             $parent = !$this->hideRubric ? $this->rubric_id : (!$this->hideThematic ? $this->thematic_id : '#');
-            $this->addBranche($this->underThematic_id, $data_courant, $parent, $this->developed);
+            $this->addBranche($this->underThematic_id, $data_courant, $parent, $this->developed,
+                $backpack->getUnderRubric()->getUnderThematic()->getIsEnable());
         }
 
         $this->underThematic_last = $data_courant;
@@ -194,7 +201,7 @@ class BackpackTree extends AbstractTree
 
         if ($data_courant != $this->underRubric_last) {
             $parent = !$this->hideUnderThematic ? $this->underThematic_id : (!$this->hideRubric ? $this->rubric_id : (!$this->hideThematic ? $this->thematic_id : '#'));
-            $this->addBranche($this->underRubric_id, $data_courant, $parent, $this->developed);
+            $this->addBranche($this->underRubric_id, $data_courant, $parent, $this->developed, $backpack->getUnderRubric()->getIsEnable());
 
             $this->dir1_id = '';
             $this->dir1_last = '';

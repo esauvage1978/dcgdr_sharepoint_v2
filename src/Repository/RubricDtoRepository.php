@@ -228,40 +228,53 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
     private function initialise_where_enable()
     {
-        $e=$this->dto->getIsEnable();
-        if (!empty($e)) {
-            if ($e == RubricDto::TRUE) {
 
-                $this->builder->andWhere(self::ALIAS . '.isEnable= true');
-            } elseif ($e == RubricDto::FALSE) {
-                $this->builder->andWhere(self::ALIAS . '.isEnable= false');
-            }
+        if (!empty($this->dto->getVisible())) {
+            $this->builder->andWhere(self::ALIAS . '.isEnable= true');
+            $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= true');
+            $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= true');
+            $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= true');
         }
-
-        $e=$this->dto->getThematicDto();
-        if (!empty($e) && !empty($e->getId())) {
-            if ($e->getIsEnable() == RubricDto::TRUE) {
-                $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= true');
-            } elseif ($e->getIsEnable() == RubricDto::FALSE) {
-                $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= false');
+        else if (!empty($this->dto->getHide()) ) {
+            $this->builder->andWhere(self::ALIAS . '.isEnable= false');
+            $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= false');
+            $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= false');
+            $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= false');
+        } else {
+            $e=$this->dto->getIsEnable();
+            if (!empty($e)) {
+                if ($e == RubricDto::TRUE) {
+                    $this->builder->andWhere(self::ALIAS . '.isEnable= true');
+                } elseif ($e == RubricDto::FALSE) {
+                    $this->builder->andWhere(self::ALIAS . '.isEnable= false');
+                }
             }
-        }
 
-        $e=$this->dto->getUnderThematicDto();
-        if (!empty($e) && !empty($e->getId())) {
-            if ($e->getIsEnable() == RubricDto::TRUE) {
-                $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= true');
-            } elseif ($e->getIsEnable() == RubricDto::FALSE) {
-                $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= false');
+            $e=$this->dto->getThematicDto();
+            if (!empty($e)) {
+                if ($e->getIsEnable() == RubricDto::TRUE) {
+                    $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= true');
+                } elseif ($e->getIsEnable() == RubricDto::FALSE) {
+                    $this->builder->andWhere(ThematicRepository::ALIAS . '.isEnable= false');
+                }
             }
-        }
 
-        $e=$this->dto->getUnderRubricDto();
-        if (!empty($e) && !empty($e->getId())) {
-            if ($e->getIsEnable() == RubricDto::TRUE) {
-                $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= true');
-            } elseif ($e->getIsEnable() == RubricDto::FALSE) {
-                $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= false');
+            $e=$this->dto->getUnderThematicDto();
+            if (!empty($e)) {
+                if ($e->getIsEnable() == RubricDto::TRUE) {
+                    $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= true');
+                } elseif ($e->getIsEnable() == RubricDto::FALSE) {
+                    $this->builder->andWhere(UnderThematicRepository::ALIAS . '.isEnable= false');
+                }
+            }
+
+            $e=$this->dto->getUnderRubricDto();
+            if (!empty($e) ) {
+                if ($e->getIsEnable() == RubricDto::TRUE) {
+                    $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= true');
+                } elseif ($e->getIsEnable() == RubricDto::FALSE) {
+                    $this->builder->andWhere(UnderRubricRepository::ALIAS . '.isEnable= false');
+                }
             }
         }
     }

@@ -13,10 +13,11 @@
     {%- import _self as macro -%}
     <div class="btn-group">
         {%- apply spaceless -%}
-            {%- for icon,values in actions  %}
+            {%- for icon,values in actions %}
                 {% if values.children is defined %}
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-expanded="false">
                             {{ macro.icon(icon) }}&nbsp;
                             <span class="caret"></span>
                             <span class="sr-only">{{ 'label.toggle_dropdown'|trans }}</span>
@@ -114,4 +115,25 @@
 
 {% macro style_bg_color(state) %}
     style="background-color:{{ state | workflowGetColorOfState }};color:black"
+{% endmacro %}
+
+
+{% macro info_box(options) %}
+    {%- import _self as macro -%}
+    {% set url = null %}
+    {% if options.route is defined %}
+        {% set url = path(options.route, options.routeOptions|default([])) %}
+    {% endif %}
+    <div class="info-box">
+    <span class="info-box-icon bg-{{ options.color|default('green') }}"><i
+                class="{{ options.icon }}"></i></span>
+        <div class="info-box-content">
+            {% if not url is empty %}<a href="{{ url }}" class="small-box-footer">{% endif %}
+                <span class="info-box-text">{{ options.title }}</span>
+                <span class="info-box-number">
+                {{ options.data }}
+        </span>
+                {% if not url is empty %}</a>{% endif %}
+        </div>
+    </div>
 {% endmacro %}
