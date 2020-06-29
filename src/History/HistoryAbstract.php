@@ -49,7 +49,7 @@ abstract class HistoryAbstract
         if (!isset($oldData) && !isset($newData) ) {
             return false;
         }
-        
+
         if($oldData!==$newData) {
             $this->addContent($field,$oldData,$newData);
             return true;
