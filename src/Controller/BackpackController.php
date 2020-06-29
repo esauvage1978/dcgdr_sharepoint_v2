@@ -13,6 +13,8 @@ use App\Entity\Rubric;
 use App\Entity\UnderRubric;
 use App\Form\Backpack\BackpackNewType;
 use App\Form\Backpack\BackpackType;
+use App\History\BackpackHistory;
+use App\History\HistoryShow;
 use App\Manager\BackpackManager;
 use App\Repository\BackpackDtoRepository;
 use App\Repository\BackpackFileRepository;
@@ -62,21 +64,23 @@ class BackpackController extends AbstractGController
     /**
      * @Route("/backpack/edit/{id}", name="backpack_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Backpack $item)
+    public function edit(Request $request, Backpack $item, backpackHistory $backpackHistory)
     {
 
         //$this->denyAccessUnlessGranted(BackpackVoter::UPDATE, $backpack);
-        $backpackOld = clone($item);
+        $itemOld = clone($item);
         $form = $this->createForm(BackpackType::class, $item);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->save($item)
-                ?
-                $this->addFlash(self::SUCCESS, self::MSG_MODIFY)
-                :
+            if ($this->manager->save($item)) {
+                $this->addFlash(self::SUCCESS, self::MSG_MODIFY);
+                $backpackHistory->compare($itemOld, $item);
+            } else {
                 $this->addFlash(self::DANGER, self::MSG_MODIFY_ERROR . $this->manager->getErrors($item));
+            }
+
         }
 
         return $this->render('backpack/edit.html.twig', [
@@ -223,6 +227,28 @@ class BackpackController extends AbstractGController
         return $this->render('backpack/hide.html.twig', $renderArray);
     }
 
+    /**
+     * @Route("/backpack/{id}/history", name="backpack_history", methods={"GET","POST"})
+     * @return Response
+     * @IsGranted("ROLE_USER")
+     */
+    public function history(
+        Request $request,
+        Backpack $item
+    ): Response
+    {
+        $historyShow = new HistoryShow(
+            $this->generateUrl('backpack_edit', ['id' => $item->getId()]),
+            "Porte-document : " . $item->getName(),
+            "Historiques des modifications du porte-document"
+        );
+
+        return $this->render('backpack/history.html.twig', [
+            'item'=>$item,
+            'histories' => $item->getHistories(),
+            'data' => $historyShow->getParams()
+        ]);
+    }
     /**
      * @Route("/underrubric/{id}", name="underrubric_show", methods={"GET"})
      * @return Response

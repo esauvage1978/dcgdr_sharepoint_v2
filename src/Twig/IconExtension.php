@@ -46,6 +46,7 @@ final class IconExtension extends AbstractExtension
         'fax' => 'fas fa-fax',
         'filter' => 'fas fa-filter',
         'help' => 'far fa-question-circle',
+        'history' => 'fas fa-history',
         'home' => 'fas fa-home',
         'invoice' => 'fas fa-file-invoice-dollar',
         'invoice-template' => 'fas fa-file-signature',
