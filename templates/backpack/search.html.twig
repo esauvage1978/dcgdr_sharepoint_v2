@@ -1,17 +1,36 @@
 {% extends 'backpack/layout_tree.html.twig' %}
+{% import "macros/widgets.html.twig" as widgets %}
+{% import "macros/default.html.twig" as new %}
 
 {% block title %}Porte-document {% endblock %}
 
 {% block page_subtitle %}
     <span class="text-muted">
-    {{ count }} porte-document{{ count>1?'s':'' }}
+        {% if underRubric is defined and item is defined %}
+            {{ item.underrubric.rubric.name }} /
+        {% endif %}
+
+    {{ count }}
+        {% if currentState is defined %}
+            {{ widgets.badge_state(currentState) }}
+        {% endif %}
+        {% if isNew is defined %}
+            {{ new.isNew(item.updateAt) }}
+        {% endif %}
+        {% if hide is defined %}
+            {{ widgets.badge('Masqué','#252525') }}
+        {% endif %}
     </span>
 {% endblock %}
 
 
 {% import "backpack/actions.html.twig" as actions %}
 {% block breadcrumb %}
-    {{ actions.backpack('search','','',item, null) }}
+    {% set ur= null %}
+    {% if underRubric is defined and item is defined %}
+        {% set ur= item.underrubric %}
+    {% endif %}
+    {{ actions.backpack('search','','',item, ur) }}
 {% endblock %}
 
 {% block page_content %}
