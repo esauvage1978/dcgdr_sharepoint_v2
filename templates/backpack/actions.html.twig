@@ -13,8 +13,12 @@
         {% elseif view=='workflow' %}
             {% set actions = actions|merge({ 'show': {url: path('backpacks_show_state',{state:state,iditem:item.id,owner:owner}),class:'btn-secondary',attr:{title:'Consulter'}}}) %}
             {% set actions = actions|merge({ 'edit': {url: path('backpack_edit',{id:item.id}),class:'btn-secondary',attr:{title:'Modifier'}}}) %}
+        {% elseif view=='history' %}
+            {% set actions = actions|merge({ 'show': {url: path('backpacks_show_state',{state:state,iditem:item.id,owner:owner}),class:'btn-secondary',attr:{title:'Consulter'}}}) %}
+            {% set actions = actions|merge({ 'edit': {url: path('backpack_edit',{id:item.id}),class:'btn-secondary',attr:{title:'Modifier'}}}) %}
         {% elseif view=='edit' %}
             {% set actions = actions|merge({ 'workflow': {url: path('workflow_backpack_history',{id:item.id}),class:'btn-secondary',attr:{title:'historique du workflow'}}}) %}
+            {% set actions = actions|merge({ 'history': {url: path('backpack_history',{id:item.id}),class:'btn-secondary',attr:{title:'historique des modifications'}}}) %}
             {% set actions = actions|merge({ 'show': {url: path('backpacks_show_state',{state:state,iditem:item.id,owner:owner}),class:'btn-secondary',attr:{title:'Consulter'}}}) %}
             {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
         {% endif %}
