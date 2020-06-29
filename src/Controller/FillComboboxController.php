@@ -29,10 +29,7 @@ class FillComboboxController extends AbstractGController
     {
         $dto=new RubricDto ();
 
-        $dto->setIsEnable(RubricDto::TRUE)
-            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderRubricDto((new UnderRubricDto())->setIsEnable(RubricDto::TRUE))
+        $dto->setVisible(RubricDto::TRUE)
             ->setUserDto((new UserDto())->setId($this->getUser()->getId()));
 
         if ($request->isXmlHttpRequest()) {
@@ -56,14 +53,11 @@ class FillComboboxController extends AbstractGController
         $idRubric=$request->get('id');
         $dto=new UnderRubricDto ();
 
-        $dto->setIsEnable(RubricDto::TRUE)
-            ->setThematicDto((new ThematicDto())->setIsEnable(RubricDto::TRUE))
-            ->setUnderThematicDto((new UnderThematicDto())->setIsEnable(RubricDto::TRUE))
+        $dto->setVisible(RubricDto::TRUE)
             ->setRubricDto((new RubricDto())
-                ->setIsEnable(RubricDto::TRUE)
                 ->setId($idRubric)
-            )
-            ->setUserDto((new UserDto())->setId($this->getUser()->getId()));
+            );
+        $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));
 
         if ($request->isXmlHttpRequest()) {
             return $this->json(

@@ -20,6 +20,8 @@ parameters:
     mailer.smtp.username: '%env(MAILER_SMTP_USERNAME)%'
     mailer.smtp.password: '%env(MAILER_SMTP_PASSWORD)%'
 
+    undevelopped_when_more: '%env(UNDEVELOPPED_WHEN_MORE)%'
+
     image.resize.x: 480
     image.resize.y: 320
 

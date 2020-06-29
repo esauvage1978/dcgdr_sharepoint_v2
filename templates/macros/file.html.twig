@@ -47,8 +47,8 @@
                     {{ file.content | raw }}
                 </div>
             </td>
-            <td class="align-middle text-center">
-                <span class="ml-3 text-muted d-flex">{{ file.modifyAt  | date('d/m/Y H:i') }}</span>
+            <td class="align-middle text-center text-muted small">
+                {{ file.modifyAt |format_datetime('full', 'short', locale='fr') }}
             </td>
             <td class="align-middle">
                 <span class="ml-2 text-muted text-bold">{{ macro.size(file.size) }}</span>
@@ -84,8 +84,8 @@
                     {{ link.content | raw }}
                 </div>
             </td>
-            <td class="align-middle text-center">
-                <span class="ml-3 text-muted d-flex">{{ link.modifyAt  | date('d/m/Y H:i:s') }}</span>
+            <td class="align-middle text-center text-muted small">
+                {{ link.modifyAt |format_datetime('full', 'short', locale='fr') }}
             </td>
             <td>
 

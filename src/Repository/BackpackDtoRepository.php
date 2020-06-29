@@ -25,7 +25,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
     const ALIAS = 'b';
 
     const FILTRE_DTO_INIT_HOME = 'home';
-    const FILTRE_DTO_INIT_TABLEAU = 'tableau';
+    const FILTRE_DTO_INIT_TREE = 'tree';
     const FILTRE_DTO_INIT_SEARCH = 'search';
     const FILTRE_DTO_INIT_UNITAIRE = 'unitaire';
 
@@ -87,8 +87,8 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
         $this->dto = $dto;
 
         switch ($filtre) {
-            case self::FILTRE_DTO_INIT_TABLEAU:
-                $this->initialise_select();
+            case self::FILTRE_DTO_INIT_TREE:
+                $this->initialise_select_tree();
                 break;
             case self::FILTRE_DTO_INIT_UNITAIRE:
                 $this->initialise_select();
@@ -125,6 +125,27 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             ->join(UnderRubricRepository::ALIAS . '.underThematic', UnderThematicRepository::ALIAS)
             ->join(UnderRubricRepository::ALIAS . '.rubric', RubricRepository::ALIAS)
             ->join(RubricRepository::ALIAS . '.thematic', ThematicRepository::ALIAS)
+        ;
+    }
+
+    private function initialise_select_tree()
+    {
+        $this->builder = $this->createQueryBuilder(self::ALIAS)
+            ->select(
+                self::ALIAS,
+                RubricRepository::ALIAS,
+                ThematicRepository::ALIAS,
+                UnderThematicRepository::ALIAS,
+                UnderRubricRepository::ALIAS,
+                BackpackFileRepository::ALIAS,
+                BackpackLinkRepository::ALIAS
+            )
+            ->join(self::ALIAS . '.underRubric', UnderRubricRepository::ALIAS)
+            ->join(UnderRubricRepository::ALIAS . '.underThematic', UnderThematicRepository::ALIAS)
+            ->join(UnderRubricRepository::ALIAS . '.rubric', RubricRepository::ALIAS)
+            ->join(RubricRepository::ALIAS . '.thematic', ThematicRepository::ALIAS)
+            ->leftJoin(self::ALIAS.'.backpackFiles',BackpackFileRepository::ALIAS)
+            ->leftJoin(self::ALIAS.'.backpackLinks',BackpackLinkRepository::ALIAS)
         ;
     }
 
@@ -237,8 +258,8 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
     }
 
     private function initialise_where_new()
-    {/*
-        if ($this->dto->getNew()==BackpackDto::TRUE ) {
+    {
+        if ($this->dto->getIsNew()==BackpackDto::TRUE ) {
             $to = date('Y-m-d', strtotime((new DateTime())->format('Y-m-d') . ' +1 day'));
             $from = date('Y-m-d', strtotime((new DateTime())->format('Y-m-d') . ' -8 day'));
 
@@ -247,7 +268,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
 
             $this->addParams('from', $from);
             $this->addParams('to', $to);
-        }*/
+        }
     }
 
     private function initialise_where_state()

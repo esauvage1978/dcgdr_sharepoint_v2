@@ -1,0 +1,21 @@
+{% extends 'backpack/layout_tree.html.twig' %}
+
+{% block title %}Porte-document {% endblock %}
+
+{% block page_subtitle %}
+    <span class="text-muted">
+    {{ count }} porte-document{{ count>1?'s':'' }}
+    </span>
+{% endblock %}
+
+
+{% import "backpack/actions.html.twig" as actions %}
+{% block breadcrumb %}
+    {{ actions.backpack('search','','',item, null) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ parent() }}
+{% endblock %}
+
+

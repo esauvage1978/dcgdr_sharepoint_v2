@@ -26,10 +26,12 @@ class DashboardController extends AbstractController
 
         $options = [
             $md->getDraft(),
+            $md->getMyDraft(),
             $md->getPublished(),
             $md->getArchived(),
             $md->getAbandonned(),
-            $md->getHide()
+            $md->getHide(),
+            $md->getNews()
         ];
 
         return $this->render('dashboard/index.html.twig',

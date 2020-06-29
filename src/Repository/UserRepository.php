@@ -41,32 +41,18 @@ class UserRepository extends ServiceEntityRepository
             ;
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findAllUserSubscription()
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder(self::ALIAS)
+            ->select(
+                self::ALIAS
+            )
+            ->where(self::ALIAS.'.isEnable=true')
+            ->andWhere(self::ALIAS.'.subscription=true')
+            ->andWhere(self::ALIAS.'.emailValidated=true')
+            ->orderBy(self::ALIAS . '.name', 'ASC')
             ->getQuery()
             ->getResult()
-        ;
+            ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
