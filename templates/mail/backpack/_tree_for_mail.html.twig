@@ -1,0 +1,135 @@
+{% set ur_c="" %}
+{% set ur_p="" %}
+{% set ur_same=false %}
+{% set ur_present=false %}
+
+
+{% for bp in backpacks %}
+    {% set ur_c=bp.underRubric.name %}
+
+    {% set ur_same=  ur_c == ur_p ? true : false %}
+
+    {% if ur_same == false %}
+        {{ ur_present?'<td class="w30" width="30"></td></tr></tbody></table>':'' }}
+<br/>
+<hr>
+    <h3 style="color:#6f42c1;">
+        {{ bp.underrubric.underthematic.name }}
+        >
+        {{ bp.underrubric.name }}
+    </h3>
+    <h6 style="color:grey"> (
+
+        {{ bp.underrubric.rubric.thematic.name }}
+        >
+        {{ bp.underrubric.rubric.name }} )
+    </h6>
+<table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+    <tr>
+        <td class="w30" width="30"></td>
+        <td class="w550" width="550">
+            {% set ur_present=true %}
+            {% endif %}
+            {% set nbrL=bp.backpackLinks | length %}
+            {% set nbrF=bp.backpackFiles | length %}
+            <table class="w550" width="550" border="0">
+                <thead>
+                <td colspan="3">
+                    <a style=" font-size: 16px; color:#57a7fe; text-decoration: none;font-weight: bolder"
+                       href="{{ absolute_url( path('backpack_show',{id:bp.id})) }}">
+                        {{ bp.name }} {{ bp.enable?'':' (masqué)' }}
+                    </a>
+                </td>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="3">
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w30" width="30"></td>
+                    <td style="font-weight: bolder" width="50">
+                        classement
+                    </td>
+                    <td>
+                        {% if bp.dir1 %}
+                            {{ bp.dir1 }}
+                            {% if bp.dir2 %}
+                                &nbsp;>&nbsp;{{ bp.dir2 }}
+                            {% endif %}
+                            {% if bp.dir3 %}
+                                &nbsp;>&nbsp;{{ bp.dir3 }}
+                            {% endif %}
+                            {% if bp.dir4 %}
+                                &nbsp;>&nbsp;{{ bp.dir4 }}
+                            {% endif %}
+                            {% if bp.dir5 %}
+                                &nbsp;>&nbsp;{{ bp.dir5 }}
+                            {% endif %}
+
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w30" width="30"></td>
+                    <td style="font-weight: bolder">
+                        Date de modification
+                    </td>
+                    <td>
+                        {{ bp.updateAt  | date('d/m/Y H:i') }}
+                    </td>
+                </tr>
+                {% if bp.content %}
+                    <tr>
+                        <td class="w30" width="30"></td>
+                        <td style="font-weight: bolder">
+                            Description
+                        </td>
+                        <td>
+                            <span style="font-size:12px;">
+                                {{ bp.content | raw }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if nbrL>0 or nbrF>0 %}
+                    <tr>
+                        <td colspan="3">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w30" width="30"></td>
+                        <td colspan="2">
+                            <table width="100%">
+                                <thead>
+                                <tr>
+                                    <td style="font-weight: bolder">
+                                        Nom du fichier
+                                    </td>
+                                    <td style="font-weight: bolder">
+                                        Description
+                                    </td>
+                                    <td style="font-weight: bolder">
+                                        Taille
+                                    </td>
+                                    <td style="font-weight: bolder">
+                                        Date
+                                    </td>
+                                </tr>
+                                </thead>
+                                {{ include('mail/backpack/_files.html.twig',{backpack:bp}) }}
+                                {{ include('mail/backpack/_links.html.twig',{backpack:bp}) }}
+                            </table>
+                        </td>
+                    </tr>
+                {% endif %}
+
+                </tbody>
+            </table>
+            {% set ur_p=ur_c %}
+            {% endfor %}
+
+{{ ur_present?'<td class="w30" width="30"></td></tr></tbody></table>':'' }}

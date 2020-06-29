@@ -25,7 +25,7 @@
                 {% block card_tools %}
                     <small class="text-muted">
                         Créé par <strong>{{ item.owner.name }}</strong>
-                        Mise à jour le <strong>{{ item.updateAt | date("d M Y à m:i") }}</strong>
+                        Mise à jour le <strong>{{ item.updateAt |format_datetime('full', 'short', locale='fr') }}</strong>
                         {{ widgets.badge_state(item.currentState) }}
                     </small>
                 {% endblock %}

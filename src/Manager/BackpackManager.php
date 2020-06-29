@@ -27,7 +27,8 @@ class BackpackManager extends AbstractManager
         if(empty( $entity->getId())) {
             $entity
                 ->setOwner( $this->security->getUser())
-                ->setCurrentPlace(WorkflowData::STATE_DRAFT);
+                ->setCurrentState(WorkflowData::STATE_DRAFT)
+                ->setStateAt(new \DateTime());
         }
 
         foreach ($entity->getBackpackFiles() as $backpackFile)

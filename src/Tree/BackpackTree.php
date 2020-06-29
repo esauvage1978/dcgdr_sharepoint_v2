@@ -109,8 +109,8 @@ class BackpackTree extends AbstractTree
             $this->Dir4($item);
             $this->Dir5($item);
 
-            $filesNumber = 0;//$backpack->getBackpackFiles()->count()+$backpack->getBackpackLinks()->count();
-            $fileSpan = $filesNumber > 0 ? " <span class='label label-default'>{$filesNumber}</span>" : '';
+            $filesNumber = $item->getBackpackFiles()->count()+$item->getBackpackLinks()->count();
+            $fileSpan = $filesNumber > 0 ? " <span class='small text-info ml-2 pl-1 pr-1 rounded border-bottom border-info'><i class=\"fas fa-paperclip\"></i> {$filesNumber}</span>" : '';
 
             $this->tree[] = [
                 'id' => $item->getid(),

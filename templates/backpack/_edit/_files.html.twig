@@ -23,7 +23,7 @@
                             {{ backpackFile.content  | raw }}
                         </td>
                         <td>
-                            {{ backpackFile.modifyAt  | date('d/m/Y H:i:s') }}
+                            <small>{{ backpackFile.modifyAt |format_datetime('full', 'short', locale='fr') }}</small>
                         </td>
                         <td class="float-right" style="width: 100px">
                             <button class="media-delete btn btn-danger btn-sm "

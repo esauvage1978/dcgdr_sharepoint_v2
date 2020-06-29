@@ -11,15 +11,11 @@ use App\Workflow\WorkflowData;
 
 class MakeDashboard
 {
-
     /**
-     * @var BackpackDtoRepository
+     * @var BackpackCounter
      */
-    private $backpackDtoRepository;
+    private $counter;
 
-    private $user;
-
-    private $gestionnaire;
 
     public function __construct(
         BackpackDtoRepository $backpackDtoRepository,
@@ -27,74 +23,112 @@ class MakeDashboard
         bool $gestionnaire
     )
     {
-        $this->backpackDtoRepository = $backpackDtoRepository;
-        $this->user = $user;
-        $this->gestionnaire = $gestionnaire;
+        $this->counter = new BackpackCounter($backpackDtoRepository, $user, $gestionnaire);
     }
 
-    private function getState($state,$color)
+    private function getArray($route, $routeOptions, $color, $title, $nbr)
     {
-        $dto = new BackpackDto();
         $ib = new WidgetInfoBox();
 
-        $dto = $this->checkUser($dto);
-
-        $dto->setCurrentState($state);
-
         return $ib
-            ->setRoute('backpacks_show_state')
-            ->setRouteOptions(['state' => $state])
+            ->setRoute($route)
+            ->setRouteOptions($routeOptions)
             ->setColor($color)
             ->setIcone('fas fa-bezier-curve')
-            ->setTitle(WorkflowData::getNameOfState($state))
-            ->setData($this->backpackDtoRepository->countForDto($dto))
+            ->setTitle($title)
+            ->setData($nbr)
             ->createArray();
 
     }
+
     public function getDraft()
     {
-        return $this->getState( WorkflowData::STATE_DRAFT, 'info');
+        $state = WorkflowData::STATE_DRAFT;
+        return $this->getArray
+        (
+            'backpacks_' . $state,
+            null,
+            'info',
+            WorkflowData::getNameOfState($state),
+            $this->counter->getDraft()
+        );
+    }
+
+    public function getMyDraft()
+    {
+        $state = WorkflowData::STATE_DRAFT;
+        return $this->getArray
+        (
+            'backpacks_mydraft',
+            ['state', $state],
+            'info',
+            'Mes brouillons',
+            $this->counter->getMyDraft()
+        );
     }
 
     public function getPublished()
     {
-        return $this->getState( WorkflowData::STATE_PUBLISHED, 'success');
+        $state = WorkflowData::STATE_PUBLISHED;
+        return $this->getArray
+        (
+            'backpacks_' . $state,
+            ['state', $state],
+            'success',
+            WorkflowData::getNameOfState($state),
+            $this->counter->getPublished()
+        );
+    }
+
+    public function getNews()
+    {
+        $state = WorkflowData::STATE_PUBLISHED;
+        return $this->getArray
+        (
+            'backpacks_news',
+            ['state', $state],
+            'fuchsia',
+            'Les nouveautés',
+            $this->counter->getNews()
+        );
     }
 
     public function getArchived()
     {
-        return $this->getState( WorkflowData::STATE_ARCHIVED, 'warning');
+        $state = WorkflowData::STATE_ARCHIVED;
+        return $this->getArray
+        (
+            'backpacks_' . $state,
+            ['state', $state],
+            'warning',
+            WorkflowData::getNameOfState($state),
+            $this->counter->getArchived()
+        );
     }
 
     public function getAbandonned()
     {
-        return $this->getState( WorkflowData::STATE_ABANDONNED, 'danger');
+        $state = WorkflowData::STATE_ABANDONNED;
+        return $this->getArray
+        (
+            'backpacks_' . $state,
+            ['state', $state],
+            'danger',
+            WorkflowData::getNameOfState($state),
+            $this->counter->getAbandonned()
+        );
     }
 
     public function getHide()
     {
-        $dto = new BackpackDto();
-        $ib = new WidgetInfoBox();
-
-        $dto = $this->checkUser($dto);
-        $dto->setHide(BackpackDto::TRUE);
-
-        return $ib
-            ->setRoute('backpacks_show_hide')
-            ->setColor('default')
-            ->setIcone('fas fa-bezier-curve')
-            ->setTitle('caché')
-            ->setData($this->backpackDtoRepository->countForDto($dto))
-            ->createArray();
-    }
-
-    private function checkUser(BackpackDto $dto)
-    {
-        if (!is_null($this->user) && !$this->gestionnaire) {
-            $dto->setUserDto((new UserDto())->setId($this->user->getId()));
-        }
-        return $dto;
-
+        return $this->getArray
+        (
+            'backpacks_hide',
+            [],
+            'black',
+            'Masqué',
+            $this->counter->getHide()
+        );
     }
 
 }

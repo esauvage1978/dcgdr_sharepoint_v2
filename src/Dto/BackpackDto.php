@@ -3,6 +3,8 @@
 namespace App\Dto;
 
 
+use Symfony\Component\HttpFoundation\Request;
+
 class BackpackDto extends AbstractDto
 {
 
@@ -40,6 +42,12 @@ class BackpackDto extends AbstractDto
      * @var ?string
      */
     private $currentState;
+
+
+    /**
+     * @var ?string
+     */
+    private $isNew;
 
     /**
      * @return mixed
@@ -163,4 +171,43 @@ class BackpackDto extends AbstractDto
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIsNew()
+    {
+        return $this->isNew;
+    }
+
+    /**
+     * @param mixed $isNew
+     * @return BackpackDto
+     */
+    public function setIsNew($isNew)
+    {
+        $this->checkBool($isNew);
+        $this->isNew = $isNew;
+        return $this;
+    }
+
+    public function getData(): array
+    {
+        $d=[];
+        isset($this->visible) && $d=array_merge($d,['isNew'=>$this->isNew]);
+        isset($this->visible) && $d=array_merge($d,['visible'=>$this->visible]);
+        isset($this->visible) && $d=array_merge($d,['currentState'=>$this->currentState]);
+        isset($this->hide) && $d=array_merge($d,['hide'=>$this->hide]);
+        isset($this->ownerDto) && isset($this->ownerDto->id) && $d=array_merge($d,['owner'=>$this->ownerDto->id]);
+        isset($this->underRubricDto) && isset($this->underRubricDto->id) && $d=array_merge($d,['underRubric'=>$this->underRubricDto->id]);
+        return $d;
+    }
+    public function setData(Request $datas)
+    {
+        null!==$datas->get('isNew') && $this->isNew=$datas->get('isNew');
+        null!==$datas->get('visible') && $this->visible=$datas->get('visible');
+        null!==$datas->get('hide') && $this->hide=$datas->get('hide');
+        null!==$datas->get('owner') && $this->ownerDto=(new UserDto())->setId($datas->get('owner'));
+        null!==$datas->get('currentState') && $this->currentState=$datas->get('currentState');
+        null!==$datas->get('underRubric') && $this->underRubricDto=(new UnderRubricDto())->setId($datas->get('underRubric'));
+    }
 }

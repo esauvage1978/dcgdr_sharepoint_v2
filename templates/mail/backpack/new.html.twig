@@ -1,0 +1,11 @@
+{% extends './mail/template.html.twig' %}
+
+{% block title %} Les nouveautés {% endblock %}
+{% block title_content %} Les nouveautés {% endblock %}
+
+{% block body %}
+    <p>Voici la liste des nouveautés effectuées cette semaine.</p>
+    <p>
+        {{ include('mail/backpack/_tree_for_mail.html.twig') }}
+    </p>
+{% endblock %}

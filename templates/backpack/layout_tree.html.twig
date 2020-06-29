@@ -14,12 +14,21 @@
     {{ parent() }}
     <script>
         $(function () {
+            var to = false;
+            $('#demo_q').keyup(function () {
+                if(to) { clearTimeout(to); }
+                to = setTimeout(function () {
+                    var v = $('#demo_q').val();
+                    $('#tree').jstree(true).search(v);
+                }, 250);
+            });
             $('#tree').jstree(
                 {
                     'core':
                         {
                             'data': treedata
-                        }
+                        },
+                    'plugins' : ["search" ]
                 }
             ).on('changed.jstree', function (e, data) {
                 if (data.node) {

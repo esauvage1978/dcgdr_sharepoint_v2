@@ -17,6 +17,7 @@ use App\Dto\UnderThematicDto;
 use App\Dto\UserDto;
 use App\Entity\User;
 use App\Repository\BackpackDtoRepository;
+use App\Service\BackpackCounter;
 use App\Workflow\WorkflowData;
 use KevinPapst\AdminLTEBundle\Event\NotificationListEvent;
 use KevinPapst\AdminLTEBundle\Helper\Constants;
@@ -40,20 +41,26 @@ class NotificationSubscriber implements EventSubscriberInterface
     private $security;
 
     /**
-     * @var BackpackDtoRepository
+     * @var BackpackCounter
      */
-    private $backpackDtoRepository;
+    private $backpackCounter;
+
     /**
      * @param AuthorizationCheckerInterface $auth
      */
     public function __construct(
         AuthorizationCheckerInterface $auth,
         Security $security,
-        BackpackDtoRepository $dto
+        BackpackDtoRepository $backpackDtoRepository
         ){
         $this->auth = $auth;
         $this->security=$security;
-        $this->backpackDtoRepository=$dto;
+        $this->backpackCounter=new BackpackCounter
+        (
+            $backpackDtoRepository,
+            $this->security->getUser(),
+            $this->auth->isGranted('ROLE_GESTIONNAIRE')
+        );
     }
 
     /**
@@ -86,28 +93,27 @@ class NotificationSubscriber implements EventSubscriberInterface
 
         }
 
-        $dto=new BackpackDto();
-
-        $dto
-            ->setCurrentState(WorkflowData::STATE_DRAFT)
-            ->setVisible(BackpackDto::TRUE);
-
-        if (!$this->auth->isGranted('GESTIONNAIRE')) {
-            $nbr=$this->backpackDtoRepository->countForDto($dto);
-            if($nbr!="0") {
-                $notification = new NotificationModel($nbr . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_INFO, 'fas fa-suitcase');
-                $notification->setId(3);
-                $event->addNotification($notification);
-            }
+        $nbr=$this->backpackCounter->getDraft();
+        if($nbr!="0") {
+            $notification = new NotificationModel($nbr . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+            $notification->setId(3);
+            $event->addNotification($notification);
         }
 
-        $dto->setOwnerDto((new UserDto())->setId($this->security->getUser()->getId()));
-        $dto->setUserDto((new UserDto())->setId($this->security->getUser()->getId()));
-        $nbr=$this->backpackDtoRepository->countForDto($dto);
+        $nbr=$this->backpackCounter->getMyDraft();
         if($nbr!="0") {
-            $notification = new NotificationModel(($nbr=="1"?'Votre ':'vos '. $nbr)  . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_INFO, 'fas fa-suitcase');
+            $notification = new NotificationModel(($nbr=="1"?'Votre ':'vos '. $nbr)  . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
             $notification->setId(4);
             $event->addNotification($notification);
         }
+
+        $nbr=$this->backpackCounter->getNews();
+        if($nbr!="0") {
+            $notification = new NotificationModel('Les nouveautés : '. $nbr , Constants::TYPE_SUCCESS, 'fas fa-suitcase');
+            $notification->setId(5);
+            $event->addNotification($notification);
+        }
     }
+
+
 }

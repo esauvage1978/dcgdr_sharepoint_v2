@@ -4,8 +4,8 @@ namespace App\Dto;
 
 class AbstractDto implements DtoInterface
 {
-    const FALSE='false';
-    const TRUE='true';
+    const FALSE = 'false';
+    const TRUE = 'true';
 
     /**
      * @var ?string
@@ -36,6 +36,7 @@ class AbstractDto implements DtoInterface
      * @var ?string
      */
     protected $hide;
+
 
     public function getWordSearch()
     {
@@ -102,11 +103,20 @@ class AbstractDto implements DtoInterface
     /**
      * @param mixed $visible
      * @return AbstractDto
+     * @throws \InvalidArgumentException
      */
     public function setVisible($visible)
     {
+        $this->checkBool($visible);
         $this->visible = $visible;
         return $this;
+    }
+
+    protected function checkBool($value)
+    {
+        if (!in_array($value, [null, self::TRUE, self::FALSE])) {
+            throw new \InvalidArgumentException('valeur interdite');
+        }
     }
 
     /**
@@ -123,6 +133,7 @@ class AbstractDto implements DtoInterface
      */
     public function setHide($hide)
     {
+        $this->checkBool($hide);
         $this->hide = $hide;
         return $this;
     }

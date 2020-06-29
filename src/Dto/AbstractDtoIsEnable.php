@@ -19,6 +19,7 @@ class AbstractDtoIsEnable extends AbstractDto
 
     protected function setIsEnable($isEnable)
     {
+        $this->checkBool($isEnable);
         $this->isEnable = $isEnable;
         return $this;
     }

@@ -40,9 +40,15 @@ class AdminController extends AbstractController
             'route' => 'admin_underrubric_list'
         ]];
 
+        $action_entries = [[
+            'name' => 'Envoie les notifications',
+            'route' => 'command_notificator'
+        ]];
+
         return $this->render('admin/index.html.twig', [
             'general_entries' => $general_entries,
             'app_entries' => $app_entries,
+            'action_entries' => $action_entries,
         ]);
     }
 }
