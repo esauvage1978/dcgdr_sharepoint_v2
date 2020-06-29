@@ -316,6 +316,7 @@ class BackpackController extends AbstractGController
         count($items)<= $this->bag->get('undevelopped_when_more') && $tree->Developed();
         array_key_exists('underRubric',$renderArray) && $tree->hideUnderThematic();
 
+        dump($renderArray);
         $renderArray = array_merge($renderArray,
             [
                 'items' => $tree->getTree(),
@@ -324,5 +325,6 @@ class BackpackController extends AbstractGController
             ]);
 
         return $this->render('backpack/search.html.twig', $renderArray);
+
     }
 }
