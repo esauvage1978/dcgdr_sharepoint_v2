@@ -199,6 +199,7 @@ class BackpackDto extends AbstractDto
         isset($this->hide) && $d=array_merge($d,['hide'=>$this->hide]);
         isset($this->ownerDto) && isset($this->ownerDto->id) && $d=array_merge($d,['owner'=>$this->ownerDto->id]);
         isset($this->underRubricDto) && isset($this->underRubricDto->id) && $d=array_merge($d,['underRubric'=>$this->underRubricDto->id]);
+        isset($this->rubricDto) && isset($this->rubricDto->id) && $d=array_merge($d,['rubric'=>$this->rubricDto->id]);
         return $d;
     }
     public function setData(Request $datas)
@@ -209,5 +210,6 @@ class BackpackDto extends AbstractDto
         null!==$datas->get('owner') && $this->ownerDto=(new UserDto())->setId($datas->get('owner'));
         null!==$datas->get('currentState') && $this->currentState=$datas->get('currentState');
         null!==$datas->get('underRubric') && $this->underRubricDto=(new UnderRubricDto())->setId($datas->get('underRubric'));
+        null!==$datas->get('rubric') && $this->rubricDto=(new RubricDto())->setId($datas->get('rubric'));
     }
 }

@@ -1,17 +1,34 @@
 <?php
+
 namespace App\EventSubscriber;
 
+use App\Security\CurrentUser;
+use App\Security\Role;
 use App\Workflow\WorkflowData;
 use KevinPapst\AdminLTEBundle\Event\KnpMenuEvent;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Security;
 
 class KnpMenuBuilderSubscriber implements EventSubscriberInterface
 {
-    private $security;
-    public function __construct(Security $security)
+    /**
+     * @var CurrentUser
+     */
+    private $currentUser;
+
+    /**
+     * @var ItemInterface
+     */
+    private $menu;
+
+    /**
+     * @var KnpMenuEvent
+     */
+    private $event;
+
+    public function __construct(CurrentUser $currentUser)
     {
-        $this->security = $security;
+        $this->currentUser = $currentUser;
     }
 
     public static function getSubscribedEvents(): array
@@ -23,91 +40,129 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
 
     public function onSetupMenu(KnpMenuEvent $event)
     {
-        $menu = $event->getMenu();
-        $menu->addChild('home', [
-            'route' => 'home',
-            'label' => 'Page d\'accueil',
-            'childOptions' => $event->getChildOptions()
-        ])->setLabelAttribute('icon', 'fas fa-home');
+        $this->event = $event;
+        $this->menu = $this->event->getMenu();
 
-        $menu->addChild('dashboard', [
-            'route' => 'dashboard',
-            'label' => 'Tableau de bord',
-            'childOptions' => $event->getChildOptions()
-        ])->setLabelAttribute('icon', 'fas fa-tachometer-alt');
+        if ($this->currentUser->isAuthenticatedRemember()) {
+            $this->addHome();
+            $this->addDashboard();
+            $this->addBackpack();
+            $this->addProfil();
+            $this->addAdmin();
+            $this->addDoc();
+            $this->addDeconnexion();
+        } else {
+            $this->addHome();
+            $this->addDoc();
+            $this->addConnexion();
+        }
+    }
 
-        $menu->addChild(
+    private function addAdmin()
+    {
+        if(Role::isAdmin($this->currentUser->getUser())) {
+            $this->menu->addChild('admin', [
+                'route' => 'admin',
+                'label' => 'Administration',
+                'childOptions' => $this->event->getChildOptions()
+            ])->setLabelAttribute('icon', 'fas fa-wrench');
+        }
+    }
+
+    private function addBackpack()
+    {
+        $this->menu->addChild(
             'backpack',
             [
-                'route'=>'home',
+                'route' => 'home',
                 'label' => 'Porte-documents',
-                'childOptions' => $event->getChildOptions(),
+                'childOptions' => $this->event->getChildOptions(),
                 'options' => ['branch_class' => 'treeview']]
         )->setLabelAttribute('icon', 'nav-icon fas fa-suitcase');
 
-        $menu->getChild('backpack')->addChild(
+        $this->menu->getChild('backpack')->addChild(
             'backpack-add',
             [
                 'route' => 'backpack_add',
                 'label' => 'Création',
-                'childOptions' => $event->getChildOptions()]
+                'childOptions' => $this->event->getChildOptions()]
         )->setLabelAttribute('icon', 'fas fa-plus-circle');
 
-        $menu->getChild('backpack')->addChild(
-            'backpack-'. WorkflowData::STATE_DRAFT,
+        $this->menu->getChild('backpack')->addChild(
+            'backpack-' . WorkflowData::STATE_DRAFT,
             [
                 'route' => 'backpacks_draft',
                 'label' => WorkflowData::getNameOfState(WorkflowData::STATE_DRAFT),
-                'childOptions' => $event->getChildOptions()]
+                'childOptions' => $this->event->getChildOptions()]
         )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-info');
 
-
-
-        $menu->getChild('backpack')->addChild(
-            'backpack-'. WorkflowData::STATE_ARCHIVED,
+        $this->menu->getChild('backpack')->addChild(
+            'backpack-' . WorkflowData::STATE_ARCHIVED,
             [
                 'route' => 'backpacks_archived',
                 'label' => WorkflowData::getNameOfState(WorkflowData::STATE_ARCHIVED),
-                'childOptions' => $event->getChildOptions()]
+                'childOptions' => $this->event->getChildOptions()]
         )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-warning');
 
-        $menu->getChild('backpack')->addChild(
-            'backpack-'. WorkflowData::STATE_ABANDONNED,
+        $this->menu->getChild('backpack')->addChild(
+            'backpack-' . WorkflowData::STATE_ABANDONNED,
             [
                 'route' => 'backpacks_abandonned',
                 'label' => WorkflowData::getNameOfState(WorkflowData::STATE_ABANDONNED),
-                'childOptions' => $event->getChildOptions()]
+                'childOptions' => $this->event->getChildOptions()]
         )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-danger');
+    }
 
-        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $menu->addChild('profil', [
-                'route' => 'profil',
-                'label' => 'Votre compte',
-                'childOptions' => $event->getChildOptions()
-            ])->setLabelAttribute('icon', 'fas fa-user');
-        }
-        $menu->addChild('admin', [
-            'route' => 'admin',
-            'label' => 'Administration',
-            'childOptions' => $event->getChildOptions()
-        ])->setLabelAttribute('icon', 'fas fa-cog');
+    private function addDashboard()
+    {
+        $this->menu->addChild('dashboard', [
+            'route' => 'dashboard',
+            'label' => 'Tableau de bord',
+            'childOptions' => $this->event->getChildOptions()
+        ])->setLabelAttribute('icon', 'fas fa-tachometer-alt');
+    }
 
-        $menu->addChild('documentation', [
+    private function addDeconnexion()
+    {
+        $this->menu->addChild(
+            'logout',
+            ['route' => 'user_logout', 'label' => 'Déconnexion', 'childOptions' => $this->event->getChildOptions()]
+        )->setLabelAttribute('icon', 'fas fa-sign-out-alt');
+    }
+
+    private function addDoc()
+    {
+        $this->menu->addChild('documentation', [
             'route' => 'documentation',
             'label' => 'Documentation',
-            'childOptions' => $event->getChildOptions()
+            'childOptions' => $this->event->getChildOptions()
         ])->setLabelAttribute('icon', 'fas fa-file-pdf');
-
-        if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $menu->addChild(
-                'logout',
-                ['route' => 'user_logout', 'label' => 'Déconnexion', 'childOptions' => $event->getChildOptions()]
-            )->setLabelAttribute('icon', 'fas fa-sign-out-alt');
-        } else {
-            $menu->addChild(
-                'login',
-                ['route' => 'user_login', 'label' => 'Connexion', 'childOptions' => $event->getChildOptions()]
-            )->setLabelAttribute('icon', 'fas fa-sign-in-alt');
-        }
     }
+
+    private function addConnexion()
+    {
+        $this->menu->addChild(
+            'login',
+            ['route' => 'user_login', 'label' => 'Connexion', 'childOptions' => $this->event->getChildOptions()]
+        )->setLabelAttribute('icon', 'fas fa-sign-in-alt');
+    }
+
+    private function addHome()
+    {
+        $this->menu->addChild('home', [
+            'route' => 'home',
+            'label' => 'Page d\'accueil',
+            'childOptions' => $this->event->getChildOptions()
+        ])->setLabelAttribute('icon', 'fas fa-home');
+    }
+
+    private function addProfil()
+    {
+        $this->menu->addChild('profil', [
+            'route' => 'profil',
+            'label' => 'Votre compte',
+            'childOptions' => $this->event->getChildOptions()
+        ])->setLabelAttribute('icon', 'fas fa-user');
+    }
+
 }

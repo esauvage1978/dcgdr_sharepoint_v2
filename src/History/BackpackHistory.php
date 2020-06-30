@@ -6,16 +6,17 @@ namespace App\History;
 
 use App\Entity\Backpack;
 use App\Manager\HistoryManager;
+use App\Security\CurrentUser;
 use Symfony\Component\Security\Core\Security;
 
 class BackpackHistory extends HistoryAbstract
 {
     public function __construct(
         HistoryManager $manager,
-        Security $securityContext
+        CurrentUser $currentUser
     )
     {
-        parent::__construct($manager, $securityContext);
+        parent::__construct($manager, $currentUser);
     }
 
     public function compare(Backpack $backpackOld, Backpack $backpackNew)

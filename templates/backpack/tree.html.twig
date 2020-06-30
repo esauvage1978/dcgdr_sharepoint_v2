@@ -6,18 +6,20 @@
 
 {% block page_subtitle %}
     <span class="text-muted">
-        {% if underRubric is defined and item is defined %}
-            {{ item.underrubric.rubric.name }} /
+        {% if underRubrix is defined %}
+            {% if underRubric  and item %}
+                {{ item.underrubric.rubric.name }} /
+            {% endif %}
         {% endif %}
 
-    {{ count }}
+        {{ count }}
         {% if currentState is defined %}
             {{ widgets.badge_state(currentState) }}
         {% endif %}
-        {% if isNew is defined %}
+        {% if isNew is defined and item %}
             {{ new.isNew(item.updateAt) }}
         {% endif %}
-        {% if hide is defined %}
+        {% if hide is defined and item %}
             {{ widgets.badge('Masqué','#252525') }}
         {% endif %}
     </span>
@@ -27,10 +29,12 @@
 {% import "backpack/actions.html.twig" as actions %}
 {% block breadcrumb %}
     {% set ur= null %}
-    {% if underRubric is defined and item is defined %}
-        {% set ur= item.underrubric %}
+    {% if underRubrix is defined %}
+        {% if underRubric and item %}
+            {% set ur= item.underrubric %}
+        {% endif %}
     {% endif %}
-    {{ actions.backpack('search','','',item, ur) }}
+    {{ actions.backpack('tree','','',item, ur) }}
 {% endblock %}
 
 {% block page_content %}

@@ -4,7 +4,13 @@
 {% block page_subtitle %}Consultation{% endblock %}
 
 {% block breadcrumb %}
-    {{ include('default/_show/_item_btn.html.twig') }}
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.adminSort(
+        'show',
+        is_granted('ROLE_GESTIONNAIRE'),
+        item,
+        domaine
+    ) }}
 {% endblock %}
 
 {% block page_content %}

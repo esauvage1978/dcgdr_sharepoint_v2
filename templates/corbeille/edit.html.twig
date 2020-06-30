@@ -2,9 +2,15 @@
 
 {% block page_subtitle %}Modification{% endblock %}
 
-{% block breadcrumb %}
-    {{ include('default/_edit/_item_btn.html.twig') }}
-{% endblock %}
+ {% block breadcrumb %}
+     {% import "default/actions.html.twig" as actions %}
+     {{ actions.admin(
+         'edit',
+         is_granted('ROLE_GESTIONNAIRE'),
+         item,
+         domaine
+     ) }}
+ {% endblock %}
 
 {% block page_content %}
     {{ include(domaine ~ '/_edit/_item.html.twig') }}

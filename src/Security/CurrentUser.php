@@ -1,66 +1,44 @@
 <?php
 
-/*
- * This file is part of the Kimai time-tracking app.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace App\Security;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 final class CurrentUser
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $storage;
-    /**
-     * @var UserRepository
-     */
-    private $repository;
+
     /**
      * @var User|null
      */
     private $user;
 
     /**
-     * @param TokenStorageInterface $storage
-     * @param UserRepository $repository
+     * @var Security
      */
-    public function __construct(TokenStorageInterface $storage, UserRepository $repository)
+    private $security;
+
+    /**
+     * @param Security $security
+     */
+    public function __construct(Security $security)
     {
-        $this->storage = $storage;
-        $this->repository = $repository;
+        $this->security=$security;
+        $this->user=$security->getUser();
     }
+
 
     /**
      * @return User|null
      */
     public function getUser()
     {
-        if (null === $this->storage->getToken()) {
-            return null;
-        }
-
-        // some inline caching to prevent multiple DB lookups
-        if (null !== $this->user) {
-            return $this->user;
-        }
-
-        /** @var User $user */
-        $user = $this->storage->getToken()->getUser();
-
-        if (!($user instanceof User)) {
-            return null;
-        }
-
-        $this->user = $this->repository->getUserById($user->getId());
-
         return $this->user;
+    }
+
+    public function isAuthenticatedRemember():bool
+    {
+        return $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')   ;
     }
 }

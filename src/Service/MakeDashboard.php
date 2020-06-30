@@ -19,11 +19,10 @@ class MakeDashboard
 
     public function __construct(
         BackpackDtoRepository $backpackDtoRepository,
-        User $user,
-        bool $gestionnaire
+        User $user
     )
     {
-        $this->counter = new BackpackCounter($backpackDtoRepository, $user, $gestionnaire);
+        $this->counter = new BackpackCounter($backpackDtoRepository, $user);
     }
 
     private function getArray($route, $routeOptions, $color, $title, $nbr)
@@ -50,7 +49,7 @@ class MakeDashboard
             null,
             'info',
             WorkflowData::getNameOfState($state),
-            $this->counter->getDraft()
+            $this->counter->get(BackpackMakerDto::DRAFT)
         );
     }
 
@@ -63,7 +62,7 @@ class MakeDashboard
             ['state', $state],
             'info',
             'Mes brouillons',
-            $this->counter->getMyDraft()
+            $this->counter->get(BackpackMakerDto::MY_DRAFT)
         );
     }
 
@@ -76,7 +75,7 @@ class MakeDashboard
             ['state', $state],
             'success',
             WorkflowData::getNameOfState($state),
-            $this->counter->getPublished()
+            $this->counter->get(BackpackMakerDto::PUBLISHED)
         );
     }
 
@@ -89,7 +88,7 @@ class MakeDashboard
             ['state', $state],
             'fuchsia',
             'Les nouveautés',
-            $this->counter->getNews()
+            $this->counter->get(BackpackMakerDto::NEWS)
         );
     }
 
@@ -102,7 +101,7 @@ class MakeDashboard
             ['state', $state],
             'warning',
             WorkflowData::getNameOfState($state),
-            $this->counter->getArchived()
+            $this->counter->get(BackpackMakerDto::ARCHIVED)
         );
     }
 
@@ -115,7 +114,7 @@ class MakeDashboard
             ['state', $state],
             'danger',
             WorkflowData::getNameOfState($state),
-            $this->counter->getAbandonned()
+            $this->counter->get(BackpackMakerDto::ABANDONNED)
         );
     }
 
@@ -127,7 +126,7 @@ class MakeDashboard
             [],
             'black',
             'Masqué',
-            $this->counter->getHide()
+            $this->counter->get(BackpackMakerDto::HIDE)
         );
     }
 

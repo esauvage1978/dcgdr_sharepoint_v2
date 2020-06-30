@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use App\Helper\ParamsInServices;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 
 /**
@@ -17,23 +17,23 @@ class MailerTransport
     private $transport;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
-    private $params;
+    private $paramsInServices;
 
-    public function __construct( ParameterBagInterface $params)
+    public function __construct( ParamsInServices $paramsInServices)
     {
-        $this->params=$params;
+        $this->paramsInServices=$paramsInServices;
     }
 
     public function getTransport()
     {
         $this->transport = new EsmtpTransport(
-            $this->params->get('mailer.smtp.host'),
-            $this->params->get('mailer.smtp.port')
+            $this->paramsInServices->get(ParamsInServices::MAILER_SMTP_HOST),
+            $this->paramsInServices->get(ParamsInServices::MAILER_SMTP_PORT)
         );
-        $this->transport->setUsername($this->params->get('mailer.smtp.username'));
-        $this->transport->setPassword($this->params->get('mailer.smtp.password'));
+        $this->transport->setUsername($this->paramsInServices->get(ParamsInServices::MAILER_SMTP_USERNAME));
+        $this->transport->setPassword($this->paramsInServices->get(ParamsInServices::MAILER_SMTP_PASSWORD));
 
         return $this->transport;
     }

@@ -3,10 +3,10 @@
 namespace App\Mail;
 
 use App\Entity\User;
+use App\Helper\ParamsInServices;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -40,9 +40,9 @@ class Mail
     private $transport;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
-    private $params;
+    private $paramsInServices;
 
     private $subject;
 
@@ -53,11 +53,11 @@ class Mail
 
     public function __construct(
         Environment $twig,
-        ParameterBagInterface $params,
+        ParamsInServices $paramsInServices,
         MailerTransport $mailerTransport
     ) {
         $this->twig = $twig;
-        $this->params = $params;
+        $this->paramsInServices = $paramsInServices;
         $this->transport=$mailerTransport->getTransport();
     }
 
@@ -101,7 +101,7 @@ class Mail
     {
         if(!in_array('application_name',$this->paramsTwig)) {
             $this->paramsTwig= array_merge($this->paramsTwig,
-            ['application_name'=>$this->params->get('application.name')]);
+            ['application_name'=>$this->paramsInServices->get(ParamsInServices::APPLICATION_NAME)]);
         }
 
         return $this->paramsTwig;
@@ -147,7 +147,7 @@ class Mail
 
     private function getSubject( )
     {
-        return $this->params->get('mailer.prefixe') . ' ' . (empty($this->subject)
+        return $this->paramsInServices->get(ParamsInServices::MAILER_PREFIXE) . ' ' . (empty($this->subject)
             ?'Pas d\'objet'
             :$this->subject);
     }
@@ -173,7 +173,7 @@ class Mail
         }
 
         return  empty($this->usersTo)
-            ?  new Address($this->params->get('mailer.mail'),$this->params->get('mailer.name'))
+            ?  new Address($this->paramsInServices->get(ParamsInServices::MAILER_MAIL),$this->paramsInServices->get(ParamsInServices::MAILER_NAME))
             : $this->usersTo;
     }
 
@@ -190,7 +190,7 @@ class Mail
     private function getUserFrom()
     {
         return  empty($this->userFrom)
-            ?  new Address($this->params->get('mailer.mail'),$this->params->get('mailer.name'))
+            ?   new Address($this->paramsInServices->get(ParamsInServices::MAILER_MAIL),$this->paramsInServices->get(ParamsInServices::MAILER_NAME))
             :$this->userFrom;
     }
 

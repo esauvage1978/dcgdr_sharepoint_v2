@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Organisme;
 use App\Form\Admin\OrganismeType;
+use App\Manager\InterfaceManager;
 use App\Manager\OrganismeManager;
 use App\Repository\OrganismeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,6 +32,9 @@ abstract class AbstractGController extends AbstractController
      */
     protected $request;
     protected $repository;
+    /**
+     * @var InterfaceManager
+     */
     protected $manager;
     protected $domaine;
 

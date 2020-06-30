@@ -10,6 +10,7 @@
 namespace App\EventSubscriber;
 
 use App\Entity\User;
+use App\Security\CurrentUser;
 use KevinPapst\AdminLTEBundle\Event\NavbarUserEvent;
 use KevinPapst\AdminLTEBundle\Event\ShowUserEvent;
 use KevinPapst\AdminLTEBundle\Event\SidebarUserEvent;
@@ -20,16 +21,16 @@ use Symfony\Component\Security\Core\Security;
 class NavbarUserSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Security
+     * @var CurrentUser
      */
-    protected $security;
+    protected $currentUser;
 
     /**
      * @param Security $security
      */
-    public function __construct(Security $security)
+    public function __construct(CurrentUser $currentUser)
     {
-        $this->security = $security;
+        $this->currentUser = $currentUser;
     }
 
     /**
@@ -48,12 +49,12 @@ class NavbarUserSubscriber implements EventSubscriberInterface
      */
     public function onShowUser(ShowUserEvent $event)
     {
-        if (null === $this->security->getUser()) {
+        if (null === $this->currentUser->getUser()) {
             return;
         }
 
         /* @var $myUser User */
-        $myUser = $this->security->getUser();
+        $myUser = $this->currentUser->getUser();
 
         $user = new UserModel();
         $user

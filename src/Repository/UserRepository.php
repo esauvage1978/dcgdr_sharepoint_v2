@@ -55,4 +55,5 @@ class UserRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
 }
