@@ -5,7 +5,13 @@
 
 
 {% block breadcrumb %}
-    {{ include('default/_show/_item_btn.html.twig') }}
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.admin(
+        'show',
+        is_granted('ROLE_ADMIN'),
+        item,
+        domaine
+    ) }}
 {% endblock %}
 
 

@@ -9,7 +9,6 @@ use Symfony\Component\Filesystem\Filesystem;
  * @author Emmanuel SAUVAGE <emmanuel.sauvage@live.fr>
  * @version 1.0.0
  */
-
 class FileDirectory
 {
     /**

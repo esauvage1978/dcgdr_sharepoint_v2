@@ -4,22 +4,13 @@
 
 
 {% block breadcrumb %}
-    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-    <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2" role="group" aria-label="First group">
-            {{ btn.link_button(
-                '',
-                path(route_list),
-                'fa fa-list',
-                'secondary',
-                'secondary'
-            ) }}
-
-            <span class="btn bg-gradient-success btn-success" onclick="sortSend();">
-                <i class="fas fa-save"></i>
-            </span>
-        </div>
-    </div>
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.adminSort(
+        'sort',
+        is_granted('ROLE_GESTIONNAIRE'),
+        null,
+        domaine
+    ) }}
 {% endblock %}
 
 

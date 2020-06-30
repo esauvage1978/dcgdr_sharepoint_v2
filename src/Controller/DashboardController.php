@@ -22,7 +22,7 @@ class DashboardController extends AbstractController
     public function index(
         BackpackDtoRepository $backpackDtoRepository
     ) {
-        $md=new MakeDashboard($backpackDtoRepository,$this->getUser(), $this->isgranted('ROLE_GESTIONNAIRE'));
+        $md=new MakeDashboard($backpackDtoRepository,$this->getUser());
 
         $options = [
             $md->getDraft(),

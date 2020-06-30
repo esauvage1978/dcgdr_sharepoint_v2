@@ -2,63 +2,28 @@
 
 namespace App\Helper;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-
+/**
+ * @author Emmanuel SAUVAGE <emmanuel.sauvage@live.fr>
+ * @version 1.0.0
+ */
 class FixturesImportData
 {
     /**
-     * @var string
+     * @var ConvertFileJsonToArray
      */
-    private $directory_import;
+    private $convertFileJsonToArray;
 
-    /**
-     * @var string
-     */
-    private $fileName;
-    public function __construct(ParameterBagInterface $params)
+    public function __construct(ParamsInServices $paramsInServices)
     {
-        $this->directory_import=$params->get('directory_import');
+        $this->convertFileJsonToArray=new ConvertFileJsonToArray();
+
+        $this->convertFileJsonToArray->setDirectory($paramsInServices->get(ParamsInServices::DIRECTIRY_IMPORT));
     }
 
-    private function  setFileSource(string $fileName)
+    public function importToArray(string $fileName): array
     {
-        $this->fileName=$fileName;
+        $this->convertFileJsonToArray->setFileSource($fileName);
+        return $this->convertFileJsonToArray->toArray();
     }
 
-    public function importToArray(string $fileName): Array
-    {
-        $this->setFileSource($fileName);
-
-        if (!$this->checkFile()) {
-            throw new \InvalidArgumentException('Le fichier '. $this->fileName .' n\'existe pas dans le répertoire ' . $this->directory_import);
-        }
-
-        $data= json_decode(
-            $this->readJson(),
-            true
-        );
-
-        if($data===null) {
-            throw new \InvalidArgumentException('Le fichier '. $this->fileName .' est vide ou n\'est pas un json valide');
-        }
-
-        return $data;
-    }
-
-    private function checkFile()
-    {
-        return  is_file($this->getPath());
-    }
-
-    private function getPath() {
-        return $this->directory_import .
-            $this->fileName;
-    }
-
-    private function readJson(): string
-    {
-        return file_get_contents(
-            $this->getPath()
-        );
-    }
 }

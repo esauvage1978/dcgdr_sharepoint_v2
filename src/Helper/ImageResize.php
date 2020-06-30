@@ -4,25 +4,45 @@
 namespace App\Helper;
 
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mime\MimeTypes;
 
+/**
+ * @author Emmanuel SAUVAGE <emmanuel.sauvage@live.fr>
+ * @version 1.0.0
+ */
 class ImageResize
 {
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
-    private $params;
+    private $paramsInServices;
 
+    /**
+     * @var int
+     */
     private $x;
+
+    /**
+     * @var int
+     */
     private $y;
+
+    /**
+     * @var string
+     */
     private $imagePath;
 
-    public function __construct(ParameterBagInterface $params)
+    public function __construct(ParamsInServices $paramsInServices)
     {
-        $this->params = $params;
+        $this->paramsInServices = $paramsInServices;
     }
 
+    /**
+     * Redimmentionne et remplace une image par rapport à X / Y (services.yaml)
+     * Ne fonctionne que pour les images png et jpg
+     *
+     * @param string $imagePath
+     */
     public function resize(string $imagePath)
     {
         if (!is_file($imagePath)) {
@@ -30,8 +50,9 @@ class ImageResize
         }
 
         $this->imagePath = $imagePath;
-        $this->x = $this->params->get('image.resize.x');
-        $this->y = $this->params->get('image.resize.y');
+
+        $this->x = $this->paramsInServices->get($this->paramsInServices::IMAGE_RESIZE_X);
+        $this->y = $this->paramsInServices->get($this->paramsInServices::IMAGE_RESIZE_Y);
 
 
         switch ($this->guessExtension()) {
@@ -42,6 +63,8 @@ class ImageResize
             case "png":
                 $this->resizePng();
                 break;
+            default:
+                throw new \InvalidArgumentException("Le format de l'\image est incorrect (jpg/jpeg/png");
         }
 
     }
@@ -77,8 +100,8 @@ class ImageResize
             $img_mini = imagecreatetruecolor($this->x, $this->y);
             imagecopyresampled($img_mini, $img_new, 0, 0, 0, 0, $this->x, $this->y, $size[0], $size[1]);
             return $img_mini;
-        } catch  (\Exception $e) {
-            dump($e->getMessage());
+        } catch (\Exception $e) {
+            dump('Une erreur s\'est produite lors du redimentionnement de l\'image : '.$e->getMessage());
         }
     }
 }

@@ -17,20 +17,13 @@
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {% if is_granted('ROLE_GESTIONNAIRE') %}
-        <div class="row mb-2">
-            <div class="col-12 text-right">
-                {{ btn.link_button(
-                    '',
-                    path(route_add),
-                    'fa fa-plus',
-                    'success',
-                    'success'
-                ) }}
-            </div>
-        </div>
-    {% endif %}
-
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.admin(
+        'list',
+        is_granted('ROLE_GESTIONNAIRE'),
+        null,
+        domaine
+    ) }}
 {% endblock %}
 
 {% block page_content %}

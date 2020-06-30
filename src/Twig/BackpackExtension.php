@@ -2,12 +2,38 @@
 
 namespace App\Twig;
 
+use App\Entity\User;
+use App\Repository\BackpackDtoRepository;
+use App\Security\CurrentUser;
+use App\Security\Role;
+use App\Service\BackpackCounter;
+use App\Service\BackpackMakerDto;
 use App\Workflow\WorkflowData;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class BackpackExtension extends AbstractExtension
 {
+
+    /**
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * @var BackpackDtoRepository
+     */
+    protected $backpackDtoRepository;
+
+    /**
+     * @param CurrentUser $user
+     */
+    public function __construct( CurrentUser $user, BackpackDtoRepository $backpackDtoRepository)
+    {
+        $this->user = $user->getUser();
+        $this->backpackDtoRepository=$backpackDtoRepository;
+    }
+
     public function getFilters()
     {
         return [
@@ -18,78 +44,36 @@ class BackpackExtension extends AbstractExtension
         ];
     }
 
-    public function sumBackpackPublishedForRubric($underRubrics = [])
+    public function sumBackpackPublishedForRubric($rubricid)
     {
-        $nbr = 0;
-        foreach ($underRubrics as $underrubric) {
-            foreach ($underrubric->getBackpacks() as $backpack) {
-                if (
-                    $underrubric->getIsEnable()
-                    && $underrubric->getUnderThematic()->getIsEnable()
-                    && $backpack->getcurrentState()===WorkflowData::STATE_PUBLISHED
-                ) {
-                    $nbr = $nbr + 1;
-                }
-            }
-        }
-        return $nbr;
+        $counter=new BackpackCounter(
+            $this->backpackDtoRepository,
+            $this->user);
+        return $counter->get(BackpackMakerDto::PUBLISHED_FOR_RUBRIC,$rubricid);
     }
 
-    public function hasNewForRubric($underRubrics = [])
+    public function hasNewForRubric($rubricid)
     {
-        $nbr = 0;
-        foreach ($underRubrics as $underrubric) {
-            foreach ($underrubric->getBackpacks() as $backpack) {
-                if (
-                    $underrubric->getEnable()
-                    && $underrubric->getUnderThematic()->getEnable()
-                    && $backpack->getEnable()
-                    && !$backpack->getArchiving()
-                ) {
-                    if ($this->getNbrDayBeetwenDates(new \DateTime(), $backpack->getUpdateAt()) < 8) {
-                        $nbr = $nbr + 1;
-                    }
-                }
-            }
-        }
-        return $nbr;
+        $counter=new BackpackCounter(
+            $this->backpackDtoRepository,
+            $this->user);
+        return $counter->get(BackpackMakerDto::NEWS_FOR_RUBRIC,$rubricid);
     }
 
-    private function getNbrDayBeetwenDates(\DateTime $date1, \DateTime $date2)
+    public function sumBackpackPublished($underRubricID)
     {
-
-        $nbJoursTimestamp = $date1->getTimestamp() - $date2->getTimestamp();
-
-        return round($nbJoursTimestamp / 86400);
+        $counter=new BackpackCounter(
+            $this->backpackDtoRepository,
+            $this->user);
+        return $counter->get(BackpackMakerDto::PUBLISHED_FOR_UNDERRUBRIC,$underRubricID);
     }
 
-    public function sumBackpackPublished($backpacks = [])
+    public function hasNewForUnderRubric($underRubricid)
     {
-        $nbr = 0;
-        foreach ($backpacks as $backpack) {
-            if (
-                $backpack->getCurrentState()==WorkflowData::STATE_PUBLISHED
-            ) {
-                $nbr = $nbr + 1;
-            }
-        }
-        return $nbr;
-    }
-
-    public function hasNewForUnderRubric($backpacks = [])
-    {
-        $nbr = 0;
-        foreach ($backpacks as $backpack) {
-            if (
-                $backpack->getEnable()
-                && !$backpack->getArchiving()
-            ) {
-                if ($this->getNbrDayBeetwenDates(new \DateTime(), $backpack->getUpdateAt()) < 8) {
-                    $nbr = $nbr + 1;
-                }
-            }
-        }
-        return $nbr;
+        $counter=new BackpackCounter(
+            $this->backpackDtoRepository,
+            $this->user);
+        return $counter->get(BackpackMakerDto::NEWS_FOR_UNDERRUBRIC,$underRubricid);
     }
 
 }

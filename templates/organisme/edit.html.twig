@@ -3,7 +3,13 @@
 {% block page_subtitle %}Modification{% endblock %}
 
 {% block breadcrumb %}
-    {{ include('default/_edit/_item_btn.html.twig') }}
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.admin(
+        'edit',
+        is_granted('ROLE_GESTIONNAIRE'),
+        item,
+        domaine
+    ) }}
 {% endblock %}
 
 {% block page_content %}

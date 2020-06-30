@@ -6,16 +6,18 @@
     {% endif %}
     {% set actions = actions|merge({ 'home': {url: path('home'),class:'btn-secondary',attr:{title:'Accueil'}}}) %}
 
-    {% if hide %}
-        {%  set url=path('backpacks_hide',{iditem:item}) %}
-    {% elseif underRubric and currentState=='published' %}
-        {%  set url=path('underrubric_show',{visible:'true',id:underRubric.id,idItem:item.id}) %}
-    {% else %}
-        {%  set url=path('backpacks_search',{visible:'true',currentState:currentState,idItem:item.id}) %}
-    {% endif %}
 
     {% if item %}
-        {% if twigTemplace=='search' %}
+
+        {% if hide %}
+            {% set url=path('backpacks_hide',{iditem:item}) %}
+        {% elseif underRubric and currentState=='published' %}
+            {% set url=path('underrubric_show',{visible:'true',id:underRubric.id,idItem:item.id}) %}
+        {% else %}
+            {% set url=path('backpacks_search',{visible:'true',currentState:currentState,idItem:item.id}) %}
+        {% endif %}
+
+        {% if twigTemplace=='tree' %}
             {% set actions = actions|merge({ 'edit': {url: path('backpack_edit',{id:item.id}),class:'btn-secondary',attr:{title:'Modifier'}}}) %}
         {% elseif twigTemplace=='workflow' %}
             {% set actions = actions|merge({ 'show': {url: url,class:'btn-secondary',attr:{title:'Consulter'}}}) %}
@@ -29,6 +31,7 @@
             {% set actions = actions|merge({ 'show': {url: url,class:'btn-secondary',attr:{title:'Consulter'}}}) %}
             {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
         {% endif %}
+
     {% endif %}
     {{ widgets.page_actions(actions) }}
 {% endmacro %}

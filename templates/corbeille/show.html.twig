@@ -3,9 +3,15 @@
 
 {% block page_subtitle %}Consultation{% endblock %}
 
-{% block breadcrumb %}
-    {{ include('default/_show/_item_btn.html.twig') }}
-{% endblock %}
+ {% block breadcrumb %}
+     {% import "default/actions.html.twig" as actions %}
+     {{ actions.admin(
+         'show',
+         is_granted('ROLE_GESTIONNAIRE'),
+         item,
+         domaine
+     ) }}
+ {% endblock %}
 
 {% block page_content %}
     {{ include(domaine ~ '/_show/_item.html.twig') }}

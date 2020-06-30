@@ -9,22 +9,16 @@
 
 namespace App\EventSubscriber;
 
-use App\Dto\BackpackDto;
-use App\Dto\RubricDto;
-use App\Dto\ThematicDto;
-use App\Dto\UnderRubricDto;
-use App\Dto\UnderThematicDto;
-use App\Dto\UserDto;
-use App\Entity\User;
 use App\Repository\BackpackDtoRepository;
+use App\Security\CurrentUser;
+use App\Security\Role;
 use App\Service\BackpackCounter;
-use App\Workflow\WorkflowData;
+use App\Service\BackpackMakerDto;
 use KevinPapst\AdminLTEBundle\Event\NotificationListEvent;
 use KevinPapst\AdminLTEBundle\Helper\Constants;
 use KevinPapst\AdminLTEBundle\Model\NotificationModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * Class NotificationSubscriber adds notification messages to the top bar.
@@ -36,31 +30,36 @@ class NotificationSubscriber implements EventSubscriberInterface
      */
     private $auth;
     /**
-     * @var Security
+     * @var CurrentUser
      */
-    private $security;
+    private $currentUser;
 
     /**
      * @var BackpackCounter
      */
     private $backpackCounter;
 
+
     /**
-     * @param AuthorizationCheckerInterface $auth
+     * NotificationSubscriber constructor.
+     * @param CurrentUser $currentUser
+     * @param BackpackDtoRepository $backpackDtoRepository
      */
     public function __construct(
-        AuthorizationCheckerInterface $auth,
-        Security $security,
+        CurrentUser $currentUser,
         BackpackDtoRepository $backpackDtoRepository
-        ){
-        $this->auth = $auth;
-        $this->security=$security;
-        $this->backpackCounter=new BackpackCounter
-        (
-            $backpackDtoRepository,
-            $this->security->getUser(),
-            $this->auth->isGranted('ROLE_GESTIONNAIRE')
-        );
+    )
+    {
+        $this->currentUser=$currentUser;
+
+        if(null!==$currentUser->getUser()) {
+            $this->backpackCounter = new BackpackCounter
+            (
+                $backpackDtoRepository,
+                $this->currentUser->getUser(),
+                Role::isGestionnaire($this->currentUser->getUser())
+            );
+        }
     }
 
     /**
@@ -79,37 +78,37 @@ class NotificationSubscriber implements EventSubscriberInterface
     public function onNotifications(NotificationListEvent $event)
     {
 
-        if (!$this->auth->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (!$this->currentUser->isAuthenticatedRemember()) {
             $notification = new NotificationModel('Vous n\'êtes pas connecté !', Constants::TYPE_ERROR, 'fas fa-key');
             $notification->setId(1);
             $event->addNotification($notification);
             return;
         }
 
-        if (!$this->security->getUser()->getEmailValidated()) {
+        if (!$this->currentUser->getUser()->getEmailValidated()) {
             $notification = new NotificationModel('Adresse mail non vérifiée !', Constants::TYPE_ERROR, 'fas fa-envelope');
             $notification->setId(2);
             $event->addNotification($notification);
 
         }
 
-        $nbr=$this->backpackCounter->getDraft();
-        if($nbr!="0") {
-            $notification = new NotificationModel($nbr . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+        $nbr = $this->backpackCounter->get(BackpackMakerDto::DRAFT);
+        if ($nbr != "0") {
+            $notification = new NotificationModel($nbr . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
             $notification->setId(3);
             $event->addNotification($notification);
         }
 
-        $nbr=$this->backpackCounter->getMyDraft();
-        if($nbr!="0") {
-            $notification = new NotificationModel(($nbr=="1"?'Votre ':'vos '. $nbr)  . ' brouillon'. ($nbr=="1"?'':'s') , Constants::TYPE_WARNING, 'fas fa-suitcase');
+        $nbr = $this->backpackCounter->get(BackpackMakerDto::MY_DRAFT);
+        if ($nbr != "0") {
+            $notification = new NotificationModel(($nbr == "1" ? 'Votre ' : 'vos ' . $nbr) . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
             $notification->setId(4);
             $event->addNotification($notification);
         }
 
-        $nbr=$this->backpackCounter->getNews();
-        if($nbr!="0") {
-            $notification = new NotificationModel('Les nouveautés : '. $nbr , Constants::TYPE_SUCCESS, 'fas fa-suitcase');
+        $nbr = $this->backpackCounter->get(BackpackMakerDto::NEWS);
+        if ($nbr != "0") {
+            $notification = new NotificationModel('Les nouveautés : ' . $nbr, Constants::TYPE_SUCCESS, 'fas fa-suitcase');
             $notification->setId(5);
             $event->addNotification($notification);
         }

@@ -2,13 +2,13 @@
 
 namespace App\Command;
 
-use App\Helper\BackpackNotificator;
-use App\Helper\CommandInterface;
-use App\Helper\CommandTool;
+use App\Command\AbstractCommand;
+use App\Service\BackpackNotificator;
+use App\Command\CommandInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class NotificatorCommand extends CommandTool implements CommandInterface
+class NotificatorCommand extends AbstractCommand implements CommandInterface
 {
     protected static $defaultName = 'app:notificator';
 

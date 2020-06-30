@@ -1,17 +1,23 @@
 <?php
 
-namespace App\Helper;
+namespace App\Service;
 
 use App\Dto\BackpackDto;
 use App\Dto\UserDto;
 use App\Entity\Backpack;
+use App\Helper\StackMessage;
 use App\Mail\BackpackMail;
 use App\Repository\BackpackDtoRepository;
 use App\Repository\UserRepository;
 use App\Workflow\WorkflowData;
 
-class BackpackNotificator extends Messagor
+class BackpackNotificator
 {
+    /**
+     * @var StackMessage
+     */
+    private $stackMessage;
+
     /**
      * @var mixed
      */
@@ -45,15 +51,15 @@ class BackpackNotificator extends Messagor
         $this->backpackRepository = $backpackRepository;
         $this->backpackMail = $backpackMail;
 
-        parent::__construct();
+        $this->stackMessage=new StackMessage();
     }
 
     public function notifyNew()
     {
-        $this->addMessage('Lancement des notifications pour ' . count($this->usersSubscription) . ' utilisateurs :');
+        $this->stackMessage->push('Lancement des notifications pour ' . count($this->usersSubscription) . ' utilisateurs :');
         $this->notifyBackpackNew($this->usersSubscription);
 
-        return $this->getMessages();
+        return $this->stackMessage->toArray();
     }
 
     private function notifyBackpackNew(array $users)
@@ -70,21 +76,21 @@ class BackpackNotificator extends Messagor
             $result = $this->backpackRepository->findAllForDto($this->backpackDto, BackpackDtoRepository::FILTRE_DTO_INIT_HOME);
 
             if (empty($result)) {
-                $this->addMessage($user->getName() . ' -> pas de nouveauté');
+                $this->stackMessage->push($user->getName() . ' -> pas de nouveauté');
                 continue;
             }
 
-            $this->addMessage(
-                Messagor::TABULTATION .
+            $this->stackMessage->push(
+                StackMessage::TABULTATION .
                 ' Notification à ' . $user->getName() .
                 ' [' . $user->getEmail() . ']' . ' -> ' . count($result) . ' nouveautés');
 
-            /*$this->backpackMail->send(
+            $this->backpackMail->send(
                 $user,
                 BackpackMail::NEW,
                 'Liste des dernières notifications',
                 ['backpacks' => $result]);
-*/
+
 
         }
     }

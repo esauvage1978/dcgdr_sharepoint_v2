@@ -3,11 +3,16 @@
 namespace App\History;
 
 use App\Entity\History;
+use App\Helper\StackArray;
 use App\Manager\HistoryManager;
+use App\Security\CurrentUser;
 use Symfony\Component\Security\Core\Security;
 
 abstract class HistoryAbstract
 {
+    CONST TYPE_STRING='string';
+    CONST TYPE_BOOL='bool';
+
     /**
      * @var HistoryManager
      */
@@ -21,50 +26,48 @@ abstract class HistoryAbstract
     /**
      * @var array
      */
-    private $content;
+    private $stack;
 
     /**
-     * @var Security
+     * @var CurrentUser
      */
-    private $securityContext;
+    private $currentUser;
 
     public function __construct(
         HistoryManager $manager,
-        Security $securityContext
+        CurrentUser $currentUser
     )
     {
         $this->manager = $manager;
-        $this->securityContext = $securityContext;
+        $this->currentUser = $currentUser;
         $this->history=new History();
-        $this->content=[];
+        $this->stack=new StackArray();
     }
 
-    private function loadUser()
-    {
-        return $this->securityContext->getToken()->getUser();
-    }
-
-    protected function compareField(string $field, ?string $oldData, ?string $newData): bool
+    protected function compareField(string $field, ?string $oldData, ?string $newData,string $type=self::TYPE_STRING): bool
     {
         if (!isset($oldData) && !isset($newData) ) {
             return false;
         }
 
-        if($oldData!==$newData) {
+        $oldData!==$newData?$add=true:$add=false;
+
+        switch ($type)
+        {
+            case self::TYPE_BOOL:
+                $oldData=$oldData?'Oui':'Non';
+                $newData=$newData?'Oui':'Non';
+                break;
+        }
+
+        if($add) {
             $this->addContent($field,$oldData,$newData);
             return true;
         }
+
         return false;
     }
 
-    protected function compareFieldBool(string $field, ?string $oldData, ?string $newData): bool
-    {
-        if($oldData!==$newData) {
-            $this->addContent($field,$oldData?'Oui':'Non',$newData?'Oui':'Non');
-            return true;
-        }
-        return false;
-    }
 
     protected function compareFieldOneToOne(string $field,string $fieldEntity, ?object $oldData, ?object $newData): bool
     {
@@ -81,7 +84,7 @@ abstract class HistoryAbstract
 
     protected function addContent(string $field, ?string $oldData, ?string $newData)
     {
-        array_push($this->content,[
+        $this->stack->push([
            'field'=>$field,
             'oldData'=>(empty($oldData)?'':$oldData),
             'newData'=>(empty($newData)?'':$newData)
@@ -92,8 +95,8 @@ abstract class HistoryAbstract
     {
         $this->history
             ->setCreatedAt(new \DateTime())
-            ->setUser($this->loadUser())
-            ->setContent($this->content);
+            ->setUser($this->currentUser->getUser())
+            ->setContent($this->stack->toArray());
 
         $this->manager->save($this->history);
     }

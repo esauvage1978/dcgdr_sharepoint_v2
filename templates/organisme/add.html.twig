@@ -4,7 +4,13 @@
 
 
 {% block breadcrumb %}
-    {{ include('default/_edit/_item_btn.html.twig') }}
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.admin(
+        'add',
+        is_granted('ROLE_GESTIONNAIRE'),
+        null,
+        domaine
+    ) }}
 {% endblock %}
 
 

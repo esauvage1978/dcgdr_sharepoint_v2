@@ -20,7 +20,13 @@
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {{ include('default/_list/_item_btn_sort.html.twig') }}
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.adminSort(
+        'list',
+        is_granted('ROLE_GESTIONNAIRE'),
+        null,
+        domaine
+    ) }}
 {% endblock %}
 
 {% block page_content %}

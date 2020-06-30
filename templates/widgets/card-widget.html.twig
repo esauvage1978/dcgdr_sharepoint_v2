@@ -24,6 +24,7 @@ Attributs :
 
 <!--debut CARD--><div class="card {% if block('card_class') is defined %} {{ block('card_class') }}{% endif %}{{ _collapsed ? ' collapsed-card' : '' }}"
         {% if block('card_attributes') is defined %} {{ block('card_attributes') }}{% endif %}{% if block('card_id') is defined %} id="{{ block('card_id') }}"{% endif %}>
+    {% if block('card_ribbon') is defined %}{{ block('card_ribbon') }}{% endif %}
     {% if block('card_img') is defined %}{{ block('card_img') }}{% endif %}
     {% if block('card_title') is defined or _collapsible or _removable %}
         <!--debut CARD HEADER--><div class="card-header">

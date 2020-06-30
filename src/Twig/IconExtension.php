@@ -82,6 +82,7 @@ final class IconExtension extends AbstractExtension
         'settings' => 'fas fa-cog',
         'shop' => 'fas fa-shopping-cart',
         'show' => 'fas fa-eye',
+        'sort' => 'fas fa-sort-amount-down-alt',
         'start' => 'fas fa-play',
         'start-small' => 'far fa-play-circle',
         'stop' => 'fas fa-stop',
