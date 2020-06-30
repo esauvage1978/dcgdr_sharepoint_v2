@@ -22,6 +22,8 @@ parameters:
 
     tree_undevelopped_for_nbr: '%env(TREE_UNDEVELOPPED_FOR_NBR)%'
 
+    news_time: '%env(NEWS_TIME)%'
+
     image.resize.x: 480
     image.resize.y: 320
 

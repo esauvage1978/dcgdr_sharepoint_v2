@@ -31,6 +31,8 @@ class ParamsInServices
 
     CONST TREE_UNDEVELOPPED_FOR_NBR= 'tree_undevelopped_for_nbr';
 
+    CONST NEWS_TIME='news_time';
+
     CONST IMAGE_RESIZE_X='image.resize.x';
     CONST IMAGE_RESIZE_Y='image.resize.y';
 
