@@ -2,6 +2,7 @@
 
 namespace App\Tree;
 
+use App\Helper\ParamsInServices;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
@@ -51,9 +52,12 @@ abstract class AbstractTree implements InterfaceTree
      */
     protected $itemRequestId;
 
+    protected $paramsInServices;
+
     public function __construct(
         ContainerInterface $container,
-        Request $request
+        Request $request,
+        ParamsInServices $paramsInServices
     )
     {
         $this->container = $container;
@@ -63,6 +67,8 @@ abstract class AbstractTree implements InterfaceTree
         $tree = null;
         $this->developed = false;
         $this->parameter = [];
+
+        $this->paramsInServices=$paramsInServices;
     }
 
     public function initialise($items): self

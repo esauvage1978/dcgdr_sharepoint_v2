@@ -275,7 +275,7 @@ class BackpackController extends AbstractGController
 
         $renderArray = $dto->getData();
 
-        $tree = new BackpackTree($this->container, $request);
+        $tree = new BackpackTree($this->container, $request,$this->paramsInServices);
         $tree
             ->initialise($items)
             ->setRoute('backpacks_search')
@@ -285,7 +285,6 @@ class BackpackController extends AbstractGController
         count($items) <= $this->paramsInServices->get(ParamsInServices::TREE_UNDEVELOPPED_FOR_NBR) && $tree->Developed();
         array_key_exists('underRubric', $renderArray) && $tree->hideUnderThematic();
 
-        dump($renderArray);
         $renderArray = array_merge($renderArray,
             [
                 'items' => $tree->getTree(),
