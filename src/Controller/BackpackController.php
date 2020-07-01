@@ -256,14 +256,13 @@ class BackpackController extends AbstractGController
 
 
     /**
-     * @Route("/backpacks/search", name="backpacks_search", methods={"GET"})
+     * @Route("/backpacks", name="backpacks", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
     public function treeView(Request $request,BackpackDto $dto = null)
     {
         if ($dto->getVisible() === null && $dto->getHide() === null) {
 
-            $dto = new BackpackDto();
             $dto->setData($request);
         }
 
@@ -278,7 +277,7 @@ class BackpackController extends AbstractGController
         $tree = new BackpackTree($this->container, $request,$this->paramsInServices);
         $tree
             ->initialise($items)
-            ->setRoute('backpacks_search')
+            ->setRoute('backpacks')
             ->setParameter($renderArray);
 
 
@@ -294,5 +293,15 @@ class BackpackController extends AbstractGController
 
         return $this->render('backpack/tree.html.twig', $renderArray);
 
+    }
+
+    /**
+     * @Route("/backpacks/search", name="backpacks_search", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function homeSearchAction(Request $request): Response
+    {
+        $r=$request->get('r');
+        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED_FOR_SEARCH,$r));
     }
 }

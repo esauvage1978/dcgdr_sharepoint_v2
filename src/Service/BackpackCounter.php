@@ -31,10 +31,10 @@ class BackpackCounter
         $this->backpackMakerDto=new BackpackMakerDto($user);
     }
 
-    public function get(string $type,string $id=null)
+    public function get(string $type,string $param=null)
     {
         return $this->backpackDtoRepository->countForDto(
-            $this->backpackMakerDto->get($type,$id)
+            $this->backpackMakerDto->get($type,$param)
         );
     }
 

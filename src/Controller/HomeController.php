@@ -3,12 +3,17 @@
 namespace App\Controller;
 
 use App\Dto\RubricDto;
-use App\Dto\ThematicDto;
 use App\Dto\UserDto;
-use App\Repository\MessageRepository;
+use App\Helper\ParamsInServices;
+use App\Repository\BackpackDtoRepository;
 use App\Repository\RubricDtoRepository;
-use App\Repository\RubricRepository;
+use App\Security\CurrentUser;
+use App\Service\BackpackMakerDto;
+use App\Tree\BackpackTree;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -32,4 +37,15 @@ class HomeController extends AbstractController
             'items' => $repo->findAllForDto($dto, RubricDtoRepository::FILTRE_DTO_INIT_HOME)
         ]);
     }
+
+    /**
+     * @return Response
+     */
+    public function searchFormAction(): Response
+    {
+        return $this->render('home/search-form.html.twig', []);
+    }
+
+
+
 }

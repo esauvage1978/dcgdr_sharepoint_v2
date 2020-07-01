@@ -16,8 +16,8 @@
         {% if currentState is defined %}
             {{ widgets.badge_state(currentState) }}
         {% endif %}
-        {% if isNew is defined and item %}
-            {{ new.isNew(item.updateAt) }}
+        {% if isNew is defined and isNew==true %}
+            {{ new.spanNew() }}
         {% endif %}
         {% if hide is defined and item %}
             {{ widgets.badge('Masqué','#252525') }}
