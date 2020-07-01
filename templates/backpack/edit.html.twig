@@ -1,0 +1,145 @@
+{% extends 'backpack/layout.html.twig' %}
+
+{% block page_subtitle %}Modification{% endblock %}
+
+{% import "backpack/actions.html.twig" as actions %}
+
+{% block breadcrumb %}
+    {{ actions.backpack(
+        'edit',
+        item.currentState,
+        item.owner==app.user,
+        item,
+        item.underrubric
+    ) }}
+{% endblock %}
+
+{% block page_content %}
+    {% import "macros/workflow.html.twig" as wfl %}
+    {{ include('backpack/_edit/_etat_modal.html.twig') }}
+
+
+    {% if item.currentState in [workflow_archived,workflow_abandonned] %}
+        <div class="row justify-content-center ">
+            <div class="col-10">
+                {{ include(domaine ~ '/_show/_item.html.twig') }}
+            </div>
+        </div>
+    {% else %}
+        {{ include(domaine ~ '/_edit/_item.html.twig') }}
+    {% endif %}
+
+    {{ wfl.cards(item) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ absolute_url( asset('js/backpack_file.js')) }}"></script>
+    <script src="{{ absolute_url( asset('js/arborescence.js')) }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", "{{ item.underRubric.id }}", true, '#backpack_dir1');
+
+            $('#cmb_dir1').change(function () {
+                var data = $('#cmb_dir1  option:selected').text();
+                $('#backpack_dir1').val(data);
+                if (data === "") {
+                    $('#div_dir2').addClass('d-none');
+                    $('#div_dir3').addClass('d-none');
+                    $('#div_dir4').addClass('d-none');
+                    $('#div_dir5').addClass('d-none');
+                } else {
+                    $('#div_dir2').removeClass('d-none');
+                    arborescenceChained('#cmb_dir2', "{{ path('ajax_fill_combobox_dir2') }}", "{{ item.underRubric.id }}", true, '#backpack_dir2', data);
+                }
+            });
+            $('#cmb_dir2').change(function () {
+                var data = $('#cmb_dir2  option:selected').text();
+                $('#backpack_dir2').val(data);
+                if (data === "") {
+                    $('#div_dir3').addClass('d-none');
+                    $('#div_dir4').addClass('d-none');
+                    $('#div_dir5').addClass('d-none');
+                } else {
+                    $('#div_dir3').removeClass('d-none');
+                    arborescenceChained('#cmb_dir3', "{{ path('ajax_fill_combobox_dir3') }}", "{{ item.underRubric.id }}", true, '#backpack_dir3', data);
+                }
+            });
+            $('#cmb_dir3').change(function () {
+                var data = $('#cmb_dir3  option:selected').text();
+                $('#backpack_dir3').val(data);
+                if (data === "") {
+                    $('#div_dir4').addClass('d-none');
+                    $('#div_dir5').addClass('d-none');
+                } else {
+                    $('#div_dir4').removeClass('d-none');
+                    arborescenceChained('#cmb_dir4', "{{ path('ajax_fill_combobox_dir4') }}", "{{ item.underRubric.id }}", true, '#backpack_dir4', data);
+                }
+            });
+            $('#cmb_dir4').change(function () {
+                var data = $('#cmb_dir4  option:selected').text();
+                $('#backpack_dir4').val(data);
+                if (data === "") {
+                    $('#div_dir5').addClass('d-none');
+                } else {
+                    $('#div_dir5').removeClass('d-none');
+                    arborescenceChained('#cmb_dir5', "{{ path('ajax_fill_combobox_dir5') }}", "{{ item.underRubric.id }}", true, '#backpack_dir5', data);
+                }
+            });
+            $('#cmb_dir5').change(function () {
+                var data = $('#cmb_dir5  option:selected').text();
+                $('#backpack_dir5').val(data);
+            });
+        });
+
+        $('#addDir').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('whatever') // Extract info from data-* attributes
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this)
+
+            modal.find('#addDir_field').val(recipient)
+        });
+
+        $(function () {
+            $('#btn_addDir').click(function () {
+
+                if ($('#addDir_field_new').val() === "") {
+                    alert('Le libellé est vide');
+                    return;
+                }
+                $('#addDir').modal('toggle');
+                var selecteurCible = $('#addDir_field').val();
+                var data = $('#addDir_field_new').val();
+                $('#' + selecteurCible).append('<option selected value="' + data + '">'
+                    + data + '</option>');
+                $('#addDir_field').val("");
+                $('#' + selecteurCible).change();
+
+            });
+        });
+
+        $(function () {
+
+
+            $('#picture_updateAt_date_month').val(new Date().getMonth() + 1);
+            $('#picture_updateAt_date_day').val(new Date().getDay());
+            $('#picture_updateAt_date_year').val(new Date().getFullYear());
+            $('#picture_updateAt_time_hour').val(new Date().getHours());
+            $('#picture_updateAt_time_minute').val(new Date().getMinutes());
+
+
+        });
+
+        $(document).on('change', '.custom-file-input', function () {
+            let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+            $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+        });
+
+        $('#backpack_underrubric').on("select2:selecting", function (e) {
+            arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", e.params.args.data.id, true, '#backpack_dir1');
+        });
+    </script>
+{% endblock %}
+

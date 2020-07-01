@@ -1,0 +1,14 @@
+App\Entity\Rubric:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: [thematic, name]
+        errorPath: name
+        message: 'Le nom de la rubrique "{{ value }}" est déjà déclaré pour cette thématique.'
+  properties:
+    name:
+      - NotBlank: ~
+      - Length:
+          min: 2
+          max: 255
+          minMessage: 'Le nom "{{ value }}" doit avoir plus de 2 caractères'
+          maxMessage: 'Le nom "{{ value }}" ne peut pas avoir plus de 255 caractères'

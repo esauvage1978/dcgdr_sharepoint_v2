@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% import "macros/widgets.html.twig" as widgets %}
+
+{% block title %}{{ app_name }} - Administration{% endblock %}
+{% block page_title %}{{ widgets.icon('admin') }} Administration{% endblock %}
+
+{% block page_content %}
+
+    <div class="row">
+        <div class="col-md-3 offset-md-1" >
+            {# ... box widget with defaults ... #}
+            {% embed 'widgets/card-widget.html.twig'%}
+
+                {% block card_body %}
+                    {% for entry in general_entries %}
+                        <div class="row ">
+                            <div class="col-sm-12">
+                                <a href="{{ path(entry.route)}}" target="_self">
+                                    <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+            {% endembed %}
+        </div>
+
+        <div class="col-md-3 " >
+            {# ... box widget with defaults ... #}
+            {% embed 'widgets/card-widget.html.twig'%}
+
+                {% block card_body %}
+                    {% for entry in app_entries %}
+                        <div class="row ">
+                            <div class="col-sm-12">
+                                <a href="{{ path(entry.route)}}" target="_self">
+                                    <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endblock %}
+            {% endembed %}
+        </div>
+
+        {% if is_granted('ROLE_GESTIONNAIRE') %}
+            <div class="col-md-3 " >
+                {# ... box widget with defaults ... #}
+                {% embed 'widgets/card-widget.html.twig'%}
+
+                    {% block card_body %}
+                        {% for entry in action_entries %}
+                            <div class="row ">
+                                <div class="col-sm-12">
+                                    <a href="{{ path(entry.route)}}" target="_self">
+                                        <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

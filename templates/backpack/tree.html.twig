@@ -1,0 +1,44 @@
+{% extends 'backpack/layout_tree.html.twig' %}
+{% import "macros/widgets.html.twig" as widgets %}
+{% import "macros/default.html.twig" as new %}
+
+{% block title %}Porte-document {% endblock %}
+
+{% block page_subtitle %}
+    <span class="text-muted">
+        {% if underRubrix is defined %}
+            {% if underRubric  and item %}
+                {{ item.underrubric.rubric.name }} /
+            {% endif %}
+        {% endif %}
+
+        {{ count }}
+        {% if currentState is defined %}
+            {{ widgets.badge_state(currentState) }}
+        {% endif %}
+        {% if isNew is defined and isNew==true %}
+            {{ new.spanNew() }}
+        {% endif %}
+        {% if hide is defined and item %}
+            {{ widgets.badge('Masqué','#252525') }}
+        {% endif %}
+    </span>
+{% endblock %}
+
+
+{% import "backpack/actions.html.twig" as actions %}
+{% block breadcrumb %}
+    {% set ur= null %}
+    {% if underRubrix is defined %}
+        {% if underRubric and item %}
+            {% set ur= item.underrubric %}
+        {% endif %}
+    {% endif %}
+    {{ actions.backpack('tree','','',item, ur) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ parent() }}
+{% endblock %}
+
+

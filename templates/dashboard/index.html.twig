@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% import "macros/widgets.html.twig" as widgets %}
+
+{% block title %}{{ app_name }} - Dashboard{% endblock %}
+{% block page_title %}{{ widgets.icon('dashboard') }} Tableau de bord{% endblock %}
+
+{% block page_content %}
+    {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        {% import "macros/default.html.twig" as dft %}
+        {{ dft.no_connexion() }}
+    {% else %}
+        <div class="row justify-content-center ">
+            <div class="col-8">
+                <div class="row  justify-content-center ">
+            {% for option in options %}
+                <div class="col-4">
+                    {{ widgets.info_box(option) }}
+                </div>
+            {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

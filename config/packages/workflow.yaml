@@ -1,0 +1,31 @@
+# config/packages/workflow.yaml
+framework:
+    workflows:
+        backpack_publishing:
+            type: 'state_machine' # or 'state_machine'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'currentState'
+            supports:
+                - App\Entity\Backpack
+            initial_marking: draft
+            places:
+                - draft
+                - published
+                - abandonned
+                - archived
+            transitions:
+                toPublish:
+                    from: draft
+                    to:   published
+                toTheDraft:
+                    from: [published, abandonned, archived]
+                    to:   draft
+                toAbandonne:
+                    from: [draft, published, archived]
+                    to:   abandonned
+                toArchive:
+                    from: [draft, published]
+                    to:   archived

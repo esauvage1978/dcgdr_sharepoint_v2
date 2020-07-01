@@ -1,19 +1,15 @@
 {% extends '@AdminLTE/layout/default-layout.html.twig' %}
 
-
+        {% block navbar_search %}
+            {% block sidebar_search %}
+                {{ render(controller('App\\Controller\\HomeController::searchFormAction')) }}
+            {% endblock %}
+        {% endblock %}
 
         {% block stylesheets %}
-            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
             {{ encore_entry_link_tags('app') }}
-
-            <!-- Renders a link tag (if your module requires any CSS)
-                 <link rel="stylesheet" href="/build/app.css"> -->
         {% endblock %}
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
-
-            <!-- Renders app.js & a webpack runtime.js file
-                <script src="/build/runtime.js"></script>
-                <script src="/build/app.js"></script> -->
         {% endblock %}

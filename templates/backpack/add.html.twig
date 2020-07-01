@@ -1,0 +1,111 @@
+{% extends 'backpack/layout.html.twig' %}
+
+{% block page_subtitle %}Création{% endblock %}
+
+
+{% block breadcrumb %}
+    {% embed 'widgets/button-widget.html.twig' %}
+        {% block btn_group %}
+            {% import "macros/delele.html.twig" as del %}
+            {% import "macros/submit.html.twig" as sub %}
+            {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+            {{ btn.link_button(
+                '',
+                path('home'),
+                'fas fa-arrow-left',
+                'outline-primary',
+                'outline-primary'
+            ) }}
+            {% if item.id is not null %}
+                {{ del.delete_btn('','show') }}
+                {{ btn.link_button(
+                    '',
+                    path(route_show,{id:item.id}),
+                    'fa fa-eye',
+                    'primary',
+                    'primary'
+                ) }}
+            {% endif %}
+            {{ sub.btn_onclick() }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+
+{% block page_content %}
+    {{ form_start(form) }}
+    <div class="row justify-content-center">
+        <div class="{{ col_1_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}<i class="fas fa-suitcase text-info mr-3"></i> Porte-document{% endblock %}
+                {% block card_body %}
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label control-label required" for="cmb_rubric">
+                            Rubrique
+                        </label>
+                        <div class="col">
+                            <select name="cmb_rubric" id="cmb_rubric" class="form-control" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label control-label required" for="cmb_underrubric">
+                            Sous-rubrique
+                        </label>
+                        <div class="col">
+                            <select name="cmb_underrubric" id="cmb_underrubric" class="form-control" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        {{ form_label(form.name,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                        <div class="col">
+                            {{ form_errors(form.name) }}
+                            {{ form_widget(form.name) }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        {{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                        <div class="col">
+                            {{ form_errors(form.content) }}
+                            {{ form_widget(form.content) }}
+                        </div>
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+
+    <div class="d-none">
+        {{ form_rest(form) }}
+        {% import "macros/submit.html.twig" as sub %}
+        {{ sub.btn() }}
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{%  block javascripts %}
+    {{ parent() }}
+    <script src="{{ absolute_url( asset('js/fillCombobox.js')) }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            fillComboboxRubric('#cmb_rubric', "{{ path('ajax_fill_combobox_rubrics') }}", true);
+        });
+
+        $('#cmb_rubric').change(function () {
+            fillComboboxRubricChained('#cmb_rubric', '#cmb_underrubric', "{{ path('ajax_fill_combobox_underrubrics') }}", true, false);
+        });
+
+        $('#backpack_new_updateAt_date_month').val(new Date().getMonth()+1);
+        $('#backpack_new_updateAt_date_day').val(new Date().getDay());
+        $('#backpack_new_updateAt_date_year').val(new Date().getFullYear());
+        $('#backpack_new_updateAt_time_hour').val(new Date().getHours());
+        $('#backpack_new_updateAt_time_minute').val(new Date().getMinutes());
+
+        $('#cmb_underrubric').change(function () {
+            $('#backpack_new_underrubric').val($('#cmb_underrubric').val());
+        });
+
+    </script>
+{% endblock %}

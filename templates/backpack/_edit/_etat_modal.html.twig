@@ -1,0 +1,4 @@
+
+{% for transition in workflow_transitions(item) %}
+    {{ include('workflow/_modal_transition.html.twig',{'transition':transition.name,'id':item.id}) }}
+{% endfor %}

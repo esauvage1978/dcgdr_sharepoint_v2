@@ -1,0 +1,36 @@
+{% for backpackLink in backpack.backpackLinks %}
+
+    <tr>
+        <td>
+            <a target="_blank" href="{{ backpackLink.link }}"  style="color:#57a7fe; text-decoration: none">
+                <i class="fas fa-globe mr-2"></i>
+                {{ backpackLink.title }}
+            </a>
+            <br>
+            <a target="_blank" href="{{ backpackLink.link }}"  style="color:#57a7fe; text-decoration: none">
+                    {{ backpackLink.link }}
+            </a>
+        </td>
+        <td >
+            <span class="text-muted">
+                {{ backpackLink.content | raw }}
+            </span>
+        </td>
+
+        <td></td>
+        <td class=" ">
+            {%  set color='black' %}
+            {% if backpackLink.modifyAt %}
+                {% set difference = date("today").diff(date(backpackLink.modifyAt)) %}
+                {% set leftDays = difference.days %}
+                {% if leftDays <8 %}
+                    {%  set color='#f012be' %}
+                {% endif %}
+            {% endif %}
+            <span style="color:{{ color }}">
+                {{ backpackLink.modifyAt  | date('d/m/Y H:i') }}
+            </span>
+        </td>
+    </tr>
+
+{% endfor %}

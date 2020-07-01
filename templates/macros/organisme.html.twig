@@ -1,0 +1,19 @@
+{% macro view(item,showRef) %}
+    <a href="{{ path('organisme_show', {'id': item.id}) }}" class="card m-0">
+        <div class="card-body text-center align-middle p-1 bg-primary">
+            <span class="{% if item.isEnable is same as(false) %}text-warning text-bold{% endif %}">
+            {% if showRef is defined %}{% if showRef is same as (true) %}{{ item.ref }}<br/> {% endif %}{% endif %}
+            {{ item.name }}
+            </span>
+        </div>
+    </a>
+{% endmacro %}
+
+{% macro views(items, showRef) %}
+    {% import _self as org %}
+    <div class="{{ row_lst }} ">
+        {% for item in items %}
+            {{ org.view(item, showRef) }}
+        {% endfor %}
+    </div>
+{% endmacro %}

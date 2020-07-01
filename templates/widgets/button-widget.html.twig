@@ -1,0 +1,5 @@
+<div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group mr-2" role="group" aria-label="First group">
+        {% if block('btn_group') is defined %} {{ block('btn_group') }}{% endif %}
+    </div>
+</div>

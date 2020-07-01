@@ -1,0 +1,19 @@
+{% extends 'picture/layout.html.twig' %}
+
+{% block page_subtitle %}Création{% endblock %}
+
+
+{% block breadcrumb %}
+    {% import "default/actions.html.twig" as actions %}
+    {{ actions.admin(
+        'add',
+        is_granted('ROLE_GESTIONNAIRE'),
+        null,
+        domaine
+    ) }}
+{% endblock %}
+
+
+{% block page_content %}
+    {{ include(domaine ~ '/_edit/_item.html.twig') }}
+{% endblock %}

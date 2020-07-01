@@ -1,0 +1,100 @@
+{% if item is defined %}
+
+    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
+    {% import "macros/delele.html.twig" as del %}
+    {% import "macros/submit.html.twig" as sub %}
+    {{ form_start(form) }}
+
+
+    <div class="row justify-content-center">
+        <div class="{{ col_1_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}{{ item.name }}{% endblock %}
+                {% block card_body %}
+                    <div class="row">
+                        <div class=" col-12">
+                            <div class="form-group row">
+                                {{ form_label(form.thematic,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                                <div class="col">
+                                    {{ form_errors(form.thematic) }}
+                                    {{ form_widget(form.thematic) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.name,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                                <div class="col">
+                                    {{ form_errors(form.name) }}
+                                    {{ form_widget(form.name) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="{{ form.isEnable.vars.id }}">
+                                    Afficher
+                                </label>
+                                <div class="col mt-1 ">
+                                    {{ form_widget(form.isEnable) }}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="{{ form.isShowall.vars.id }}">
+                                    Visible par tous
+                                </label>
+                                <div class="col mt-1 ">
+                                    {{ form_widget(form.isShowall) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        {{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                        <div class="col">
+                            {{ form_errors(form.content) }}
+                            {{ form_widget(form.content) }}
+                        </div>
+                    </div>
+
+                {% endblock %}
+
+            {% endembed %}
+        </div>
+        <div class="{{ col_2_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Image de présentation{% endblock %}
+                {% block card_body_class %}select2-primary{% endblock %}
+                {% block card_body %}
+                    <div class="text-center row">
+                        <div class="col">
+                            {% if item.picture %}
+                                <img src="{{ absolute_url( asset(item.picture.Href)) }}" class="card-img-top rounded-top rounded-lg " style="width:200px"
+                                     alt="{{ item.picture.name }}">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <br>
+                    {{ form_widget(form.picture) |raw }}
+                {% endblock %}
+            {% endembed %}
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Corbeille en lecture{% endblock %}
+                {% block card_body_class %}select2-primary{% endblock %}
+                {% block card_body %}
+                    {{ form_widget(form.readers) }}
+                {% endblock %}
+            {% endembed %}
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% block card_title %}Corbeille en écriture{% endblock %}
+                {% block card_body_class %}select2-primary{% endblock %}
+                {% block card_body %}
+                    {{ form_widget(form.writers) }}
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+    {% import "macros/submit.html.twig" as sub %}
+    <div class="d-none">{{ sub.btn() }}</div>
+    {{ form_end(form) }}
+    {% if item.id is not null %}
+        {{ del.delete_form(route_del,item.id, 'show') }}
+    {% endif %}
+{% endif %}

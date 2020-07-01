@@ -1,0 +1,50 @@
+{% macro no_connexion() %}
+    <div class="row bg-white shadow ">
+        <div class="col-sm-4 ">
+            <img src="{{ absolute_url( asset('img/closed.png')) }}"
+                 style="min-width:50%;
+                        min-height:50%;
+                        width:auto;
+                        height:auto;" alt="nothing"/>
+        </div>
+        <div class="col-sm-8 pr-4 pt-5">
+            <div class="row justify-content-center ">
+                <h1 class="font-weight-bold  bg-white rounded">{{ app_name }}</h1>
+            </div>
+            <div class="row justify-content-center ">
+                <span class="text-muted  bg-white rounded">{{ app_name_description }}</span>
+            </div>
+            <br/>
+            <div class="row justify-content-center">
+                <div class="col-6 m-5 bg-white rounded">
+                    <h3><i class="fa fa-lock fa-fw text-danger"></i> Oops! Vous n'êtes pas connecté.</h3>
+                    <p>
+                        <br/><br/>
+                        Rien de grave, vous pouvez le faire à partir de la <a href="{{ path('user_login') }}">page de
+                            connexion</a>.
+                    </p>
+                    <p>
+                        A tout de suite !
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro isNew(dateNew) %}
+    {% import _self as macro %}
+    {% if dateNew %}
+        {% set difference = date("today").diff(date(dateNew)) %}
+        {% set leftDays = difference.days %}
+        {% if leftDays < news_time %}
+            {{ macro.spanNew() }}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro spanNew() %}
+    <span class="badge bg-gradient-fuchsia">
+                <i class="fas fa-certificate"></i> Nouveau
+            </span>
+{% endmacro %}

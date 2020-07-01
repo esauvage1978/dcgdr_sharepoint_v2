@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% set title='Porte document' %}
+{% set entityName='backpack' %}
+{% set entity=backpack %}
+
+{% block title %}{{ parent() }} {{ title }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ absolute_url( asset('plugins/select2/css/select2.min.css')) }}">
+    <link rel="stylesheet"
+          href="{{ absolute_url( asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')) }}">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ absolute_url( asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css')) }}">
+{% endblock %}
+
+{% block body_header %}
+{% endblock %}
+
+{% block sidebar_sommaire %}
+
+{% endblock %}
+
+{% block sidebar_button %}
+    {% if is_granted('ROLE_GESTIONNAIRE') %}
+
+        {{ include('share/__btn_save_onclick.html.twig') }}
+
+
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    <div class="row justify-content-center">
+        <div class="card-deck col-12">
+            <div class="col-xl-9 card shadow ">
+                {{ include('backpack/_edit/_name_new.html.twig') }}
+            </div>
+            <div class="col-xl-3 card shadow ">
+                <div class="card-body">
+                    {{ include('backpack/_edit/_afficher.html.twig') }}
+                </div>
+                <div class="card-body bg-white">
+                    <div class="form-group row">
+                        <label for="cmb_axe" class="col-sm-12 col-form-label">
+                            Rubrique
+                        </label>
+                        <div class="col-12">
+                            <select name="cmb_axe" id="cmb_rubric" class="form-control" required>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="cmb_axe" class="col-sm-12 col-form-label">
+                            Sous-rubrique
+                        </label>
+                        <div class="col-12">
+                            <select name="cmb_axe" id="cmb_underrubric" class="form-control" required>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none">
+        {{ form_rest(form) }}
+        <button name="update" id="update">{{ button_label|default('Save') }}</button>
+        {{ include('share/__btn_save.html.twig') }}
+    </div>
+    {{ form_end(form) }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Select2 -->
+    <script src="{{ absolute_url( asset('plugins/select2/js/select2.full.min.js')) }}"></script>
+    <script src="{{ absolute_url( asset('js/add_sidebar.js')) }}"></script>
+    <script src="{{ absolute_url( asset('js/fillCombobox/fillCombobox.js')) }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            fillComboboxRubric('#cmb_rubric', "{{ path('ajax_fill_combobox_rubrics') }}", true);
+
+            $('#cmb_rubric').change(function () {
+                fillComboboxRubricChained('#cmb_rubric', '#cmb_underrubric', "{{ path('ajax_fill_combobox_underrubrics') }}", true, false);
+            });
+
+            $('#backpack_new_updateAt_date_month').val(new Date().getMonth()+1);
+            $('#backpack_new_updateAt_date_day').val(new Date().getDay());
+            $('#backpack_new_updateAt_date_year').val(new Date().getFullYear());
+            $('#backpack_new_updateAt_time_hour').val(new Date().getHours());
+            $('#backpack_new_updateAt_time_minute').val(new Date().getMinutes());
+
+            $('#cmb_underrubric').change(function () {
+                $('#backpack_new_underrubric').val($('#cmb_underrubric').val());
+            });
+        })
+
+
+    </script>
+{% endblock %}
+
+
+

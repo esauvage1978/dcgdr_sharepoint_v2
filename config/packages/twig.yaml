@@ -3,3 +3,15 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     exception_controller: null
+    form_themes: ['bootstrap_3_layout.html.twig']
+    globals:
+        app_name: '%env(APPLICATION_NAME)%'
+        app_name_description: '%env(APPLICATION_DESCRIPTION)%'
+        col_1_2: 'col-sm-12 col-md-12 col-lg-8 col-xl-6'
+        col_2_2: 'col-sm-12 col-md-12 col-lg-4'
+        row_lst: 'row row-cols-1 row-cols-md-2 row-cols-lg-3'
+        workflow_archived: 'archived'
+        workflow_published: 'published'
+        workflow_abandonned: 'abandonned'
+        workflow_draft: 'draft'
+        news_time: '%env(NEWS_TIME)%'

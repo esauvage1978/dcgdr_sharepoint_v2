@@ -1,0 +1,174 @@
+{% macro cards(item,choice) %}
+    <div class="row justify-content-center mt-4">
+        <div class="col-10">
+            {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+                {% import "macros/workflow.html.twig" as macro %}
+                {% block card_title_class %}text-secondary{% endblock %}
+                {% block card_title %}Changer l'état du porte-document{% endblock %}
+                {% block card_body_class %} {% endblock %}
+                {% block card_body %}
+                    <div class="d-flex flex-row">
+                        {{ macro.current_card(item) }}
+                        {% for transition in item.currentState | workflowGetTransitionsForState %}
+                            {{ macro.card(item,transition,choice) }}
+                        {% endfor %}
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro current_card(item) %}
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4 ">
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% import "macros/widgets.html.twig" as widgets %}
+            {% block card_class %}h-100 bg-gray{% endblock %}
+            {% block card_body_ribbon_text %}
+                {{ item.currentState | workflowGetShortNameOfState }}{% endblock %}
+            {% block card_body_ribbon_class %}ribbon-lg{% endblock %}
+            {% block card_body_ribbon_attr %}{{ widgets.style_bg_color(item.currentState) }}{% endblock %}
+            {% block card_body %}
+                <h4>Etat actuel de l'action</h4>
+                {% if item.contentstate is defined %}
+                    <p class=" m-4">
+                        {{ item.contentstate | raw }}
+                    </p>
+                {% endif %}
+            {% endblock %}
+        {% endembed %}
+    </div>
+{% endmacro %}
+
+{% macro card(item,transition,choice) %}
+    <div class="col-sm-12 col-md-6  col-lg-4 col-xl-3 mb-4">
+        {% set data = (transition | workflowGetModalDataForTransition) %}
+        {% embed 'widgets/card-widget.html.twig' %}
+            {% import "macros/widgets.html.twig" as widgets %}
+            {% block card_class %}h-100 bg-gray{% endblock %}
+            {% block card_body_ribbon_text %}{{ data.state | workflowGetShortNameOfState }}{% endblock %}
+            {% block card_body_ribbon_class %}ribbon-lg{% endblock %}
+            {% block card_body_ribbon_attr %}{{ widgets.style_bg_color(data.state) }}{% endblock %}
+            {% block card_body %}
+                {% if workflow_can(item, data.transition ) %}
+                    <p class="text-center text-success">
+                        {{ widgets.icon('check_big') }}
+                    </p>
+                    {% for message in item | workflowGetExplains(data.transition) %}
+                        <p>
+                            <small>
+                                {{ message }}
+                            </small>
+                        </p>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-center text-warning">
+                        {{ widgets.icon('nocheck_big') }}
+                    </p>
+
+                    <span class="text-warning">Les conditions ne sont pas réunies</span>
+                    {% set iconSuccess='<i class="fa fa-check-circle"></i>' %}
+                    {% set iconDanger='<i class="fa fa-stop-circle"></i>' %}
+
+                    {% set checkMessages=item | workflowGetCheckMessages(data.transition) %}
+                    {% if checkMessages | length >0 %}
+                        <ul class="list-unstyled mt-1 p-2 rounded-1 bg-light">
+                            {% for checkMessage in checkMessages %}
+                                <li><small>
+                                        {% if checkMessage.type == 'success' %}
+                                            <span class="text-success  ">
+                                        {{ iconSuccess | raw }}{{ checkMessage.message }}
+                                    </span>
+                                        {% elseif checkMessage.type == 'danger' %}
+                                            <span class="text-danger">
+                                        {{ iconDanger | raw }}
+                                                {{ checkMessage.message }}
+                                    </span>
+                                        {% elseif checkMessage.type == 'info' %}
+                                            <span class="text-info  ">
+                                        {{ checkMessage.message }}
+                                    </span>
+                                        {% else %}
+                                            {{ checkMessage.message }}
+                                        {% endif %}
+                                    </small></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endif %}
+            {% endblock %}
+
+            {% block card_footer %}
+
+                {% if workflow_can(item, data.transition ) %}
+                    <div class="col text-center">
+                        <button type="button"
+                                class="btn {{ css | default('') }}" {{ widgets.style_bg_color(data.state) }}
+                                data-toggle="modal" data-target="#modal-{{ transition }}">
+                            <i class="fas fa-external-link-alt "></i> {{ data.btn_label }}
+                        </button>
+                    </div>
+                {% endif %}
+            {% endblock %}
+
+        {% endembed %}
+    </div>
+{% endmacro %}
+
+{% macro timeline(data) %}
+    {% embed 'widgets/timeline-item-widget.html.twig' %}
+        {% import "macros/widgets.html.twig" as widgets %}
+        {% block timeline_item_icon %}fas fa-bezier-curve{% endblock %}
+        {% block timeline_item_icon_class %}{{ widgets.style_bg_color(data.state) }}{% endblock %}
+        {% block timeline_item_class %}{{ widgets.style_bg_color(data.stateNew) }}{% endblock %}
+        {% block timeline_item_body_class %}mt-1{% endblock %}
+        {% block  timeline_item_tool %}
+            <i class="fas fa-clock"></i> {{ data.changeAt | date('d-m-Y') }}
+        {% endblock %}
+        {% block timeline_item_header %}
+            <img class="img-circle img-bordered-sm"
+                 src=" {{ asset( data.user.avatar) }}"
+                 alt="user image" style="width: 48px">
+            <a href="{{ path('user_show',{'id':data.user.id }) }}">{{ data.user.name }}</a>
+        {% endblock %}
+        {% block timeline_item_body %}
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-12 col-xl-6">
+                            <div class=" info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">De</span>
+                                    <span class="info-box-number text-center  text-lg mb-0">
+                                            {{ widgets.badge_state(data.stateOld) }}
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-xl-6">
+
+                            <div class=" info-box bg-light">
+                                <div class="info-box-content">
+                                    <span class="info-box-text text-center text-muted">Vers</span>
+                                    <span class="info-box-number text-center  text-lg mb-0">
+                                            {{ widgets.badge_state(data.stateNew) }}
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-8">
+                    {{ data.content | raw }}
+                </div>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endmacro %}
+
+
+
+
+
+
+

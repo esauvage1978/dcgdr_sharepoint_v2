@@ -8,16 +8,21 @@
 
 admin_lte:
     options:
-        skin: skin-blue
-        fixed_layout: false
+        skin: skin-light
+        fixed_header: true
+        fixed_menu: true
+        fixed_footer: true
         boxed_layout: false
         collapsed_sidebar: true
         mini_sidebar: true
 
     knp_menu:
         enable: true
+        breadcrumb_menu: false
 
     routes:
         adminlte_welcome: home
-        adminlte_login: login
-        adminlte_profile: profile
+        adminlte_login: user_login
+        adminlte_notification: notification
+        adminlte_notifications: home
+        adminlte_profile: profil

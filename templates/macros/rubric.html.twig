@@ -1,0 +1,82 @@
+{% macro vignette(item, route_show, route_thematic_show) %}
+    {% embed 'widgets/card-widget.html.twig' %}
+        {% block card_class %} h-100 border-light shadow{% endblock %}
+        {% block card_ribbon %}
+        {% set nbr=item.id | hasNewForRubric %}
+        {% if nbr >0 %}
+            <div class="ribbon-wrapper ribbon-lg ">
+                <div class="ribbon  bg-gradient-fuchsia">
+                    <a href="{{ path('backpacks_news_for_rubric',{id:item.id}) }}" class="text-white text-bold">
+                        <i class="fas fa-certificate"></i> {{ nbr }} Nouveauté{{ nbr>1 ?'s':'' }}
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+        {% endblock %}
+        {% block card_img %}
+            <a href="{{ path(route_show,{id:item.id}) }}" data-html="true"
+               data-toggle="tooltip" data-placement="top" title="{{ item.content }}">
+                {% if item.picture %}
+                    <img src="{{ absolute_url( asset(item.picture.href)) }}"
+                         class="card-img-top  "
+                         alt="{{ item.picture.name }}">
+                {% else %}
+                    <img src="{{ absolute_url( asset('img/vignette.jpg')) }}"
+                         class="card-img-top "
+                         alt="{{ item.thematic.name }}">
+                {% endif %}
+            </a>
+        {% endblock %}
+        {% block card_body_class %}text-center{% endblock %}
+        {% block card_body %}
+            <a href="{{ path(route_show,{id:item.id}) }}" data-html="true"
+               data-toggle="tooltip" data-placement="top" title="{{ item.content }}">
+                <h5 class="text-bold {{ item.isEnable?'':'text-danger' }}">{{ item.name }}</h5>
+            </a>
+            <div class="text-muted">
+                <a href="{{ path(route_thematic_show,{id:item.thematic.id}) }}" data-html="true"
+                   data-toggle="tooltip" data-placement="top" title="{{ item.thematic.content }}">
+                    <span class="{{ item.thematic.isEnable?'':'text-danger' }}">{{ item.thematic.name }}</span>
+                </a>
+                <br/>
+                {% set nbr=item.id | sumBackpackPublishedForRubric %}
+                <small class="text-muted">{{ nbr }} PORTE-DOCUMENT{{ nbr>1?'S':'' }}</small>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endmacro %}
+
+{% macro vignettes_by_thematic(items, route_show, route_thematic_show) %}
+
+
+
+    {% import _self as macro %}
+    {% set t_c="" %}
+    {% set t_p="" %}
+    {% set t_same=false %}
+    {% set t_present=false %}
+    {% set t_open=false %}
+
+    {% for item in items %}
+        {% set t_c=item.thematic.name %}
+
+        {% set t_same=  t_c == t_p ? true : false %}
+        {% set t_present=  t_c is empty ? false : true %}
+
+        {% if t_same == false and t_present==true %}
+
+            {{ t_open ?'</div>':'' }}
+            {% set t_open=true %}
+            {% import "macros/thematic.html.twig" as tmt %}
+            {{ tmt.anchor(item.thematic) }}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+
+        {% endif %}
+        <div class="col mb-4">
+            {{ macro.vignette(item,route_show,route_thematic_show) }}
+        </div>
+        {% set t_p=item.thematic.name %}
+
+    {% endfor %}
+    {{ t_open ?'</div>':'' }}
+{% endmacro %}
