@@ -193,6 +193,7 @@ class BackpackDto extends AbstractDto
     public function getData(): array
     {
         $d=[];
+        isset($this->wordSearch) && $d=array_merge($d,['wordSearch'=>$this->wordSearch]);
         isset($this->visible) && $d=array_merge($d,['isNew'=>$this->isNew]);
         isset($this->visible) && $d=array_merge($d,['visible'=>$this->visible]);
         isset($this->visible) && $d=array_merge($d,['currentState'=>$this->currentState]);
@@ -204,6 +205,7 @@ class BackpackDto extends AbstractDto
     }
     public function setData(Request $datas)
     {
+        null!==$datas->get('wordSearch') && $this->wordSearch=$datas->get('wordSearch');
         null!==$datas->get('isNew') && $this->isNew=$datas->get('isNew');
         null!==$datas->get('visible') && $this->visible=$datas->get('visible');
         null!==$datas->get('hide') && $this->hide=$datas->get('hide');

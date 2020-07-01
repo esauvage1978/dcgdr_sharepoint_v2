@@ -1,8 +1,7 @@
 
 .div_tree {
     background-color: #f9f9f9;
-    padding: 10px 5px;
-    max-height: 75vh;
+    max-height: 70vh;
 }
 
 .dataTables_info {
@@ -40,3 +39,22 @@ h1 > small {
     background-color: #eceeef;
 }
 
+
+.split, .gutter.gutter-horizontal {
+    float: left;
+}
+.gutter.gutter-horizontal {
+    cursor: ew-resize;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+}
+
+.gutter.gutter-vertical {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+}
+
+.gutter {
+    margin-left:20px;
+    background-color: #5d6166;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}

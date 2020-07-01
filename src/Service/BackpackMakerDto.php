@@ -16,6 +16,7 @@ class BackpackMakerDto
     Const DRAFT='draft';
     Const MY_DRAFT='mydraft';
     Const PUBLISHED='published';
+    Const PUBLISHED_FOR_SEARCH='published_for_search';
     Const PUBLISHED_FOR_RUBRIC='published_for_rubric';
     Const PUBLISHED_FOR_UNDERRUBRIC='published_for_underrubric';
     Const NEWS='news';
@@ -42,7 +43,7 @@ class BackpackMakerDto
     }
 
 
-    public function get(string $type,?string $id=null): BackpackDto
+    public function get(string $type,?string $param=null): BackpackDto
     {
         $dto = new BackpackDto();
         $dto = $this->checkUser($dto);
@@ -66,20 +67,29 @@ class BackpackMakerDto
                     ->setVisible(BackpackDto::TRUE)
                     ->setCurrentState(WorkflowData::STATE_PUBLISHED);
                 break;
-            case self::PUBLISHED_FOR_RUBRIC:
-                if(null===$id) {
+            case self::PUBLISHED_FOR_SEARCH:
+                if(null===$param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la rubrique');
                 }
-                $dto->setRubricDto((new RubricDto())->setId($id));
+                $dto
+                    ->setWordSearch($param)
+                    ->setVisible(BackpackDto::TRUE)
+                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                break;
+            case self::PUBLISHED_FOR_RUBRIC:
+                if(null===$param) {
+                    throw new \InvalidArgumentException('Il manque l\'id de la rubrique');
+                }
+                $dto->setRubricDto((new RubricDto())->setId($param));
                 $dto
                     ->setVisible(BackpackDto::TRUE)
                     ->setCurrentState(WorkflowData::STATE_PUBLISHED);
                 break;
             case self::PUBLISHED_FOR_UNDERRUBRIC:
-                if(null===$id) {
+                if(null===$param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la sous rubrique');
                 }
-                $dto->setUnderRubricDto((new UnderRubricDto())->setId($id));
+                $dto->setUnderRubricDto((new UnderRubricDto())->setId($param));
                 $dto
                     ->setVisible(BackpackDto::TRUE)
                     ->setCurrentState(WorkflowData::STATE_PUBLISHED);
@@ -91,20 +101,20 @@ class BackpackMakerDto
                     ->setCurrentState(WorkflowData::STATE_PUBLISHED);
                 break;
             case self::NEWS_FOR_RUBRIC:
-                if(null===$id) {
+                if(null===$param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la rubrique');
                 }
-                $dto->setRubricDto((new RubricDto())->setId($id));
+                $dto->setRubricDto((new RubricDto())->setId($param));
                 $dto
                     ->setIsNew(BackpackDto::TRUE)
                     ->setVisible(BackpackDto::TRUE)
                     ->setCurrentState(WorkflowData::STATE_PUBLISHED);
                 break;
             case self::NEWS_FOR_UNDERRUBRIC:
-                if(null===$id) {
+                if(null===$param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la sous rubrique');
                 }
-                $dto->setUnderRubricDto((new UnderRubricDto())->setId($id));
+                $dto->setUnderRubricDto((new UnderRubricDto())->setId($param));
                 $dto
                     ->setIsNew(BackpackDto::TRUE)
                     ->setVisible(BackpackDto::TRUE)

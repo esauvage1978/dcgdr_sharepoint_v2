@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
+
+{% import "macros/widgets.html.twig" as widgets %}
+
 {% block title %}{{ app_name }} - Administration{% endblock %}
-{% block page_title %}<i class="fas fa-cog"></i> Administration{% endblock %}
+{% block page_title %}{{ widgets.icon('admin') }} Administration{% endblock %}
+
 {% block page_content %}
 
     <div class="row">

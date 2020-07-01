@@ -13,7 +13,7 @@
             {{ widgets.badge_state(item.currentState) }}
             {{ new.isNew(item.updateAt) }}
         {% endblock %}
-        {% block card_body_class %}h-100 card-light  card-outline shadow{% endblock %}
+        {% block card_body_class %}card-light  card-outline shadow{% endblock %}
         {% block card_body %}
             {% if item.content %}
                 <small class="text-muted ">
@@ -25,7 +25,7 @@
             {% set nbrL=item.backpackLinks | length %}
             {% set nbrF=item.backpackFiles | length %}
             {% if nbrL>0 or nbrF>0 %}
-                <div class=" list-blk">
+                <div class=" list-blk h-100">
                     <table class="table table-hover">
                         <colgroup>
                             <col class="col-lg-1">
