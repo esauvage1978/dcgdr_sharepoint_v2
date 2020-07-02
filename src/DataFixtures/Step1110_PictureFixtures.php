@@ -6,6 +6,7 @@ use App\Entity\Picture;
 use App\Helper\FileDirectory;
 use App\Helper\FixturesImportData;
 use App\Helper\ImageResize;
+use App\Helper\ParamsInServices;
 use App\Validator\PictureValidator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
@@ -37,7 +38,7 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
     private $entityManagerInterface;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
     private $params;
 
@@ -50,7 +51,7 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
         FixturesImportData $fixturesImportData,
         PictureValidator $validator,
         EntityManagerInterface $entityManagerI,
-        ParameterBagInterface $params
+        ParamsInServices $params
     )
     {
         $this->fixturesImportData = $fixturesImportData;
@@ -117,8 +118,8 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
 
     private function moveFile(string $fileNameSource, string $fileNameDestination)
     {
-        $dirDestination=$this->params->get('directory_picture');
-        $dirSource=$this->params->get('directory_data_picture');
+        $dirDestination=$this->params->get(ParamsInServices::DIRECTORY_PICTURE);
+        $dirSource=$this->params->get(ParamsInServices::DIRECTORY_FIXTURES_PICTURE);
 
         $this->fileDirectory->moveFile($dirSource, $fileNameSource, $dirDestination , $fileNameDestination);
         $this->imageResize->resize($dirDestination.'/'.$fileNameDestination);

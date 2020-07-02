@@ -38,8 +38,7 @@
             </td>
             <td class="align-middle">
                 <a target="_blank"
-                   href="{{ path(route,{'id':item.id, 'fileId':file.id}) }}" data-html="true"
-                   data-toggle="tooltip" data-placement="top" title="{{ file.content }}" data-container="body">
+                   href="{{ path(route,{'id':item.id, 'fileId':file.id}) }}" >
                     {{ file.title }}.{{ file.fileExtension }}
                 </a>
                 <br/>
@@ -74,9 +73,7 @@
                 <i class="fas fa-globe  fa-3x align-self-start mr-3 {{ color }} mt-2"></i>
             </td>
             <td class="align-middle">
-                <a target="_blank" href="{{ link.link }}" data-html="true"
-                   data-toggle="tooltip" data-placement="top" title="{{ link.content }}"
-                   data-container="body">{{ link.title }}
+                <a target="_blank" href="{{ link.link }}" >{{ link.title }}
                     <span class="small">( {{ link.link }} )</span>
                 </a>
                 <br/>

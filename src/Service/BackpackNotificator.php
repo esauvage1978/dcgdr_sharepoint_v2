@@ -81,7 +81,7 @@ class BackpackNotificator
             }
 
             $this->stackMessage->push(
-                StackMessage::TABULTATION .
+                StackMessage::TABULATION .
                 ' Notification à ' . $user->getName() .
                 ' [' . $user->getEmail() . ']' . ' -> ' . count($result) . ' nouveautés');
 

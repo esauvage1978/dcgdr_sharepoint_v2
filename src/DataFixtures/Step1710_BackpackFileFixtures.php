@@ -6,6 +6,9 @@ use App\Entity\Backpack;
 use App\Entity\BackpackFile;
 use App\Helper\FileDirectory;
 use App\Helper\FixturesImportData;
+use App\Helper\ParamsInServices;
+use App\Helper\Slugger;
+use App\Helper\SplitFile;
 use App\Repository\BackpackRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
@@ -37,7 +40,7 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
     private $fileDirectory;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
     private $params;
 
@@ -45,14 +48,17 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
         FixturesImportData $fixturesImportData,
         BackpackRepository $backpackRepository,
         EntityManagerInterface $entityManagerI,
-        ParameterBagInterface $params
+        ParamsInServices $params
     )
     {
         $this->fixturesImportData = $fixturesImportData;
         $this->backpacks = $backpackRepository->findAll();
         $this->entityManagerInterface = $entityManagerI;
-        $this->fileDirectory = new FileDirectory();
         $this->params = $params;
+
+        $this->fileDirectory = new FileDirectory();
+        $this->fileDirectory->toSlugAllFiles($this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC));
+
     }
 
     public function getInstance(string $id, $entitys)
@@ -95,25 +101,28 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
         /** @var Backpack $backpack */
         $backpack = $this->getInstance($data['obj_num'], $this->backpacks);
-
+        $sf=new  SplitFile();
+        $sf->split($data['adresse']);
+        $slugified = Slugger::slugify($sf->getName());
+        $filename= $slugified .'.'. $sf->getExtension();
         if (is_a($backpack, Backpack::class) and $data['titre']!='Thumbs'
         ) {
             $instance
                 ->setTitle($data['titre'])
                 ->setFileExtension($data['extension'])
-                ->setSize($this->fileDirectory->fileSize($this->params->get('directory_data_doc'), $data['adresse']))
+                ->setSize($this->fileDirectory->fileSize($this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC),$filename))
                 ->setModifyAt
                 (
                     $data['date_update'] == "01/01/0001 00:00:00" ?
                         $backpack->getUpdateAt() :
                         $this->convertDate($data['date_update'])
                 )
-                ->setFileName(substr($data['adresse'], 0, strlen($data['adresse']) - 1 - strlen($data['extension'])))
+                ->setFileName($slugified)
                 ->setBackpack($backpack)
                 ->setContent($data['description'])
             ;
 
-            $this->moveFile($backpack->getId(), $data['adresse']);
+            $this->moveFile($backpack->getId(), $filename);
 
             return $instance;
         }
@@ -123,12 +132,17 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
     private function moveFile(string $backpackId, string $fileName)
     {
-        $dirDestination = $this->params->get('directory_file_backpack');
-        $dirSource = $this->params->get('directory_data_doc');
 
-        $this->fileDirectory->createDir($dirDestination, $backpackId);
+        $dirDestination = $this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC);
+        $dirSource = $this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC);
 
-        $this->fileDirectory->moveFile($dirSource, $fileName, $dirDestination . '/' . $backpackId, $fileName);
+        if (!$this->fileDirectory->dirExist($dirDestination, $backpackId)) {
+            $this->fileDirectory->createDir($dirDestination, $backpackId);
+        }
+
+        if(!$this->fileDirectory->fileExist($dirDestination . '/' . $backpackId.'/',$fileName)) {
+            $this->fileDirectory->moveFile($dirSource, $fileName, $dirDestination . '/' . $backpackId, $fileName);
+        }
     }
 
     public static function getGroups(): array

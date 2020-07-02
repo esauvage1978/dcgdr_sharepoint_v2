@@ -17,7 +17,7 @@ class FixturesImportData
     {
         $this->convertFileJsonToArray=new ConvertFileJsonToArray();
 
-        $this->convertFileJsonToArray->setDirectory($paramsInServices->get(ParamsInServices::DIRECTIRY_IMPORT));
+        $this->convertFileJsonToArray->setDirectory($paramsInServices->get(ParamsInServices::DIRECTORY_FIXTURES_JSON));
     }
 
     public function importToArray(string $fileName): array

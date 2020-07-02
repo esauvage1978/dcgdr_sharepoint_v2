@@ -16,9 +16,16 @@ class FileDirectory
      */
     private $fsObject;
 
+
     public function __construct()
     {
         $this->fsObject = new Filesystem();
+    }
+
+    public function dirExist(string $chemin, string $directory)
+    {
+        $new_dir_path = $chemin . "/" . $directory;
+        return $this->fsObject->exists($new_dir_path);
     }
 
     public function createDir(string $chemin, string $directory)
@@ -84,5 +91,23 @@ class FileDirectory
             return filesize($this->fullPathSource($cheminSource, $fileSource));
         }
         return 0;
+    }
+
+    public function toSlugAllFiles(string $cheminSource)
+    {
+        $sf=new  SplitFile();
+        $dir = opendir($cheminSource);
+
+        while ($file = readdir($dir)) {
+            if (is_file($cheminSource . DIRECTORY_SEPARATOR . $file)) {
+                $sf->split($file);
+                $slugified = Slugger::slugify($sf->getName());
+                if ($sf->getName() != $slugified) {
+                    rename(
+                        $cheminSource . DIRECTORY_SEPARATOR . $file,
+                        $cheminSource . DIRECTORY_SEPARATOR . $slugified .'.'. $sf->getExtension());
+                }
+            }
+        }
     }
 }

@@ -5,10 +5,10 @@ namespace App\Controller;
 use App\Dto\BackpackDto;
 use App\Entity\Backpack;
 use App\Entity\Rubric;
-use App\Entity\User;
 use App\Form\Backpack\BackpackNewType;
 use App\Form\Backpack\BackpackType;
 use App\Helper\ParamsInServices;
+use App\Helper\Slugger;
 use App\History\BackpackHistory;
 use App\History\HistoryShow;
 use App\Manager\BackpackManager;
@@ -19,6 +19,7 @@ use App\Repository\UnderRubricRepository;
 use App\Security\CurrentUser;
 use App\Service\BackpackMakerDto;
 use App\Tree\BackpackTree;
+use App\Workflow\WorkflowData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,8 +67,8 @@ class BackpackController extends AbstractGController
         $this->domaine = 'backpack';
         $this->underRubricRepository = $underRubricRepository;
         $this->paramsInServices = $paramsInServices;
-        $this->backpackDtoRepository=$backpackDtoRepository;
-        $this->backpackMakerDto=new BackpackMakerDto($currentUser->getUser());
+        $this->backpackDtoRepository = $backpackDtoRepository;
+        $this->backpackMakerDto = new BackpackMakerDto($currentUser->getUser());
     }
 
     /**
@@ -109,11 +110,11 @@ class BackpackController extends AbstractGController
      * @Route("/backpacks/news/rubric/{id}", name="backpacks_news_for_rubric", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function newsForRubric(Request $request,string $id)
+    public function newsForRubric(Request $request, string $id)
     {
         return $this->treeView($request,
             $this->backpackMakerDto->get(
-                BackpackMakerDto::NEWS_FOR_RUBRIC,$id
+                BackpackMakerDto::NEWS_FOR_RUBRIC, $id
             ));
     }
 
@@ -121,11 +122,11 @@ class BackpackController extends AbstractGController
      * @Route("/backpacks/news/underrubric/{id}", name="backpacks_news_for_underrubric", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function newsForUnderRubric(Request $request,string $id)
+    public function newsForUnderRubric(Request $request, string $id)
     {
         return $this->treeView($request,
             $this->backpackMakerDto->get(
-                BackpackMakerDto::NEWS_FOR_UNDERRUBRIC,$id
+                BackpackMakerDto::NEWS_FOR_UNDERRUBRIC, $id
             ));
     }
 
@@ -135,7 +136,7 @@ class BackpackController extends AbstractGController
      */
     public function news(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::NEWS));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::NEWS));
     }
 
     /**
@@ -144,7 +145,7 @@ class BackpackController extends AbstractGController
      */
     public function state_abandonned(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::ABANDONNED));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::ABANDONNED));
     }
 
     /**
@@ -153,7 +154,7 @@ class BackpackController extends AbstractGController
      */
     public function state_archived(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::ARCHIVED));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::ARCHIVED));
     }
 
 
@@ -163,7 +164,7 @@ class BackpackController extends AbstractGController
      */
     public function state_draft(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::DRAFT));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::DRAFT));
     }
 
     /**
@@ -172,7 +173,7 @@ class BackpackController extends AbstractGController
      */
     public function state_published(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED));
     }
 
     /**
@@ -181,7 +182,7 @@ class BackpackController extends AbstractGController
      */
     public function state_mydraft(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::MY_DRAFT));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::MY_DRAFT));
     }
 
 
@@ -191,7 +192,7 @@ class BackpackController extends AbstractGController
      */
     public function showHide(Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::HIDE));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::HIDE));
     }
 
     /**
@@ -199,7 +200,7 @@ class BackpackController extends AbstractGController
      * @return Response
      * @IsGranted("ROLE_USER")
      */
-    public function history(Request $request,Backpack $item): Response
+    public function history(Request $request, Backpack $item): Response
     {
         $historyShow = new HistoryShow(
             $this->generateUrl('backpack_edit', ['id' => $item->getId()]),
@@ -214,15 +215,28 @@ class BackpackController extends AbstractGController
         ]);
     }
 
+    /**
+     * @Route("/backpack/{id}", name="backpack_show", methods={"GET"})
+     * @return Response
+     * @IsGranted("ROLE_USER")
+     */
+    public function show(string $id, Request $request)
+    {
+        $dto = new BackpackDto();
+        $dto
+            ->setId($id);
+
+        return $this->treeView($request, $dto);
+    }
 
     /**
      * @Route("/underrubric/{id}", name="underrubric_show", methods={"GET"})
      * @return Response
      * @IsGranted("ROLE_USER")
      */
-    public function showUnderrubric(string $id,Request $request)
+    public function showUnderrubric(string $id, Request $request)
     {
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED_FOR_UNDERRUBRIC,$id));
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED_FOR_UNDERRUBRIC, $id));
     }
 
     /**
@@ -243,7 +257,8 @@ class BackpackController extends AbstractGController
         Request $request,
         Backpack $backpack,
         string $fileId,
-        BackpackFileRepository $backpackFileRepository): Response
+        BackpackFileRepository $backpackFileRepository
+    ): Response
     {
         //$this->denyAccessUnlessGranted(BackpackVoter::READ, $backpack);
 
@@ -251,7 +266,7 @@ class BackpackController extends AbstractGController
 
         $file = new File($actionFile->getHref());
 
-        return $this->file($file, $actionFile->getTitle() . '.' . $actionFile->getFileExtension());
+        return $this->file($file, Slugger::slugify($actionFile->getTitle()) . '.' . $actionFile->getFileExtension());
     }
 
 
@@ -259,27 +274,31 @@ class BackpackController extends AbstractGController
      * @Route("/backpacks", name="backpacks", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function treeView(Request $request,BackpackDto $dto = null)
+    public function treeView(Request $request, BackpackDto $dto = null)
     {
         if ($dto->getVisible() === null && $dto->getHide() === null) {
 
             $dto->setData($request);
         }
 
-        if(null===$dto) {
-            $items=null;
+        if (null === $dto) {
+            $items = null;
         } else {
             $items = $this->backpackDtoRepository->findAllForDto($dto, BackpackDtoRepository::FILTRE_DTO_INIT_TREE);
         }
 
         $renderArray = $dto->getData();
 
-        $tree = new BackpackTree($this->container, $request,$this->paramsInServices);
+        $tree = new BackpackTree($this->container, $request, $this->paramsInServices);
+
+        if (!is_null($dto->getId())) {
+            $tree->setItem($this->repository->find($dto->getId()));
+        }
+
         $tree
             ->initialise($items)
             ->setRoute('backpacks')
             ->setParameter($renderArray);
-
 
         count($items) <= $this->paramsInServices->get(ParamsInServices::TREE_UNDEVELOPPED_FOR_NBR) && $tree->Developed();
         array_key_exists('underRubric', $renderArray) && $tree->hideUnderThematic();
@@ -301,7 +320,7 @@ class BackpackController extends AbstractGController
      */
     public function homeSearchAction(Request $request): Response
     {
-        $r=$request->get('r');
-        return $this->treeView($request,$this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED_FOR_SEARCH,$r));
+        $r = $request->get('r');
+        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED_FOR_SEARCH, $r));
     }
 }

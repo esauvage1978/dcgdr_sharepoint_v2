@@ -2,12 +2,13 @@
 
 namespace App\Manager;
 
-use App\Entity\Avatar;
 use App\Entity\User;
-use App\Helper\ToolCollecion;
+use App\Helper\ArrayDiff;
+use App\Helper\ParamsInServices;
 use App\Repository\CorbeilleRepository;
 use App\Repository\OrganismeRepository;
 use App\Repository\UserRepository;
+use App\Security\Role;
 use App\Validator\UserValidator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,7 +35,7 @@ class UserManager
     private $validator;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
     private $params;
 
@@ -59,7 +60,7 @@ class UserManager
         UserValidator $validator,
         UserPasswordEncoderInterface $passwordEncoder,
         UserRepository $userRepository,
-        ParameterBagInterface $params,
+        ParamsInServices $params,
         CorbeilleRepository $corbeilleRepository,
         OrganismeRepository $organismeRepository
     )
@@ -128,10 +129,10 @@ class UserManager
 
     public function checkAvatar(User $user): bool
     {
-        if (!file_exists($this->params->get('directory_avatar') .'/' . $user->getId() . '.png')) {
+        if (!file_exists($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png')) {
             copy(
-                $this->params->get('directory_avatar') .'/__default.png',
-                $this->params->get('directory_avatar') .'/' . $user->getId() . '.png'
+                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/__default.png',
+                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png'
             );
         }
 
@@ -144,11 +145,11 @@ class UserManager
         list($type, $data) = explode(';', $image);
         list(, $data) = explode(',', $data);
         $data = base64_decode($data);
-        if (file_exists($this->params->get('directory_avatar') .'/' . $user->getId() . '.png')) {
-            unlink($this->params->get('directory_avatar') .'/' . $user->getId() . '.png');
+        if (file_exists($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png')) {
+            unlink($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png');
         }
         file_put_contents(
-            $this->params->get('directory_avatar') .'/' . $user->getId() . '.png',
+            $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png',
             $data
         );
     }
@@ -187,8 +188,8 @@ class UserManager
     {
         $user->setEmailValidated(true);
         $user->setEmailValidatedToken(date_format(new DateTime(), 'Y-m-d H:i:s'));
-        if(!in_array('ROLE_USER',$user->getRoles())) {
-            $user->setRoles(['ROLE_USER']);
+        if(!in_array(Role::ROLE_USER,$user->getRoles())) {
+            $user->setRoles([Role::ROLE_USER]);
         }
 
         return $this;
@@ -227,7 +228,7 @@ class UserManager
 
     public function setRelation(User $user, $entitysOld, $entitysNew)
     {
-        $em = new ToolCollecion($entitysOld, $entitysNew->toArray());
+        $em = new ArrayDiff($entitysOld, $entitysNew->toArray());
 
         foreach ($em->getDeleteDiff() as $entity) {
             $entity->removeUser($user);

@@ -40,6 +40,7 @@ class PictureUploadListener
     {
         if (!empty($picture->getFile())) {
 
+
             $extension = $this->uploader->getExtension($picture->getFile());
 
             if (empty($picture->getFileName())) {
