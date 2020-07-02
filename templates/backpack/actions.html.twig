@@ -14,7 +14,7 @@
         {% elseif underRubric and currentState=='published' %}
             {% set url=path('underrubric_show',{visible:'true',id:underRubric.id,idItem:item.id}) %}
         {% else %}
-            {% set url=path('backpacks_search',{visible:'true',currentState:currentState,idItem:item.id}) %}
+            {% set url=path('backpacks',{visible:'true',currentState:currentState,idItem:item.id}) %}
         {% endif %}
 
         {% if twigTemplace=='tree' %}

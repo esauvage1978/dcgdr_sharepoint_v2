@@ -4,8 +4,11 @@ namespace App\Listener;
 
 use App\Entity\BackpackFile;
 use App\Helper\FileDirectory;
+use App\Helper\Slugger;
+use App\Helper\SplitFile;
 use App\Service\Uploader;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class BackpackFileUploadListener
 {
@@ -19,10 +22,16 @@ class BackpackFileUploadListener
      */
     private $directory;
 
+    /**
+     * @var SplitFile
+     */
+    private $splitFile;
+
     public function __construct(Uploader $uploader, string $directory)
     {
         $this->uploader = $uploader;
         $this->directory = $directory;
+        $this->splitFile=new  SplitFile();
     }
 
     /**
@@ -31,18 +40,22 @@ class BackpackFileUploadListener
      */
     public function prePersistHandler(BackpackFile $backpackFile)
     {
-        if (!empty($backpackFile->getFile())) {
-            $extension = $this->uploader->getExtension($backpackFile->getFile());
+
+        $file=$backpackFile->getFile();
+        if (!empty($file)) {
+
+            $this->splitFile->split($file->getClientOriginalName());
+            $extension = $this->splitFile->getExtension();
 
             if (empty($backpackFile->getFileName())) {
-                $backpackFile->setFileName(md5(uniqid()));
+                $backpackFile->setFileName(Slugger::slugify($this->splitFile->getName()) );
             }
             if (empty($backpackFile->getTitle())) {
                 $backpackFile->setTitle('Nouveau fichier');
             }
 
             $backpackFile->setFileExtension($extension);
-            $backpackFile->setSize($this->uploader->getSize($backpackFile->getFile()));
+            $backpackFile->setSize($this->uploader->getSize($file));
         }
         $backpackFile->setUpdateAt(new \DateTime());
     }
