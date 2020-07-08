@@ -13,7 +13,7 @@
         {% endif %}
 
         {{ count }}
-        {% if currentState is defined %}
+        {% if currentState is defined and currentState  %}
             {{ widgets.badge_state(currentState) }}
         {% endif %}
         {% if isNew is defined and isNew==true %}

@@ -8,7 +8,11 @@
 
 admin_lte:
     options:
-        skin: skin-light
+        skin: 'skin-blue'
+        form_theme: default
+        max_navbar_notifications: 5
+        max_navbar_tasks: 5
+        max_navbar_messages: 5
         fixed_header: true
         fixed_menu: true
         fixed_footer: true

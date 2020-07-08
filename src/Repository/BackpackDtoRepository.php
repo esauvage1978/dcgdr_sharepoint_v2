@@ -8,6 +8,7 @@ use App\Dto\BackpackDto;
 use App\Dto\DtoInterface;
 use App\Dto\RubricDto;
 use App\Entity\Backpack;
+use App\Entity\BackpackLink;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -376,7 +377,15 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                     ' OR ' . self::ALIAS . '.dir3 like :search' .
                     ' OR ' . self::ALIAS . '.dir4 like :search' .
                     ' OR ' . self::ALIAS . '.dir5 like :search' .
-                    ' OR ' . self::ALIAS . '.name like :search');
+                    ' OR ' . self::ALIAS . '.name like :search' .
+                    ' OR ' . self::ALIAS . '.contentState like :search' .
+                    ' OR ' . BackpackLinkRepository::ALIAS . '.title like :search' .
+                    ' OR ' . BackpackLinkRepository::ALIAS . '.link like :search' .
+                    ' OR ' . BackpackLinkRepository::ALIAS . '.content like :search' .
+                    ' OR ' . BackpackFileRepository::ALIAS . '.title like :search' .
+                    ' OR ' . BackpackFileRepository::ALIAS . '.fileName like :search' .
+                    ' OR ' . BackpackFileRepository::ALIAS . '.content like :search'
+);
 
             $this->addParams('search', '%' . $dto->getWordSearch() . '%');
         }

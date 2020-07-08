@@ -40,6 +40,11 @@ class Step1500_BackpackFixtures extends Fixture implements FixtureGroupInterface
     private $underrubrics;
 
     /**
+     * @var User[]
+     */
+    private $users;
+
+    /**
      * @var EntityManagerInterface
      */
     private $entityManagerInterface;
@@ -57,6 +62,7 @@ class Step1500_BackpackFixtures extends Fixture implements FixtureGroupInterface
         $this->underrubrics = $underRubricRepository->findAll();
         $this->entityManagerInterface = $entityManagerI;
         $this->user=$userRepository->find(1);
+        $this->users = $userRepository->findAll();
     }
 
     public function load(ObjectManager $manager)
@@ -103,6 +109,7 @@ class Step1500_BackpackFixtures extends Fixture implements FixtureGroupInterface
         /** @var UnderRubric $underrubric */
         $underrubric = $this->getInstance($data['id_sousthematique'], $this->underrubrics);
 
+        $user = $this->getInstance($data['id_u_create'], $this->users);
 
         $instance
             ->setId($data['n0_num'])
@@ -116,7 +123,7 @@ class Step1500_BackpackFixtures extends Fixture implements FixtureGroupInterface
             ->setCurrentState($data['afficher']=='1'?WorkflowData::STATE_PUBLISHED:WorkflowData::STATE_ABANDONNED)
             ->setStateAt($this->convertDate($data['date_create']))
             ->setContentState('Version 1.0.0')
-            ->setOwner($this->user)
+            ->setOwner($user===null? $this->user:$user)
             ->setUpdateAt
             (
                 $data['date_update'] == "01/01/0001 00:00:00" ?

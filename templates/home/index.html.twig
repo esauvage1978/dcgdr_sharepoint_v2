@@ -7,10 +7,19 @@
         {% import "macros/default.html.twig" as dft %}
         {{ dft.no_connexion() }}
     {% else %}
-        {% import "macros/thematic.html.twig" as tmt %}
-        {{ tmt.anchors(items) }}
 
-        {% import "macros/rubric.html.twig" as rbc %}
-        {{ rbc.vignettes_by_thematic(items,'rubric_show','thematic_show') }}
+        {% import "macros/user.html.twig" as user %}
+        {{ user.messageEmailValidated(app.user) }}
+
+        {% if is_granted('ROLE_USER') %}
+            {{ user.messageShowGestionnaire(items) }}
+
+            {% import "macros/thematic.html.twig" as tmt %}
+            {{ tmt.anchors(items) }}
+
+            {% import "macros/rubric.html.twig" as rbc %}
+            {{ rbc.vignettes_by_thematic(items,'rubric_show','thematic_show') }}
+        {% endif %}
+
     {% endif %}
 {% endblock %}

@@ -2,9 +2,8 @@
 
 {% block page_subtitle %}Modification{% endblock %}
 
-{% import "backpack/actions.html.twig" as actions %}
-
 {% block breadcrumb %}
+    {% import "backpack/actions.html.twig" as actions %}
     {{ actions.backpack(
         'edit',
         item.currentState,

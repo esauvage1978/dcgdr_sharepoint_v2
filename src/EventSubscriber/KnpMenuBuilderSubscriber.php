@@ -43,7 +43,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
         $this->event = $event;
         $this->menu = $this->event->getMenu();
 
-        if ($this->currentUser->isAuthenticatedRemember()) {
+        if ($this->currentUser->isAuthenticatedRemember() && Role::isUser($this->currentUser->getUser())) {
             $this->addHome();
             $this->addDashboard();
             $this->addBackpack();
@@ -51,6 +51,11 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             $this->addAdmin();
             $this->addDoc();
             $this->addDeconnexion();
+        } elseif ($this->currentUser->isAuthenticatedRemember()) {
+            $this->addHome();
+            $this->addProfil();
+            $this->addDoc();
+            $this->addConnexion();
         } else {
             $this->addHome();
             $this->addDoc();
@@ -60,7 +65,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
 
     private function addAdmin()
     {
-        if(Role::isAdmin($this->currentUser->getUser())) {
+        if (Role::isAdmin($this->currentUser->getUser())) {
             $this->menu->addChild('admin', [
                 'route' => 'admin',
                 'label' => 'Administration',
@@ -94,7 +99,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
                 'route' => 'backpacks_draft',
                 'label' => WorkflowData::getNameOfState(WorkflowData::STATE_DRAFT),
                 'childOptions' => $this->event->getChildOptions()]
-        )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-info');
+        )->setLabelAttribute('icon', 'fab fa-firstdraft text-info');
 
         $this->menu->getChild('backpack')->addChild(
             'backpack-' . WorkflowData::STATE_ARCHIVED,
@@ -102,7 +107,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
                 'route' => 'backpacks_archived',
                 'label' => WorkflowData::getNameOfState(WorkflowData::STATE_ARCHIVED),
                 'childOptions' => $this->event->getChildOptions()]
-        )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-warning');
+        )->setLabelAttribute('icon', 'fas fa-archive text-warning');
 
         $this->menu->getChild('backpack')->addChild(
             'backpack-' . WorkflowData::STATE_ABANDONNED,
@@ -110,7 +115,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
                 'route' => 'backpacks_abandonned',
                 'label' => WorkflowData::getNameOfState(WorkflowData::STATE_ABANDONNED),
                 'childOptions' => $this->event->getChildOptions()]
-        )->setLabelAttribute('icon', 'far fa-arrow-alt-circle-down text-danger');
+        )->setLabelAttribute('icon', 'far fa-trash-alt text-danger');
     }
 
     private function addDashboard()
@@ -136,7 +141,7 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             'route' => 'documentation',
             'label' => 'Documentation',
             'childOptions' => $this->event->getChildOptions()
-        ])->setLabelAttribute('icon', 'fas fa-file-pdf');
+        ])->setLabelAttribute('icon', 'fas fa-book');
     }
 
     private function addConnexion()

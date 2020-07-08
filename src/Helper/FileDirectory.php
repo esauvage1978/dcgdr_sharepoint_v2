@@ -36,8 +36,6 @@ class FileDirectory
             try {
                 $old = umask(0);
                 $this->fsObject->mkdir($new_dir_path, 0775);
-                $this->fsObject->chown($new_dir_path, "www-data");
-                $this->fsObject->chgrp($new_dir_path, "www-data");
                 umask($old);
             } catch (\Exception $e) {
                 dump($e->getMessage());
@@ -102,7 +100,7 @@ class FileDirectory
             if (is_file($cheminSource . DIRECTORY_SEPARATOR . $file)) {
                 $sf->split($file);
                 $slugified = Slugger::slugify($sf->getName());
-                if ($sf->getName() != $slugified) {
+                if ($file != $slugified .'.'.$sf->getExtension()) {
                     rename(
                         $cheminSource . DIRECTORY_SEPARATOR . $file,
                         $cheminSource . DIRECTORY_SEPARATOR . $slugified .'.'. $sf->getExtension());

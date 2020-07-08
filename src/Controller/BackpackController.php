@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Dto\BackpackDto;
+use App\Dto\UnderRubricDto;
+use App\Dto\UserDto;
 use App\Entity\Backpack;
 use App\Entity\Rubric;
 use App\Form\Backpack\BackpackNewType;
@@ -16,7 +18,9 @@ use App\Repository\BackpackDtoRepository;
 use App\Repository\BackpackFileRepository;
 use App\Repository\BackpackRepository;
 use App\Repository\UnderRubricRepository;
+use App\Security\BackpackVoter;
 use App\Security\CurrentUser;
+use App\Security\Role;
 use App\Service\BackpackMakerDto;
 use App\Tree\BackpackTree;
 use App\Workflow\WorkflowData;
@@ -73,6 +77,7 @@ class BackpackController extends AbstractGController
 
     /**
      * @Route("/backpack/add", name="backpack_add", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function add(Request $request)
     {
@@ -80,11 +85,12 @@ class BackpackController extends AbstractGController
     }
 
     /**
-     * @Route("/backpack/edit/{id}", name="backpack_edit", methods={"GET","POST"})
+     * @Route("/backpack/{id}/edit", name="backpack_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Backpack $item, backpackHistory $backpackHistory)
     {
-        //$this->denyAccessUnlessGranted(BackpackVoter::UPDATE, $backpack);
+        $this->denyAccessUnlessGranted(BackpackVoter::UPDATE, $item);
         $itemOld = clone($item);
         $form = $this->createForm(BackpackType::class, $item);
 
@@ -202,6 +208,7 @@ class BackpackController extends AbstractGController
      */
     public function history(Request $request, Backpack $item): Response
     {
+        $this->denyAccessUnlessGranted(BackpackVoter::READ, $item);
         $historyShow = new HistoryShow(
             $this->generateUrl('backpack_edit', ['id' => $item->getId()]),
             "Porte-document : " . $item->getName(),
@@ -241,11 +248,24 @@ class BackpackController extends AbstractGController
 
     /**
      * @Route("/backpack/{id}", name="backpack_del", methods={"DELETE"})
-     * @IsGranted("ROLE_GESTIONNAIRE")
+     * @IsGranted("ROLE_USER")
      */
-    public function delete(Request $request, Rubric $item)
+    public function delete(Request $request, Backpack $item)
     {
-        return $this->deleteAction($request, $item);
+        $this->denyAccessUnlessGranted(BackpackVoter::DELETE, $item);
+
+        $dto=new BackpackDto();
+        $dto
+            ->setCurrentState($item->getCurrentState())
+            ->setUnderRubricDto((new UnderRubricDto())->setId($item->getUnderRubric()->getId()))
+            ->setVisible(BackpackDto::TRUE);
+
+        if ($this->isCsrfTokenValid('delete' . $item->getId(), $request->request->get('_token'))) {
+            $this->addFlash(self::SUCCESS, self::MSG_DELETE);
+            $this->manager->remove($item);
+        }
+
+        return $this->treeView($request,$dto);
     }
 
 
@@ -274,14 +294,18 @@ class BackpackController extends AbstractGController
      * @Route("/backpacks", name="backpacks", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function treeView(Request $request, BackpackDto $dto = null)
+    public function treeView(Request $request, BackpackDto $dto)
     {
-        if ($dto->getVisible() === null && $dto->getHide() === null) {
 
+        if ($dto->getVisible() === null && $dto->getHide() === null) {
             $dto->setData($request);
+            if (!is_null($this->getUser()) && !Role::isGestionnaire($this->getUser())) {
+                $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));
+            }
         }
 
         if (null === $dto) {
+
             $items = null;
         } else {
             $items = $this->backpackDtoRepository->findAllForDto($dto, BackpackDtoRepository::FILTRE_DTO_INIT_TREE);
@@ -318,9 +342,13 @@ class BackpackController extends AbstractGController
      * @Route("/backpacks/search", name="backpacks_search", methods={"GET","POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function homeSearchAction(Request $request): Response
+    public function search(Request $request): Response
     {
         $r = $request->get('r');
-        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::PUBLISHED_FOR_SEARCH, $r));
+        if($r===null) {
+            return $this->redirectToRoute('home');
+        } else {
+            return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::SEARCH, $r));
+        }
     }
 }

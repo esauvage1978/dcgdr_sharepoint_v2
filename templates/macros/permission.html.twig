@@ -1,0 +1,74 @@
+{% macro show(items, itemsConsult, itemsModif,itemsConsultU, itemsModifU) %}
+    {% import "macros/widgets.html.twig" as widgets %}
+    {% embed 'widgets/card-widget.html.twig' %}
+        {% block card_title %}Permissions{% endblock %}
+        {% block card_body_class %}p-0{% endblock %}
+        {% block card_body %}
+            <table class="table  table-hover table-condensed">
+                <thead>
+                <tr>
+                    <th>Rubrique</th>
+                    <th>Consultable</th>
+                    <th>Modifiable</th>
+                </tr>
+                </thead>
+                {% for  data in items %}
+                    {% set under=false %}
+                    {% if data.isEnable and data.thematic.isEnable %}
+                        <tr>
+                            <td class="text-primary">
+                                <a href="{{ path('admin_rubric_show',{id:data.id}) }}">
+                                    {{ data.thematic.name }} <i class="fa fa-chevron-right"></i> {{ data.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if data in itemsConsult %}
+                                    <span class="text-success"><i class="fas fa-check"></i> Oui</span>
+                                    {% set under=true %}
+
+                                {% else %}
+                                    <span class="text-danger"><i class="fas fa-times"></i> Non</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if data in itemsModif %}
+                                    {% set under=true %}
+                                    <span class="text-success"><i class="fas fa-check"></i> Oui</span>
+                                {% else %}
+                                    <span class="text-danger"><i class="fas fa-times"></i> Non</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if under==true %}
+                            {% for  ur in data.underRubrics %}
+                                {% if ur.isEnable and ur.underThematic.isEnable %}
+                                    <tr>
+                                        <td class="text-info">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-caret-right"></i>
+                                            {{ ur.underthematic.name }} > {{ ur.name }}
+                                        </td>
+                                        <td>
+                                            {% if ur in itemsConsultU %}
+                                                <span class="text-success"><i class="fas fa-check"></i> Oui</span>
+                                            {% else %}
+                                                <span class="text-danger"><i class="fas fa-times"></i> Non</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if ur in itemsModifU %}
+                                                <span class="text-success"><i class="fas fa-check"></i> Oui</span>
+                                            {% else %}
+                                                <span class="text-danger"><i class="fas fa-times"></i> Non</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+            </table>
+        {% endblock %}
+    {% endembed %}
+{% endmacro %}

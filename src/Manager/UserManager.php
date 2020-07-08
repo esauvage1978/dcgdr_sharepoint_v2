@@ -85,7 +85,14 @@ class UserManager
         $this->manager->persist($user);
         $this->manager->flush();
 
+        $this->actionAfterSave($user);
+
         return true;
+    }
+
+    private function actionAfterSave($item)
+    {
+        $this->checkAvatar($item);
     }
 
     public function initialise(User $user, $oldUserMail = null)
@@ -129,6 +136,8 @@ class UserManager
 
     public function checkAvatar(User $user): bool
     {
+        if(is_null($user->getId())) return false;
+
         if (!file_exists($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png')) {
             copy(
                 $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/__default.png',

@@ -8,7 +8,7 @@
                 {% block card_body %}
                     <h3 class="profile-username text-center">{{ item.name }}</h3>
                     <h5 class="text-center">
-                        <a href="{{ path('thematic_show',{id:item.thematic.id}) }}">{{ item.thematic.name }}</a>
+                        <a href="{{ path('thematic_show',{id:item.underthematic.id}) }}">{{ item.underthematic.name }}</a>
                     </h5>
 
                     <small class="float-right">
@@ -29,6 +29,12 @@
                 {% endembed %}
             {% endif %}
 
+            {% if item.isShowAll == true %}
+                <div class="alert alert-success ">
+                    <h5><i class="icon fas fa-info"></i> Consultable par tous</h5>
+                </div>
+            {% endif %}
+
             {% embed 'widgets/card-widget.html.twig' %}
                 {% block card_title %}Corbeille de lecture{% endblock %}
                 {% block card_body %}
@@ -47,7 +53,7 @@
         </div>
         <div class="{{ col_2_2 }}">
             {% import "macros/rubric.html.twig" as rbc %}
-            {{ rbc.vignette(item,route_show,'thematic_show') }}
+            {{ rbc.vignette(item.rubric,'admin_rubric_show','underthematic_show') }}
     </div>
 
 

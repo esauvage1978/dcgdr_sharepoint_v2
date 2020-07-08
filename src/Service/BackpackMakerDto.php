@@ -16,7 +16,7 @@ class BackpackMakerDto
     Const DRAFT='draft';
     Const MY_DRAFT='mydraft';
     Const PUBLISHED='published';
-    Const PUBLISHED_FOR_SEARCH='published_for_search';
+    Const SEARCH='search';
     Const PUBLISHED_FOR_RUBRIC='published_for_rubric';
     Const PUBLISHED_FOR_UNDERRUBRIC='published_for_underrubric';
     Const NEWS='news';
@@ -67,14 +67,13 @@ class BackpackMakerDto
                     ->setVisible(BackpackDto::TRUE)
                     ->setCurrentState(WorkflowData::STATE_PUBLISHED);
                 break;
-            case self::PUBLISHED_FOR_SEARCH:
+            case self::SEARCH:
                 if(null===$param) {
-                    throw new \InvalidArgumentException('Il manque l\'id de la rubrique');
+                    throw new \InvalidArgumentException('Il manque le critère de recherche');
                 }
                 $dto
                     ->setWordSearch($param)
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::PUBLISHED_FOR_RUBRIC:
                 if(null===$param) {

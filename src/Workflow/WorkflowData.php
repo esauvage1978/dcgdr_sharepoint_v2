@@ -66,7 +66,25 @@ class WorkflowData
                 $stateName = ' Archivé';
                 break;
         }
-
+        return $stateName;
+    }
+    public static function getIconOfState(string $state)
+    {
+        $stateName = '';
+        switch ($state) {
+            case self::STATE_DRAFT:
+                $stateName = '<i class="fab fa-firstdraft text-info"></i>';
+                break;
+            case self::STATE_PUBLISHED:
+                $stateName = '<i class="fab fa-product-hunt text-success"></i>';
+                break;
+            case self::STATE_ABANDONNED:
+                $stateName = '<i class="far fa-trash-alt text-danger"></i>';
+                break;
+            case self::STATE_ARCHIVED:
+                $stateName = '<i class="fas fa-archive text-warning"></i>';
+                break;
+        }
         return $stateName;
     }
     public static function getTitleOfMail(string $state)
@@ -107,7 +125,7 @@ class WorkflowData
                 $stateColor = '#f8d7da';
                 break;
             case self::STATE_ARCHIVED:
-                $stateColor = '#ffc107';
+                $stateColor = '#fff3cd';
                 break;
         }
 

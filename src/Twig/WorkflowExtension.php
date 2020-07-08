@@ -26,6 +26,7 @@ class WorkflowExtension extends AbstractExtension
             new TwigFilter('workflowGetTransitionsForState', [$this, 'workflowGetTransitionsForState']),
             new TwigFilter('workflowGetExplains', [$this, 'workflowGetExplains']),
             new TwigFilter('workflowGetCheckMessages', [$this, 'workflowGetCheckMessages']),
+            new TwigFilter('workflowGetIconOfState', [$this, 'workflowGetIconOfState']),
         ];
     }
 
@@ -66,5 +67,10 @@ class WorkflowExtension extends AbstractExtension
         $object =  'App\Workflow\Transaction\Transition' . ucfirst( $transition);
         $instance=new $object($backpack);
         return $instance->getCheckMessages();
+    }
+
+    public function workflowGetIconOfState(string $state)
+    {
+        return WorkflowData::getIconOfState($state);
     }
 }

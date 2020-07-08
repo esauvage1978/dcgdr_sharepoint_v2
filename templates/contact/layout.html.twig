@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+    {% import "macros/widgets.html.twig" as widgets %}
+{% set domaine = 'contact' %}
+{% set domaineTitle = 'Contact' %}
+{% set tableName = domaine %}
+
+{% block title %}{{ app_name }} - {{domaineTitle}}{% endblock %}
+{% block page_title %}{{ widgets.icon(domaine)}} {{domaineTitle}}{% endblock %}
+
+

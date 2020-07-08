@@ -47,10 +47,7 @@ class RubricController extends AbstractGController
             ->setRubricDto((new RubricDto())->setId($item->getId()));
 
         if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
-            $dto->setUserDto(
-                (new UserDto())
-                    ->setId($this->getUser()->getName())
-            );
+            $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));
         }
 
         return $this->render('rubric/index.html.twig', [

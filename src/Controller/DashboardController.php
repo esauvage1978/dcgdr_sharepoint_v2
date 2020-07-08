@@ -11,6 +11,7 @@ use App\Dto\UserDto;
 use App\Repository\BackpackDtoRepository;
 use App\Service\MakeDashboard;
 use App\Workflow\WorkflowData;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,6 +19,7 @@ class DashboardController extends AbstractController
 {
     /**
      * @Route("/dashboard", name="dashboard")
+     * @IsGranted("ROLE_USER")
      */
     public function index(
         BackpackDtoRepository $backpackDtoRepository

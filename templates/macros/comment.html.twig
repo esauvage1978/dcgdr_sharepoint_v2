@@ -1,0 +1,33 @@
+{% macro timeline(data) %}
+    {% embed 'widgets/timeline-item-widget.html.twig' %}
+        {% import "macros/widgets.html.twig" as widgets %}
+        {% block timeline_item_icon %}fas fa-comment-dots{% endblock %}
+        {% block timeline_item_icon_class %}{% endblock %}
+        {% block timeline_item_class %}{% endblock %}
+        {% block timeline_item_body_class %}bg-secondary mt-1{% endblock %}
+
+        {% block timeline_item_body %}
+            <div class="mailbox-read-info">
+                <h5 class="mb-3"><strong>Sujet du message :</strong> {{ data.subject }}
+                    <span class="mailbox-read-time float-right">{{ data.sentat |format_datetime('full', 'short', locale='fr') }}</span>
+                </h5>
+                <h6><strong>De :</strong> <a class="text-light " href="{{ path('user_show',{id:data.userFrom.id}) }}"> {{ data.userFrom.name }} </a></h6>
+                {% if data.usersTo | length >0 %}
+                <h6><strong>A :</strong>
+                    {% for user in data.usersTo %}
+                        {% if loop.index!=1 %}, {% endif %}
+                        <a class="text-light"  href="{{ path('user_show',{id:user.id}) }}">{{ user.name }}</a>
+                    {% endfor %}
+                </h6>
+                {% endif %}
+            </div>
+            <div class="mailbox-read-message bg-white">
+                <div class=" p-3">
+                    <small>
+                        {{ data.content | raw }}
+                    </small>
+                </div>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endmacro %}

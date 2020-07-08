@@ -1,0 +1,15 @@
+{% extends 'contact/layout.html.twig' %}
+
+{% block page_subtitle %}Gestionnaire{% endblock %}
+
+{% block breadcrumb %}
+        {% import "profil/actions.html.twig" as actions %}
+        {{ actions.menu('gestionnaire') }}
+{% endblock %}
+
+
+{% block page_content %}
+        {% import "macros/user.html.twig" as user %}
+        {{ user.vignettes(items,'user_show','gestionnaire') }}
+
+{% endblock %}

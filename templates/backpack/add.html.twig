@@ -1,34 +1,18 @@
 {% extends 'backpack/layout.html.twig' %}
 
+
 {% block page_subtitle %}Création{% endblock %}
 
 
 {% block breadcrumb %}
-    {% embed 'widgets/button-widget.html.twig' %}
-        {% block btn_group %}
-            {% import "macros/delele.html.twig" as del %}
-            {% import "macros/submit.html.twig" as sub %}
-            {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-            {{ btn.link_button(
-                '',
-                path('home'),
-                'fas fa-arrow-left',
-                'outline-primary',
-                'outline-primary'
-            ) }}
-            {% if item.id is not null %}
-                {{ del.delete_btn('','show') }}
-                {{ btn.link_button(
-                    '',
-                    path(route_show,{id:item.id}),
-                    'fa fa-eye',
-                    'primary',
-                    'primary'
-                ) }}
-            {% endif %}
-            {{ sub.btn_onclick() }}
-        {% endblock %}
-    {% endembed %}
+    {% import "backpack/actions.html.twig" as actions %}
+    {{ actions.backpack(
+        'add',
+        item.currentState,
+        item.owner==app.user,
+        item,
+        item.underrubric
+    ) }}
 {% endblock %}
 
 
@@ -37,7 +21,7 @@
     <div class="row justify-content-center">
         <div class="{{ col_1_2 }}">
             {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}<i class="fas fa-suitcase text-info mr-3"></i> Porte-document{% endblock %}
+
                 {% block card_body %}
                     <div class="form-group row">
                         <label class="col-sm-3 col-form-label control-label required" for="cmb_rubric">

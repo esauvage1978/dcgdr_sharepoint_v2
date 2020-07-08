@@ -123,7 +123,7 @@
         {% block timeline_item_class %}{{ widgets.style_bg_color(data.stateNew) }}{% endblock %}
         {% block timeline_item_body_class %}mt-1{% endblock %}
         {% block  timeline_item_tool %}
-            <i class="fas fa-clock"></i> {{ data.changeAt | date('d-m-Y') }}
+            <i class="fas fa-clock"></i> {{ data.changeAt |format_datetime('full', 'short', locale='fr') }}
         {% endblock %}
         {% block timeline_item_header %}
             <img class="img-circle img-bordered-sm"

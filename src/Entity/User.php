@@ -129,6 +129,16 @@ class User implements UserInterface, EntityInterface
      */
     private $histories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="userFrom")
+     */
+    private $comments;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Comment::class, mappedBy="usersTo")
+     */
+    private $CommentsTo;
+
     public function __construct()
     {
         $this->organismes = new ArrayCollection();
@@ -136,6 +146,8 @@ class User implements UserInterface, EntityInterface
         $this->backpacks = new ArrayCollection();
         $this->backpackStates = new ArrayCollection();
         $this->histories = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->CommentsTo = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -526,6 +538,65 @@ class User implements UserInterface, EntityInterface
             if ($history->getUser() === $this) {
                 $history->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUserFrom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUserFrom() === $this) {
+                $comment->setUserFrom(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getCommentsTo(): Collection
+    {
+        return $this->CommentsTo;
+    }
+
+    public function addCommentsTo(Comment $commentsTo): self
+    {
+        if (!$this->CommentsTo->contains($commentsTo)) {
+            $this->CommentsTo[] = $commentsTo;
+            $commentsTo->addUsersTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentsTo(Comment $commentsTo): self
+    {
+        if ($this->CommentsTo->contains($commentsTo)) {
+            $this->CommentsTo->removeElement($commentsTo);
+            $commentsTo->removeUsersTo($this);
         }
 
         return $this;

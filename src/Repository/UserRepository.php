@@ -41,6 +41,35 @@ class UserRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function findAllForContactGestionnaire()
+    {
+        return $this->createQueryBuilder(self::ALIAS)
+            ->Where(self::ALIAS.'.roles like :val1')
+            ->AndWhere(self::ALIAS.'.roles not like :val2')
+            ->setParameter('val1', '%"ROLE_GESTIONNAIRE"%')
+            ->setParameter('val2', '%ROLE_ADMIN%')
+            ->orderBy(self::ALIAS.'.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    /**
+     * @return User[] Returns an array of User objects
+     */
+    public function findAllForContactAdmin()
+    {
+        return $this->createQueryBuilder(self::ALIAS)
+            ->Where(self::ALIAS.'.roles like :val1')
+            ->setParameter('val1', '%ROLE_ADMIN%')
+            ->orderBy(self::ALIAS.'.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function findAllUserSubscription()
     {
         return $this->createQueryBuilder(self::ALIAS)

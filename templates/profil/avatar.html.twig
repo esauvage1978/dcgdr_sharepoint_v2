@@ -11,10 +11,7 @@
         <div class="col-xs-12 col-lg-6 ">
             <div class="card mt-5">
                 <div class="card-body ">
-
                     <form method="post">
-
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -22,25 +19,18 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div id="my-image-container" class="form-group">
                                 </div>
                             </div>
                         </div>
-
-
                         <input type="hidden" name="_csrf_token"
-                               value="{{ csrf_token('authenticate') }}"
-                        >
-
-
+                               value="{{ csrf_token('authenticate') }}">
                     </form>
-
                     <p class="text-center">
                         <button class="btn btn-lg btn-primary  mb-4" id="use" name="use" type="submit">
-                            {{ 'Update' | trans }}
+                            Appliquer
                         </button>
                     </p>
                     <div class="d-none">

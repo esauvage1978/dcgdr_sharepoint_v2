@@ -21,7 +21,7 @@
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {% import "default/actions.html.twig" as actions %}
+    {% import "user/actions.html.twig" as actions %}
     {{ actions.admin(
         'list',
         is_granted('ROLE_ADMIN'),

@@ -1,0 +1,34 @@
+{% macro menu(twigTemplace) %}
+    {% import "macros/widgets.html.twig" as widgets %}
+    {% set actions = {} %}
+
+    {% set actions = actions|merge({ 'home': {url: path('home'),class:'btn-secondary',attr:{title:'Accueil'}}}) %}
+
+    {% if twigTemplace!='permission' %}
+        {% set actions = actions|merge({ 'permissions': {url: path('my_permission'),class:'btn-secondary',attr:{title:'Liste des permissions'}}}) %}
+    {% endif %}
+
+    {% if twigTemplace!='index' %}
+        {% set actions = actions|merge({ 'profil': {url: path('profil'),class:'btn-secondary',attr:{title:'votre profil'}}}) %}
+    {% endif %}
+
+    {% if twigTemplace!='administrateur' %}
+        {% set actions = actions|merge({ 'administrateur': {url: path('administrateur'),class:'btn-secondary',attr:{title:'Liste des administrateurs'}}}) %}
+    {% endif %}
+
+    {% if twigTemplace!='gestionnaire' %}
+        {% set actions = actions|merge({ 'gestionnaire': {url: path('gestionnaire'),class:'btn-secondary',attr:{title:'Liste des gestionnaires'}}}) %}
+    {% endif %}
+
+    {% if twigTemplace!='password' %}
+        {% set actions = actions|merge({ 'password': {url: path('password_change'),class:'btn-secondary',attr:{title:'Changer de mot de passe'}}}) %}
+    {% endif %}
+
+    {% set actions = actions|merge({ 'avatar': {url: path('avatar'),class:'btn-secondary',attr:{title:'changer d\'avatar'}}}) %}
+
+    {% if twigTemplace=='index'  or twigTemplace=='password'%}
+        {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
+    {% endif %}
+
+    {{ widgets.page_actions(actions) }}
+{% endmacro %}

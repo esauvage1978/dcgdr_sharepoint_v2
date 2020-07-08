@@ -50,14 +50,13 @@ class NotificationSubscriber implements EventSubscriberInterface
         BackpackDtoRepository $backpackDtoRepository
     )
     {
-        $this->currentUser=$currentUser;
+        $this->currentUser = $currentUser;
 
-        if(null!==$currentUser->getUser()) {
+        if (null !== $currentUser->getUser()) {
             $this->backpackCounter = new BackpackCounter
             (
                 $backpackDtoRepository,
-                $this->currentUser->getUser(),
-                Role::isGestionnaire($this->currentUser->getUser())
+                $this->currentUser->getUser()
             );
         }
     }
@@ -90,27 +89,28 @@ class NotificationSubscriber implements EventSubscriberInterface
             $notification->setId(2);
             $event->addNotification($notification);
 
-        }
+        } elseif (Role::isUser($this->currentUser->getUser())) {
 
-        $nbr = $this->backpackCounter->get(BackpackMakerDto::DRAFT);
-        if ($nbr != "0") {
-            $notification = new NotificationModel($nbr . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
-            $notification->setId(3);
-            $event->addNotification($notification);
-        }
+            $nbr = $this->backpackCounter->get(BackpackMakerDto::DRAFT);
+            if ($nbr != "0") {
+                $notification = new NotificationModel($nbr . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
+                $notification->setId(3);
+                $event->addNotification($notification);
+            }
 
-        $nbr = $this->backpackCounter->get(BackpackMakerDto::MY_DRAFT);
-        if ($nbr != "0") {
-            $notification = new NotificationModel(($nbr == "1" ? 'Votre ' : 'vos ' . $nbr) . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
-            $notification->setId(4);
-            $event->addNotification($notification);
-        }
+            $nbr = $this->backpackCounter->get(BackpackMakerDto::MY_DRAFT);
+            if ($nbr != "0") {
+                $notification = new NotificationModel(($nbr == "1" ? 'Votre ' : 'vos ' . $nbr) . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
+                $notification->setId(4);
+                $event->addNotification($notification);
+            }
 
-        $nbr = $this->backpackCounter->get(BackpackMakerDto::NEWS);
-        if ($nbr != "0") {
-            $notification = new NotificationModel('Les nouveautés : ' . $nbr, Constants::TYPE_SUCCESS, 'fas fa-suitcase');
-            $notification->setId(5);
-            $event->addNotification($notification);
+            $nbr = $this->backpackCounter->get(BackpackMakerDto::NEWS);
+            if ($nbr != "0") {
+                $notification = new NotificationModel('Les nouveautés : ' . $nbr, Constants::TYPE_SUCCESS, 'fas fa-suitcase');
+                $notification->setId(5);
+                $event->addNotification($notification);
+            }
         }
     }
 

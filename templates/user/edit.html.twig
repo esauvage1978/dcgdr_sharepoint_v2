@@ -3,7 +3,7 @@
 {% block page_subtitle %}Modification{% endblock %}
 
 {% block breadcrumb %}
-    {% import "default/actions.html.twig" as actions %}
+    {% import "user/actions.html.twig" as actions %}
     {{ actions.admin(
         'edit',
         is_granted('ROLE_ADMIN'),

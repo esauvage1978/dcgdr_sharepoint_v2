@@ -27,7 +27,7 @@ class SplitFile
      */
     public function getExtension()
     {
-        return $this->extension;
+        return strtolower($this->extension);
     }
 
     public function split($file)

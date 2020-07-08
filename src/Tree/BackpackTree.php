@@ -105,12 +105,12 @@ class BackpackTree extends AbstractTree
             $this->Dir5($item);
 
             $filesNumber = $item->getBackpackFiles()->count() + $item->getBackpackLinks()->count();
-            $fileSpan = $filesNumber > 0 ? " <span class='small text-info ml-2 pl-1 pr-1 rounded border-bottom border-info'><i class=\"fas fa-paperclip\"></i> {$filesNumber}</span>" : '';
+            $fileSpan = $filesNumber > 0 ? "&nbsp;<span class=\"small text-info ml-2 pl-1 pr-1 rounded border-bottom border-info\"><i class=\"fas fa-paperclip\"></i> {$filesNumber}</span>&nbsp;" : '';
 
             $this->tree[] = [
                 'id' => $item->getid(),
                 'parent' => $this->getParent(),
-                'text' => '<span class="text-primary">' . $item->getName() . '</span> ' . $fileSpan . $this->checkNews($item),
+                'text' => '<span class="text-primary">' . $item->getName() . '</span> ' . $fileSpan . $this->checkNews($item). $this->checkState($item),
                 'icon' => 'fas fa-suitcase text-info ',
                 'a_attr' => [
                     'href' => $this->generateUrl($item->getId()),
@@ -133,6 +133,14 @@ class BackpackTree extends AbstractTree
             && $this->getNbrDayBeetwenDates(new \DateTime(), $item->getUpdateAt()) < $this->paramsInServices->get(ParamsInServices::NEWS_TIME)) {
 
             return '<i class="fas fa-certificate text-fuchsia"></i>';
+        }
+        return '';
+    }
+
+    private function checkState(Backpack $item):string
+    {
+        if ($item->getCurrentState()!==null) {
+            return WorkflowData::getIconOfState($item->getCurrentState());
         }
         return '';
     }

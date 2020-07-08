@@ -29,6 +29,12 @@
             {% endembed %}
         {% endif %}
 
+        {% if item.isShowAll == true %}
+            <div class="alert alert-success ">
+                <h5><i class="icon fas fa-info"></i> Consultable par tous</h5>
+            </div>
+        {% endif %}
+
         {% embed 'widgets/card-widget.html.twig' %}
             {% block card_title %}Corbeille de lecture{% endblock %}
             {% block card_body %}
