@@ -5,7 +5,7 @@
 
     {% set actions = actions|merge({ 'home': {url: path('home'),class:'btn-secondary',attr:{title:'Accueil'}}}) %}
     {% set actions = actions|merge({ 'admin': {url: path('admin'),class:'btn-secondary',attr:{title:'Accueil de l\'administration'}}}) %}
-
+    {% set actions = actions|merge({'divider': null}) %}
     {% if twigTemplace!='list' %}
         {% set actions = actions|merge({ 'list': {url: path(domaine~'_list'),class:'btn-secondary',attr:{title:'Liste'}}}) %}
     {% endif %}

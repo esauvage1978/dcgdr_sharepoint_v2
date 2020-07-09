@@ -56,7 +56,6 @@ class CommentController extends AbstractGController
                     [
                         'id' => $item->getUnderRubric()->getId(),
                         'visible'=>'true',
-                        'currentState'=>$item->getCurrentState(),
                         'idItem'=>$item->getId()
                     ]);
             }

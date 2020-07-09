@@ -21,6 +21,9 @@ class AdminController extends AbstractController
         ],[
             'name' => 'Corbeille',
             'route' => 'corbeille_list'
+        ],[
+            'name' => 'Informations générales',
+            'route' => 'gpi_list'
         ]];
 
         $app_entries = [[

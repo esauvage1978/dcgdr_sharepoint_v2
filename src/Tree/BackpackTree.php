@@ -29,6 +29,10 @@ class BackpackTree extends AbstractTree
      */
     private $hideRubric = false;
 
+    /**
+     * @var bool
+     */
+    private $hideState = false;
 
     /**
      * @var bool
@@ -129,7 +133,7 @@ class BackpackTree extends AbstractTree
     private function checkNews(Backpack $item):string
     {
         if (
-            $item->getCurrentState()==WorkflowData::STATE_PUBLISHED
+            $item->getCurrentState()===WorkflowData::STATE_PUBLISHED
             && $this->getNbrDayBeetwenDates(new \DateTime(), $item->getUpdateAt()) < $this->paramsInServices->get(ParamsInServices::NEWS_TIME)) {
 
             return '<i class="fas fa-certificate text-fuchsia"></i>';
@@ -139,7 +143,7 @@ class BackpackTree extends AbstractTree
 
     private function checkState(Backpack $item):string
     {
-        if ($item->getCurrentState()!==null) {
+        if ($item->getCurrentState()!==null && $this->hideState===false) {
             return WorkflowData::getIconOfState($item->getCurrentState());
         }
         return '';
@@ -391,6 +395,12 @@ class BackpackTree extends AbstractTree
     {
         $this->hideUnderThematic = true;
         $this->check();
+        return $this;
+    }
+
+    public function hideState(): self
+    {
+        $this->hideState = true;
         return $this;
     }
 

@@ -1,16 +1,15 @@
-{% macro view(item,card) %}
+{% macro view(item) %}
 
-    <a href="{{ path('user_show', {'id': item.id}) }}" class="card m-0">
-        <div class="card-body pl-1 p-1 bg-primary image">
-            <img class="img-circle elevation-2"
-                 src="{{ asset(item.avatar) }}" style="height: auto;width: 2rem;"
+    <a href="{{ path('user_show', {'id': item.id}) }}" class="p-1 user-animate ">
+        <div class="image">
+            <img  class="img-circle img-bordered-sm"
+                 src="{{ asset(item.avatar) }}" style="width: 48px"
                  alt="avatar">
-            <small class="{% if item.isEnable is same as(false) %}text-warning text-bold{% endif %}">
+            <span class="text-bold {% if item.isEnable is same as(false) %}text-warning {% endif %}">
                 {{ item.name }}
-            </small>
+            </span>
         </div>
     </a>
-
 {% endmacro %}
 
 {% macro views(items) %}

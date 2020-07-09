@@ -319,10 +319,15 @@ class BackpackController extends AbstractGController
             $tree->setItem($this->repository->find($dto->getId()));
         }
 
+
         $tree
             ->initialise($items)
             ->setRoute('backpacks')
             ->setParameter($renderArray);
+
+        if (!is_null($dto->getCurrentState())) {
+            $tree->hideState();
+        }
 
         count($items) <= $this->paramsInServices->get(ParamsInServices::TREE_UNDEVELOPPED_FOR_NBR) && $tree->Developed();
         array_key_exists('underRubric', $renderArray) && $tree->hideUnderThematic();
