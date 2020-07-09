@@ -9,6 +9,7 @@
         {% import "macros/default.html.twig" as dft %}
         {{ dft.no_connexion() }}
     {% else %}
+        {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'dashboard'})) }}
         <div class="row justify-content-center ">
             <div class="col-8">
                 <div class="row  justify-content-center ">
@@ -22,3 +23,6 @@
         </div>
     {% endif %}
 {% endblock %}
+
+
+

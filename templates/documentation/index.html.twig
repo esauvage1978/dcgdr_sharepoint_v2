@@ -5,7 +5,7 @@
 {% block page_title %}{{widgets.icon('manual')}} Documentation{% endblock %}
 
 {% block page_content %}
-
+    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'documentation'})) }}
     <div class="row">
         <div class="col-md-6 offset-md-3" >
             {# ... box widget with defaults ... #}

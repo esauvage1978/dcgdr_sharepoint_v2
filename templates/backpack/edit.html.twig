@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block page_content %}
+    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'backpack_edit'})) }}
     {% import "macros/workflow.html.twig" as wfl %}
     {{ include('backpack/_edit/_etat_modal.html.twig') }}
 

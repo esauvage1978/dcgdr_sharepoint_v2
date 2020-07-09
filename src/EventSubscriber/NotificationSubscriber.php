@@ -107,7 +107,7 @@ class NotificationSubscriber implements EventSubscriberInterface
 
             $nbr = $this->backpackCounter->get(BackpackMakerDto::NEWS);
             if ($nbr != "0") {
-                $notification = new NotificationModel('Les nouveautés : ' . $nbr, Constants::TYPE_SUCCESS, 'fas fa-suitcase');
+                $notification = new NotificationModel('Les mises à jour récentes : ' . $nbr, Constants::TYPE_SUCCESS, 'fas fa-suitcase');
                 $notification->setId(5);
                 $event->addNotification($notification);
             }

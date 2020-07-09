@@ -1,6 +1,6 @@
 {% macro vignette(item, route_show, route_underthematic_show) %}
     {% embed 'widgets/card-widget.html.twig' %}
-        {% block card_class %} h-100 border-light shadow{% endblock %}
+        {% block card_class %} h-100  card-animate{% endblock %}
         {% block card_ribbon %}
             {% set nbr=item.id | hasNewForUnderRubric %}
             {% if nbr >0 %}
@@ -8,7 +8,7 @@
                     <div class="ribbon  bg-gradient-fuchsia">
                         <a href="{{ path('backpacks_news_for_underrubric',{id:item.id}) }}"
                            class="text-white text-bold">
-                            <i class="fas fa-certificate"></i> {{ nbr }} Nouveauté{{ nbr>1 ?'s':'' }}
+                            <i class="fas fa-certificate"></i> {{ nbr }} <small>Mise{{ nbr>1?'s':'' }} à jour</small>
                         </a>
                     </div>
                 </div>

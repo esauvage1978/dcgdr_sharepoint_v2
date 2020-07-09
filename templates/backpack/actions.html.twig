@@ -38,8 +38,7 @@
                 {% set actions = actions|merge({ 'edit': {url: path('backpack_edit',{id:item.id}),class:'btn-secondary',attr:{title:'Modifier'}}}) %}
             {% endif %}
             {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
-        {% elseif twigTemplace=='add' %}
-            {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
+
         {% elseif twigTemplace=='workflow' %}
             {% set actions = actions|merge({ 'show': {url: url,class:'btn-secondary',attr:{title:'Consulter'}}}) %}
             {% set actions = actions|merge({ 'edit': {url: path('backpack_edit',{id:item.id}),class:'btn-secondary',attr:{title:'Modifier'}}}) %}
@@ -60,7 +59,8 @@
             {% endif %}
             {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
         {% endif %}
-
+    {% elseif twigTemplace=='add' %}
+        {% set actions = actions|merge({ 'save': {onclick: '$(\'#submit_1\').click();',class:'btn-success',attr:{title:'Sauvegarder'}}}) %}
     {% endif %}
     {{ widgets.page_actions(actions) }}
 {% endmacro %}

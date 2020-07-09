@@ -60,5 +60,33 @@ $('.select2')
     }).addClass('col');
 
 
+$('.info-box-animate').hover(
+    function () {
+        $(this).animate({
+            top: "-=2%",
+            left: "-=1%",
+        }, 200)
+    },
+    function () {
+        $(this).animate({
+            top: "0%",
+            left: "0%",
+        }, 200)
+    }
+);
+$('.card-animate').hover(
+    function () {
+        $(this).animate({
+            top: "-=2%",
+            left: "-=1%",
+        }, 200)
+    },
+    function () {
+        $(this).animate({
+            top: "0%",
+            left: "0%",
+        }, 200)
+    }
+);
 
 

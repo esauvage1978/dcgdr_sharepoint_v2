@@ -12,6 +12,21 @@ final class Role
     const ROLE_GESTIONNAIRE = 'ROLE_GESTIONNAIRE';
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
+    public static function hasData(string $data): bool
+    {
+        $datas = [
+            self::ROLE_USER,
+            self::ROLE_EDITEUR,
+            self::ROLE_GESTIONNAIRE,
+            self::ROLE_ADMIN,
+        ];
+
+        if (in_array($data, $datas)) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Défini si l'utilisateur est administrateur
      *

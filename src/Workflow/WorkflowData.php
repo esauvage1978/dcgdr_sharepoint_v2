@@ -17,8 +17,47 @@ class WorkflowData
     const TRANSITION_TO_ARCHIVE = 'toArchive';
     const TRANSITION_TO_DRAFT = 'toTheDraft';
 
+    public function hasData(string $data): bool
+    {
+        return self::hasState($data) && self::hasTransition($data);
+    }
+
+    public static function hasState(string $data): bool
+    {
+        $datas = [
+            self::STATE_DRAFT,
+            self::STATE_ABANDONNED,
+            self::STATE_PUBLISHED,
+            self::STATE_ARCHIVED,
+        ];
+
+        if (in_array($data, $datas)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function hasTransition(string $data): bool
+    {
+        $datas = [
+            self::TRANSITION_TO_PUBLISH,
+            self::TRANSITION_TO_ABANDONNE,
+            self::TRANSITION_TO_ARCHIVE,
+            self::TRANSITION_TO_DRAFT,
+        ];
+
+        if (in_array($data, $datas)) {
+            return true;
+        }
+        return false;
+    }
+
     public static function getTransitionsForState($state)
     {
+        if (!self::hasState($state)) {
+            throw new \InvalidArgumentException('cet état n\'existe pas');
+        }
+
         $transitions = [];
         switch ($state) {
             case self::STATE_DRAFT:
@@ -49,8 +88,12 @@ class WorkflowData
 
         return $transitions;
     }
+
     public static function getNameOfState(string $state)
     {
+        if (!self::hasState($state)) {
+            throw new \InvalidArgumentException('cet état n\'existe pas');
+        }
         $stateName = '';
         switch ($state) {
             case self::STATE_DRAFT:
@@ -68,8 +111,12 @@ class WorkflowData
         }
         return $stateName;
     }
+
     public static function getIconOfState(string $state)
     {
+        if (!self::hasState($state)) {
+            throw new \InvalidArgumentException('cet état n\'existe pas');
+        }
         $stateName = '';
         switch ($state) {
             case self::STATE_DRAFT:
@@ -87,8 +134,12 @@ class WorkflowData
         }
         return $stateName;
     }
+
     public static function getTitleOfMail(string $state)
     {
+        if (!self::hasState($state)) {
+            throw new \InvalidArgumentException('cet état n\'existe pas');
+        }
         $stateName = '';
         switch ($state) {
             case self::STATE_PUBLISHED:
@@ -106,13 +157,20 @@ class WorkflowData
         }
         return $stateName;
     }
+
     public static function getShortNameOfState(string $state)
     {
+        if (!self::hasState($state)) {
+            throw new \InvalidArgumentException('cet état n\'existe pas');
+        }
         return self::getNameOfState($state);
     }
 
     public static function getColorOfState(string $state)
     {
+        if (!self::hasState($state)) {
+            throw new \InvalidArgumentException('cet état n\'existe pas');
+        }
         $stateColor = '';
         switch ($state) {
             case self::STATE_PUBLISHED:
@@ -134,33 +192,36 @@ class WorkflowData
 
     public static function getModalDataForTransition(string $transition)
     {
-        $data=[
-            'state'=>'',
-            'transition'=>$transition,
-            'titre'=>'',
-            'btn_label'=>''
+        if (!self::hasTransition($transition)) {
+            throw new \InvalidArgumentException('Cette transition n\'existe pas');
+        }
+        $data = [
+            'state' => '',
+            'transition' => $transition,
+            'titre' => '',
+            'btn_label' => ''
         ];
 
         switch ($transition) {
             case self::TRANSITION_TO_DRAFT:
-                $data['state']=self::STATE_DRAFT;
-                $data['titre']='Remettre en brouillon';
-                $data['btn_label']='Basculer';
+                $data['state'] = self::STATE_DRAFT;
+                $data['titre'] = 'Remettre en brouillon';
+                $data['btn_label'] = 'Basculer';
                 break;
             case self::TRANSITION_TO_PUBLISH:
-                $data['state']=self::STATE_PUBLISHED;
-                $data['titre']='Publier de porte document';
-                $data['btn_label']='Publier';
+                $data['state'] = self::STATE_PUBLISHED;
+                $data['titre'] = 'Publier de porte document';
+                $data['btn_label'] = 'Publier';
                 break;
             case self::TRANSITION_TO_ABANDONNE:
-                $data['state']=self::STATE_ABANDONNED;
-                $data['titre']='Abandonner l\'action';
-                $data['btn_label']='Abandonner';
+                $data['state'] = self::STATE_ABANDONNED;
+                $data['titre'] = 'Abandonner l\'action';
+                $data['btn_label'] = 'Abandonner';
                 break;
             case self::TRANSITION_TO_ARCHIVE:
-                $data['state']=self::STATE_ARCHIVED;
-                $data['titre']='Archiver le porte document';
-                $data['btn_label']='Archiver';
+                $data['state'] = self::STATE_ARCHIVED;
+                $data['titre'] = 'Archiver le porte document';
+                $data['btn_label'] = 'Archiver';
                 break;
 
         }

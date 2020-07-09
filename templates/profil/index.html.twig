@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block page_content %}
+    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'profil'})) }}
     <div class="row justify-content-center">
         <div class="{{ col_1_2 }}">
 

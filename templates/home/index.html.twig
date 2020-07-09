@@ -7,7 +7,7 @@
         {% import "macros/default.html.twig" as dft %}
         {{ dft.no_connexion() }}
     {% else %}
-
+        {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'home'})) }}
         {% import "macros/user.html.twig" as user %}
         {{ user.messageEmailValidated(app.user) }}
 
@@ -23,3 +23,5 @@
 
     {% endif %}
 {% endblock %}
+
+

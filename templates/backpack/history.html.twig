@@ -15,23 +15,21 @@
 
 
 {% block page_content %}
+    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'backpack_history'})) }}
     <div class="row justify-content-center ">
         <div class="col-10">
             {% embed 'widgets/card-widget.html.twig' %}
                 {% import "macros/widgets.html.twig" as widgets %}
+                {% import "macros/backpack.html.twig" as bpk %}
                 {% block card_title_class %} text-info{% endblock %}
                 {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
                 {% block card_tools %}
-                    <small class="text-muted">
-                        Créé par <strong>{{ item.owner.name }}</strong>
-                        Mise à jour le
-                        <strong>{{ item.updateAt |format_datetime('full', 'short', locale='fr') }}</strong>
-                    </small>
                     {{ widgets.badge_state(item.currentState) }}
                 {% endblock %}
                 {% block card_body_class %}h-100 bg-light shadow{% endblock %}
                 {% block card_body %}
-
+                    {{ bpk.identification(item) }}
+                    <hr/>
                     {% embed 'widgets/timeline-widget.html.twig' %}
                         {% block timeline_title %}Modification{% endblock %}
                         {% block timeline_title_class %}bg-secondary{% endblock %}

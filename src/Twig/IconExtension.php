@@ -50,6 +50,7 @@ final class IconExtension extends AbstractExtension
         'fax' => 'fas fa-fax',
         'gestionnaire' => 'fa fa-user-secret',
         'filter' => 'fas fa-filter',
+        'gpi'=>'fas fa-bullhorn',
         'help' => 'far fa-question-circle',
         'history' => 'fas fa-history',
         'home' => 'fas fa-home',
