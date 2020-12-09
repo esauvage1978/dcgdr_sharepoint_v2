@@ -98,7 +98,7 @@ class NotificationSubscriber implements EventSubscriberInterface
                 $event->addNotification($notification);
             }
 
-            $nbr = $this->backpackCounter->get(BackpackMakerDto::MY_DRAFT);
+            $nbr = $this->backpackCounter->get(BackpackMakerDto::MY_DRAFT_UPDATABLE);
             if ($nbr != "0") {
                 $notification = new NotificationModel(($nbr == "1" ? 'Votre ' : 'vos ' . $nbr) . ' brouillon' . ($nbr == "1" ? '' : 's'), Constants::TYPE_WARNING, 'fas fa-suitcase');
                 $notification->setId(4);

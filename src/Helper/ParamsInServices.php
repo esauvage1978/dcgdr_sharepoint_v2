@@ -1,10 +1,7 @@
 <?php
 
-
 namespace App\Helper;
 
-
-use http\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -31,7 +28,7 @@ class ParamsInServices
     CONST MAILER_SMTP_HOST='mailer.smtp.host';
     CONST MAILER_SMTP_PORT='mailer.smtp.port';
     CONST NEWS_TIME='news_time';
-    CONST TREE_UNDEVELOPPED_FOR_NBR= 'tree_undevelopped_for_nbr';
+    public const ES_TREE_UNDEVELOPPED_NBR = 'es.tree.undevelopped.nbr';
 
 
     /**
@@ -69,7 +66,7 @@ class ParamsInServices
             self::MAILER_SMTP_HOST,
             self::MAILER_SMTP_PORT,
             self::NEWS_TIME,
-            self::TREE_UNDEVELOPPED_FOR_NBR
+            self::ES_TREE_UNDEVELOPPED_NBR
         ];
     }
 

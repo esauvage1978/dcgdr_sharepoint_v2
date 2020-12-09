@@ -63,12 +63,12 @@ class Backpack implements EntityInterface
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updateAt;
+    private $updatedAt;
 
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $currentState;
+    private $stateCurrent;
 
     /**
      * @ORM\Column(type="datetime")
@@ -78,7 +78,7 @@ class Backpack implements EntityInterface
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $contentState;
+    private $stateContent;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="backpacks")
@@ -228,26 +228,26 @@ class Backpack implements EntityInterface
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdateAt(\DateTimeInterface $updateAt): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getCurrentState(): ?string
+    public function getStateCurrent(): ?string
     {
-        return $this->currentState;
+        return $this->stateCurrent;
     }
 
-    public function setCurrentState(string $currentState): self
+    public function setStateCurrent(string $stateCurrent): self
     {
-        $this->currentState = $currentState;
+        $this->stateCurrent = $stateCurrent;
 
         return $this;
     }
@@ -276,14 +276,14 @@ class Backpack implements EntityInterface
         return $this;
     }
 
-    public function getContentState(): ?string
+    public function getStateContent(): ?string
     {
-        return $this->contentState;
+        return $this->stateContent;
     }
 
-    public function setContentState(?string $contentState): self
+    public function setStateContent(?string $stateContent): self
     {
-        $this->contentState = $contentState;
+        $this->stateContent = $stateContent;
 
         return $this;
     }

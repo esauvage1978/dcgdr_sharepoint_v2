@@ -8,23 +8,34 @@
 {% block page_content %}
     {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'administration'})) }}
     <div class="row">
-        <div class="col-md-3 offset-md-1" >
-            {# ... box widget with defaults ... #}
-            {% embed 'widgets/card-widget.html.twig'%}
+<div class="col-lg-4 ">
 
-                {% block card_body %}
-                    {% for entry in general_entries %}
-                        <div class="row ">
-                            <div class="col-sm-12">
-                                <a href="{{ path(entry.route)}}" target="_self">
-                                    <i class="fas fa-angle-right text-purple"></i>  {{ entry.name }}
-                                </a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endblock %}
-            {% endembed %}
-        </div>
+	<div class="card">
+		<div class="list-group list-group-flush">
+
+			{% for entry in general_entries %}
+				<a href="{{ path(entry.route)}}" target="_self" class="list-group-item list-group-item-action hvr-float-shadow ">
+
+					<div class="d-flex w-100 align-items-center">
+						<div class="col-4  text-center">
+							<i class="fa-3x {{entry.icon}}"></i>
+						</div>
+						<div class="">
+							<h5 class="mb-1 text-p-dark">
+								<strong>{{ entry.name }}</strong>
+							</h5>
+							<p class="mb-1">{{ entry.content | raw }}</p>
+
+							<small>{{ entry.smallcontent | raw}}</small>
+
+						</div>
+					</div>
+				</a>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
 
         <div class="col-md-3 " >
             {# ... box widget with defaults ... #}

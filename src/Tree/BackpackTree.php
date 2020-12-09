@@ -74,7 +74,6 @@ class BackpackTree extends AbstractTree
             $this->hideThematic = true;
             $this->hideRubric = true;
         }
-
     }
 
     /**
@@ -108,14 +107,12 @@ class BackpackTree extends AbstractTree
             $this->Dir4($item);
             $this->Dir5($item);
 
-            $filesNumber = $item->getBackpackFiles()->count() + $item->getBackpackLinks()->count();
-            $fileSpan = $filesNumber > 0 ? "&nbsp;<span class=\"small text-info ml-2 pl-1 pr-1 rounded border-bottom border-info\"><i class=\"fas fa-paperclip\"></i> {$filesNumber}</span>&nbsp;" : '';
-
+ 
             $this->tree[] = [
                 'id' => $item->getid(),
                 'parent' => $this->getParent(),
-                'text' => '<span class="text-primary">' . $item->getName() . '</span> ' . $fileSpan . $this->checkNews($item). $this->checkState($item),
-                'icon' => 'fas fa-suitcase text-info ',
+                'text' =>  $this->getText($item),
+                'icon' => 'fas fa-suitcase text-p-dark ',
                 'a_attr' => [
                     'href' => $this->generateUrl($item->getId()),
                 ],
@@ -124,27 +121,41 @@ class BackpackTree extends AbstractTree
                     'opened' => true,
                 ],
             ];
-
         }
 
         return json_encode($this->tree);
     }
 
-    private function checkNews(Backpack $item):string
+    private function getText(Backpack $item)
+    {
+        $text = '';
+
+        $filesNumber = $item->getBackpackFiles()->count() + $item->getBackpackLinks()->count();
+        $fileSpan = $filesNumber > 0 ? "&nbsp;<span class=\"small text-p-dark bg-p-light ml-2 pl-1 pr-1 rounded \"><i class=\"fas fa-paperclip\"></i> {$filesNumber}</span>&nbsp;" : '';
+
+        return  $text . '<span class="text-p-dark">' . $item->getName() . '</span> ' . $fileSpan . $this->checkNews($item) . $this->checkState($item);
+    }
+
+    private function checkNews(Backpack $item): string
     {
         if (
-            $item->getCurrentState()===WorkflowData::STATE_PUBLISHED
-            && $this->getNbrDayBeetwenDates(new \DateTime(), $item->getUpdateAt()) < $this->paramsInServices->get(ParamsInServices::NEWS_TIME)) {
+            $item->getStateCurrent() === WorkflowData::STATE_PUBLISHED
+            && $this->getNbrDayBeetwenDates(new \DateTime(), $item->getUpdatedAt()) < $this->paramsInServices->get(ParamsInServices::NEWS_TIME)
+        ) {
 
-            return '<i class="fas fa-certificate text-fuchsia"></i>';
+            return '<i class="fas fa-certificate text-p-dark2 bg-p-light"></i>';
         }
         return '';
     }
 
-    private function checkState(Backpack $item):string
+    private function checkState(Backpack $item): string
     {
-        if ($item->getCurrentState()!==null && $this->hideState===false) {
-            return WorkflowData::getIconOfState($item->getCurrentState());
+        if ($item->getStateCurrent() !== null && $this->hideState === false) {
+            return "<span class='badge' style='color:" .
+            WorkflowData::getBGColorOfState($item->getStateCurrent()) .
+                ";background-color:" . WorkflowData::getForeColorOfState($item->getStateCurrent()) .
+                "'><i class='" . WorkflowData::getIconOfState($item->getStateCurrent()) . "'></i>"
+                . "</span>"; //WorkflowData::getNameOfState($item->getStateCurrent())
         }
         return '';
     }
@@ -216,8 +227,13 @@ class BackpackTree extends AbstractTree
 
         if ($data_courant != $this->underThematic_last) {
             $parent = !$this->hideRubric ? $this->rubric_id : (!$this->hideThematic ? $this->thematic_id : '#');
-            $this->addBranche($this->underThematic_id, $data_courant, $parent, $this->developed,
-                $backpack->getUnderRubric()->getUnderThematic()->getIsEnable());
+            $this->addBranche(
+                $this->underThematic_id,
+                $data_courant,
+                $parent,
+                $this->developed,
+                $backpack->getUnderRubric()->getUnderThematic()->getIsEnable()
+            );
         }
 
         $this->underThematic_last = $data_courant;
@@ -274,7 +290,6 @@ class BackpackTree extends AbstractTree
 
             $this->dir1_last = $data_courant;
         }
-
     }
 
     private function Dir2(Backpack $backpack)
@@ -302,7 +317,6 @@ class BackpackTree extends AbstractTree
 
             $this->dir2_last = $data_courant;
         }
-
     }
 
     private function Dir3(Backpack $backpack)
@@ -328,7 +342,6 @@ class BackpackTree extends AbstractTree
 
             $this->dir3_last = $data_courant;
         }
-
     }
 
     private function Dir4(Backpack $backpack)
@@ -352,7 +365,6 @@ class BackpackTree extends AbstractTree
 
             $this->dir4_last = $data_courant;
         }
-
     }
 
     private function Dir5(Backpack $backpack)
@@ -374,7 +386,6 @@ class BackpackTree extends AbstractTree
 
             $this->dir5_last = $data_courant;
         }
-
     }
 
     public function hideThematic(): self
@@ -403,5 +414,4 @@ class BackpackTree extends AbstractTree
         $this->hideState = true;
         return $this;
     }
-
 }

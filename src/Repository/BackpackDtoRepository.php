@@ -254,7 +254,6 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                     ' OR ' . self::ALIAS. '.id IN (' . $qRC->getDQL() . ')' .
                     ' OR ' . RubricRepository::ALIAS . '.isShowAll = 1' .
                     ' OR ' . UnderRubricRepository::ALIAS . '.isShowAll = 1');
-
         }
     }
 
@@ -265,7 +264,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             $from = date('Y-m-d', strtotime((new DateTime())->format('Y-m-d') . ' -8 day'));
 
             $this->builder->andWhere(
-                self::ALIAS . '.updateAt BETWEEN  :from AND :to');
+                self::ALIAS . '.updatedAt BETWEEN  :from AND :to');
 
             $this->addParams('from', $from);
             $this->addParams('to', $to);
@@ -275,9 +274,9 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
     private function initialise_where_state()
     {
 
-        if (!empty($this->dto->getCurrentState())) {
-            $this->builder->andwhere(self::ALIAS . '.currentState = :state');
-            $this->addParams('state', $this->dto->getCurrentState());
+        if (!empty($this->dto->getStateCurrent())) {
+            $this->builder->andwhere(self::ALIAS . '.stateCurrent = :state');
+            $this->addParams('state', $this->dto->getStateCurrent());
         }
 
 
@@ -378,7 +377,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                     ' OR ' . self::ALIAS . '.dir4 like :search' .
                     ' OR ' . self::ALIAS . '.dir5 like :search' .
                     ' OR ' . self::ALIAS . '.name like :search' .
-                    ' OR ' . self::ALIAS . '.contentState like :search' .
+                    ' OR ' . self::ALIAS . '.stateContent like :search' .
                     ' OR ' . BackpackLinkRepository::ALIAS . '.title like :search' .
                     ' OR ' . BackpackLinkRepository::ALIAS . '.link like :search' .
                     ' OR ' . BackpackLinkRepository::ALIAS . '.content like :search' .

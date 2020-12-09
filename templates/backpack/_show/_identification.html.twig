@@ -1,0 +1,61 @@
+{% import "macros/widgets.html.twig" as widgets %}
+{% import "macros/workflow.html.twig" as workflow %}
+{% import "macros/widgets.html.twig" as widgets %}
+{% import "macros/backpack.html.twig" as bpk %}
+<section>
+	<div class="row col-12 ">
+
+		<h3 class="text-bold text-p-dark ">
+
+			<a href="{{ path('backpack_show',{id: item.id})}}" class="text-p-dark">
+
+				{{ widgets.icon('backpack') }}
+
+
+				{{ item.name }}
+				{% if item.stateCurrent=='published' %}
+					{{ bpk.isNew(item.updatedAt)}}
+				{% endif %}
+			</a>
+		</h3>
+	</div>
+
+	<div class="row  d-flex justify-content-end mr-1 pb-2 text-gray">
+
+
+
+		<div class="badge">
+
+			{{ widgets.icon('user','text-p-dark2') }}
+			{{item.owner.name}}
+		</div>
+
+		{% if item.updatedat %}
+			<div class="badge">
+
+				{{ widgets.icon('calendar','text-p-dark2') }}
+
+				<small class="text-muted">Modifié le
+				</small>
+				{{ widgets.showShortDate(item.updatedat) }}
+			</div>
+
+
+		{% else %}
+			<div class="badge">
+
+				{{ widgets.icon('calendar','text-p-dark2') }}
+
+				<small class="text-muted">Créé le
+				</small>
+				{{ widgets.showShortDate(item.createdat) }}
+			</div>
+
+		{% endif %}
+
+		<div class="badge">
+
+			{{ workflow.badge_state(item.stateCurrent) }}
+		</div>
+	</div>
+</section>

@@ -5,7 +5,7 @@ namespace App\Listener;
 use App\Entity\BackpackFile;
 use App\Helper\FileDirectory;
 use App\Helper\Slugger;
-use App\Helper\SplitFile;
+use App\Helper\SplitNameFile;
 use App\Service\Uploader;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -23,15 +23,21 @@ class BackpackFileUploadListener
     private $directory;
 
     /**
-     * @var SplitFile
+     * @var SplitNameFile
      */
-    private $splitFile;
+    private $splitNameFile;
 
-    public function __construct(Uploader $uploader, string $directory)
+    /**
+     * @var FileDirectory
+     */
+    private $fileDirectory;
+
+    public function __construct(Uploader $uploader, string $directory, SplitNameFile $splitNameFile, FileDirectory $fileDirectory)
     {
         $this->uploader = $uploader;
         $this->directory = $directory;
-        $this->splitFile=new  SplitFile();
+        $this->splitNameFile=$splitNameFile;
+        $this->fileDirectory=$fileDirectory;
     }
 
     /**
@@ -44,11 +50,11 @@ class BackpackFileUploadListener
         $file=$backpackFile->getFile();
         if (!empty($file)) {
 
-            $this->splitFile->split($file->getClientOriginalName());
-            $extension = $this->splitFile->getExtension();
+            $this->splitNameFile->split($file->getClientOriginalName());
+            $extension = $this->splitNameFile->getExtension();
 
             if (empty($backpackFile->getFileName())) {
-                $backpackFile->setFileName(Slugger::slugify($this->splitFile->getName()) );
+                $backpackFile->setFileName(Slugger::slugify($this->splitNameFile->getName()) );
             }
             if (empty($backpackFile->getTitle())) {
                 $backpackFile->setTitle('Nouveau fichier');
@@ -57,7 +63,7 @@ class BackpackFileUploadListener
             $backpackFile->setFileExtension($extension);
             $backpackFile->setSize($this->uploader->getSize($file));
         }
-        $backpackFile->setUpdateAt(new \DateTime());
+        $backpackFile->setUpdatedAt(new \DateTime());
     }
 
     /**
@@ -67,7 +73,7 @@ class BackpackFileUploadListener
     public function postPersistHandler(BackpackFile $backpackFile)
     {
         if (!empty($backpackFile->getFile())) {
-            $fileDirectory = new FileDirectory();
+            $fileDirectory = $this->fileDirectory;
 
             $fileDirectory->createDir($this->directory, $backpackFile->getBackpack()->getId());
             $targetDir = $this->directory.'/'.$backpackFile->getBackpack()->getId();
@@ -86,7 +92,7 @@ class BackpackFileUploadListener
      */
     public function postRemoveHandler(BackpackFile $backpackFile)
     {
-        $fileDirectory = new FileDirectory();
+        $fileDirectory = $this->fileDirectory;
         $targetDir = $this->directory.'/'.$backpackFile->getBackpack()->getId();
         $fileDirectory->removeFile($targetDir, $backpackFile->getFullName());
     }

@@ -32,12 +32,12 @@ class BackpackManager extends AbstractManager
          * @var Backpack $bp
          */
         $bp=$entity;
-        $entity->setUpdateAt(new \DateTime());
+        $entity->setUpdatedAt(new \DateTime());
 
         if(empty( $entity->getId())) {
             $bp
                 ->setOwner( $this->currentUser->getUser())
-                ->setCurrentState(WorkflowData::STATE_DRAFT)
+                ->setStateCurrent(WorkflowData::STATE_DRAFT)
                 ->setStateAt(new \DateTime());
         }
 

@@ -1,145 +1,226 @@
 {% extends 'backpack/layout.html.twig' %}
 
-{% block page_subtitle %}Modification{% endblock %}
+{% import "macros/workflow.html.twig" as wfl %}
+{% import "macros/delele.html.twig" as del %}
+{% import "macros/submit.html.twig" as sub %}
+{% import "macros/save.html.twig" as save %}
+
+
+{% block page_subtitle %}
+	<small class="muted text-xs">Modification</small>
+{% endblock %}
+{% block page_title %}{% endblock %}
+
 
 {% block breadcrumb %}
-    {% import "backpack/actions.html.twig" as actions %}
-    {{ actions.backpack(
+	{% import "backpack/_btn_actions.html.twig" as actions %}
+	{{ actions.backpack(
+
         'edit',
-        item.currentState,
+        item.stateCurrent,
         item.owner==app.user,
         item,
-        item.underrubric
+        null
     ) }}
 {% endblock %}
 
+
 {% block page_content %}
-    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'backpack_edit'})) }}
-    {% import "macros/workflow.html.twig" as wfl %}
-    {{ include('backpack/_edit/_etat_modal.html.twig') }}
+	{{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'backpack_edit'})) }}
+	{{ form_start(form) }}
+	{{ form_errors(form) }}
 
 
-    {% if item.currentState in [workflow_archived,workflow_abandonned] %}
-        <div class="row justify-content-center ">
-            <div class="col-10">
-                {{ include(domaine ~ '/_show/_item.html.twig') }}
-            </div>
-        </div>
-    {% else %}
-        {{ include(domaine ~ '/_edit/_item.html.twig') }}
-    {% endif %}
+	<div class="row justify-content-center ">
+		<div class="col-lg-12 col-xl-8">
 
-    {{ wfl.cards(item) }}
+			{{ include(domaine ~ '/_show/_identification.html.twig') }}
+			{% if item.stateCurrent in [workflow_archived,workflow_abandonned] %}
+
+				{% else %}
+					{% set nbrL=item.backpackLinks | length %}
+					{% set nbrF=item.backpackFiles | length %}
+
+					<div class="card card-p-dark card-tabs">
+						<div class="card-header p-0 pt-1">
+							<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+								<li class="nav-item">
+									<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">
+										Général
+									</a>
+								</li>
+
+								<li class="nav-item">
+									<a class="nav-link" id="custom-tabs-one-file-tab" data-toggle="pill" href="#custom-tabs-one-file" role="tab" aria-controls="custom-tabs-one-file" aria-selected="false">
+										Fichiers (<strong>{{ nbrL + nbrF}}</strong>)
+									</a>
+								</li>
+
+
+							</ul>
+						</div>
+					</div>
+
+
+					<div class="tab-content " id="custom-tabs-one-tabContent">
+
+						<div class="tab-pane fade active show " id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+							{{ include(domaine ~ '/_edit/_rubric.html.twig') }}
+							{{ include(domaine ~ '/_edit/_arborescence.html.twig') }}
+							{{ include(domaine ~ '/_edit/_name.html.twig') }}
+							{{ save.btn()}}
+						</div>
+
+
+						<div class="tab-pane fade" id="custom-tabs-one-file" role="tabpanel" aria-labelledby="custom-tabs-one-file-tab">
+							{{ include(domaine ~ '/_edit/_files.html.twig') }}
+							{{ save.btn()}}
+
+						</div>
+					</div>
+
+
+			{% endif %}
+
+		</div>
+		<div class="col-lg-12 col-xl-4 ">
+			<h4 class="text-p-dark  p-2 rounded">Etat du porte-document</h4>
+			<hr/>
+			{{ wfl.cards(item) }}
+		</div>
+	</div>
+
+
+	<div class="d-none">
+		{{form_rest(form)}}
+		{{ sub.btn() }}
+	</div>
+
+	{{ form_end(form) }}
+	{% for transition in workflow_transitions(item) %}
+		{{ include('workflow/_modal_transition.html.twig',{'transition':transition.name,'id':item.id}) }}
+	{% endfor %}
+
+
+	{% if item.id is not null %}
+		{{ del.delete_form(route_del,item.id, 'show') }}
+	{% endif %}
+	<p class="mt-5 mb-5">&nbsp;</p>
+	<p class="mt-5 mb-5">&nbsp;</p>
+	<p class="mt-5 mb-5">&nbsp;</p>
+	<p class="mt-5 mb-5">&nbsp;</p>
+	<p class="mt-5 mb-5">&nbsp;</p>
+	<p class="mt-5 mb-5">&nbsp;</p>
+
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="{{ absolute_url( asset('js/backpack_file.js')) }}"></script>
-    <script src="{{ absolute_url( asset('js/arborescence.js')) }}"></script>
-    <script type="text/javascript">
-        $(function () {
-            arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", "{{ item.underRubric.id }}", true, '#backpack_dir1');
+	{{ parent() }}
+	<script src="{{ absolute_url( asset('js/backpack_file.js')) }}"></script>
+	<script src="{{ absolute_url( asset('js/arborescence.js')) }}"></script>
+	<script type="text/javascript">
+		$(function () {
+arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", "{{ item.underRubric.id }}", true, '#backpack_dir1');
 
-            $('#cmb_dir1').change(function () {
-                var data = $('#cmb_dir1  option:selected').text();
-                $('#backpack_dir1').val(data);
-                if (data === "") {
-                    $('#div_dir2').addClass('d-none');
-                    $('#div_dir3').addClass('d-none');
-                    $('#div_dir4').addClass('d-none');
-                    $('#div_dir5').addClass('d-none');
-                } else {
-                    $('#div_dir2').removeClass('d-none');
-                    arborescenceChained('#cmb_dir2', "{{ path('ajax_fill_combobox_dir2') }}", "{{ item.underRubric.id }}", true, '#backpack_dir2', data);
-                }
-            });
-            $('#cmb_dir2').change(function () {
-                var data = $('#cmb_dir2  option:selected').text();
-                $('#backpack_dir2').val(data);
-                if (data === "") {
-                    $('#div_dir3').addClass('d-none');
-                    $('#div_dir4').addClass('d-none');
-                    $('#div_dir5').addClass('d-none');
-                } else {
-                    $('#div_dir3').removeClass('d-none');
-                    arborescenceChained('#cmb_dir3', "{{ path('ajax_fill_combobox_dir3') }}", "{{ item.underRubric.id }}", true, '#backpack_dir3', data);
-                }
-            });
-            $('#cmb_dir3').change(function () {
-                var data = $('#cmb_dir3  option:selected').text();
-                $('#backpack_dir3').val(data);
-                if (data === "") {
-                    $('#div_dir4').addClass('d-none');
-                    $('#div_dir5').addClass('d-none');
-                } else {
-                    $('#div_dir4').removeClass('d-none');
-                    arborescenceChained('#cmb_dir4', "{{ path('ajax_fill_combobox_dir4') }}", "{{ item.underRubric.id }}", true, '#backpack_dir4', data);
-                }
-            });
-            $('#cmb_dir4').change(function () {
-                var data = $('#cmb_dir4  option:selected').text();
-                $('#backpack_dir4').val(data);
-                if (data === "") {
-                    $('#div_dir5').addClass('d-none');
-                } else {
-                    $('#div_dir5').removeClass('d-none');
-                    arborescenceChained('#cmb_dir5', "{{ path('ajax_fill_combobox_dir5') }}", "{{ item.underRubric.id }}", true, '#backpack_dir5', data);
-                }
-            });
-            $('#cmb_dir5').change(function () {
-                var data = $('#cmb_dir5  option:selected').text();
-                $('#backpack_dir5').val(data);
-            });
-        });
+$('#cmb_dir1').change(function () {
+var data = $('#cmb_dir1  option:selected').text();
+$('#backpack_dir1').val(data);
+if (data === "") {
+$('#div_dir2').addClass('d-none');
+$('#div_dir3').addClass('d-none');
+$('#div_dir4').addClass('d-none');
+$('#div_dir5').addClass('d-none');
+} else {
+$('#div_dir2').removeClass('d-none');
+arborescenceChained('#cmb_dir2', "{{ path('ajax_fill_combobox_dir2') }}", "{{ item.underRubric.id }}", true, '#backpack_dir2', data);
+}
+});
+$('#cmb_dir2').change(function () {
+var data = $('#cmb_dir2  option:selected').text();
+$('#backpack_dir2').val(data);
+if (data === "") {
+$('#div_dir3').addClass('d-none');
+$('#div_dir4').addClass('d-none');
+$('#div_dir5').addClass('d-none');
+} else {
+$('#div_dir3').removeClass('d-none');
+arborescenceChained('#cmb_dir3', "{{ path('ajax_fill_combobox_dir3') }}", "{{ item.underRubric.id }}", true, '#backpack_dir3', data);
+}
+});
+$('#cmb_dir3').change(function () {
+var data = $('#cmb_dir3  option:selected').text();
+$('#backpack_dir3').val(data);
+if (data === "") {
+$('#div_dir4').addClass('d-none');
+$('#div_dir5').addClass('d-none');
+} else {
+$('#div_dir4').removeClass('d-none');
+arborescenceChained('#cmb_dir4', "{{ path('ajax_fill_combobox_dir4') }}", "{{ item.underRubric.id }}", true, '#backpack_dir4', data);
+}
+});
+$('#cmb_dir4').change(function () {
+var data = $('#cmb_dir4  option:selected').text();
+$('#backpack_dir4').val(data);
+if (data === "") {
+$('#div_dir5').addClass('d-none');
+} else {
+$('#div_dir5').removeClass('d-none');
+arborescenceChained('#cmb_dir5', "{{ path('ajax_fill_combobox_dir5') }}", "{{ item.underRubric.id }}", true, '#backpack_dir5', data);
+}
+});
+$('#cmb_dir5').change(function () {
+var data = $('#cmb_dir5  option:selected').text();
+$('#backpack_dir5').val(data);
+});
+});
 
-        $('#addDir').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var recipient = button.data('whatever') // Extract info from data-* attributes
-            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-            var modal = $(this)
+$('#addDir').on('show.bs.modal', function (event) {
+var button = $(event.relatedTarget) // Button that triggered the modal
+var recipient = button.data('whatever')
+// Extract info from data-* attributes
+// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+var modal = $(this)
 
-            modal.find('#addDir_field').val(recipient)
-        });
+modal.find('#addDir_field').val(recipient)
+});
 
-        $(function () {
-            $('#btn_addDir').click(function () {
+$(function () {
+$('#btn_addDir').click(function () {
 
-                if ($('#addDir_field_new').val() === "") {
-                    alert('Le libellé est vide');
-                    return;
-                }
-                $('#addDir').modal('toggle');
-                var selecteurCible = $('#addDir_field').val();
-                var data = $('#addDir_field_new').val();
-                $('#' + selecteurCible).append('<option selected value="' + data + '">'
-                    + data + '</option>');
-                $('#addDir_field').val("");
-                $('#' + selecteurCible).change();
+if ($('#addDir_field_new').val() === "") {
+alert('Le libellé est vide');
+return;
+}
+$('#addDir').modal('toggle');
+var selecteurCible = $('#addDir_field').val();
+var data = $('#addDir_field_new').val();
+$('#' + selecteurCible).append('<option selected value="' + data + '">' + data + '</option>');
+$('#addDir_field').val("");
+$('#' + selecteurCible).change();
 
-            });
-        });
+});
+});
 
-        $(function () {
-
-
-            $('#picture_updateAt_date_month').val(new Date().getMonth() + 1);
-            $('#picture_updateAt_date_day').val(new Date().getDay());
-            $('#picture_updateAt_date_year').val(new Date().getFullYear());
-            $('#picture_updateAt_time_hour').val(new Date().getHours());
-            $('#picture_updateAt_time_minute').val(new Date().getMinutes());
+$(function () {
 
 
-        });
+$('#picture_updatedAt_date_month').val(new Date().getMonth() + 1);
+$('#picture_updatedAt_date_day').val(new Date().getDay());
+$('#picture_updatedAt_date_year').val(new Date().getFullYear());
+$('#picture_updatedAt_time_hour').val(new Date().getHours());
+$('#picture_updatedAt_time_minute').val(new Date().getMinutes());
 
-        $(document).on('change', '.custom-file-input', function () {
-            let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-            $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
-        });
 
-        $('#backpack_underrubric').on("select2:selecting", function (e) {
-            arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", e.params.args.data.id, true, '#backpack_dir1');
-        });
-    </script>
+});
+
+$(document).on('change', '.custom-file-input', function () {
+let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+$(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+});
+
+$('#backpack_underrubric').on("select2:selecting", function (e) {
+arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", e.params.args.data.id, true, '#backpack_dir1');
+});
+	</script>
 {% endblock %}
-

@@ -1,6 +1,6 @@
 {% macro view(item) %}
-    <a href="{{ path('corbeille_show', {'id': item.id}) }}" class="card m-0">
-        <div class="card-body text-center align-middle p-1 bg-primary">
+    <a href="{{ path('corbeille_show', {'id': item.id}) }}" class="card m-0 text-p-light">
+        <div class="card-body text-center align-middle p-1 bg-p-dark">
             <span class="{% if item.isEnable is same as(false) %}text-warning text-bold{% endif %}">
                 {{ item.fullName }}
             </span>

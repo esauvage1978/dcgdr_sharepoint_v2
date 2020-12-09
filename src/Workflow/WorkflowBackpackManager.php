@@ -71,7 +71,7 @@ class WorkflowBackpackManager
 
     public function applyTransition(Backpack $item, string $transition, string $content, bool $automate = false)
     {
-        $stateOld = $item->getCurrentState();
+        $stateOld = $item->getStateCurrent();
 
         $this->initialiseStateMachine($item);
 
@@ -86,7 +86,7 @@ class WorkflowBackpackManager
 
             return true;
         } else {
-            dump('not apply' . $item->getCurrentState() . ' ' . $transition);
+            dump('not apply' . $item->getStateCurrent() . ' ' . $transition);
         }
 
         return false;

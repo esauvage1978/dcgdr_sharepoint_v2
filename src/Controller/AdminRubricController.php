@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class ThematicController
+ * Class AdminRubricController
  * @package App\Controller
  */
 class AdminRubricController extends AbstractGController

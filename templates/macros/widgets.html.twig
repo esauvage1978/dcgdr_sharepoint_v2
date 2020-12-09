@@ -3,8 +3,18 @@
 {% endmacro %}
 
 {% macro showLongDate(date) %}
-    {{ date |format_datetime('full', 'short', locale='fr') }}
+	{{ date |format_datetime('full', 'short', locale='fr') }}
 {% endmacro %}
+
+{% macro showShortDate(date) %}
+	{{ date |format_datetime('medium', 'short', locale='fr') }}
+{% endmacro %}
+
+{% macro showXShortDate(date) %}
+	{{ date |format_datetime('medium', 'none', locale='fr') }}
+
+{% endmacro %}
+
 
 {%- macro page_actions(tools) -%}
     {% import _self as macro %}
@@ -107,20 +117,9 @@
     {% endapply %}
 {% endmacro %}
 
-
-{% macro badge_state(state) %}
-    {%- import _self as macro -%}
-    {{ macro.badge( (state | workflowGetIconOfState) ~ ' ' ~ (state | workflowGetNameOfState) , state | workflowGetColorOfState) }}
+{% macro badge(title, bgcolor, forecolor) %}
+	<span class="badge" style="background-color:{{ bgcolor }}{{ forecolor ? " ;color:" ~ forecolor :'' }}">{{ title | raw }}</span>
 {% endmacro %}
-
-{% macro badge(title, color) %}
-    <span class="badge" style="background-color:{{ color }}">{{ title | raw }}</span>
-{% endmacro %}
-
-{% macro style_bg_color(state) %}
-    style="background-color:{{ state | workflowGetColorOfState }};color:black"
-{% endmacro %}
-
 
 {% macro info_box(options) %}
     {%- import _self as macro -%}

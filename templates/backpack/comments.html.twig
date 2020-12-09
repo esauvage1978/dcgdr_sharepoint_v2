@@ -6,7 +6,7 @@
     {% import "backpack/actions.html.twig" as actions %}
     {{ actions.backpack(
         'comments',
-        item.currentState,
+        item.stateCurrent,
         item.owner==app.user,
         item,
         item.underrubric
@@ -24,8 +24,8 @@
                 {% block card_title_class %} text-bold{% endblock %}
                 {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
                 {% block card_tools %}
-                    {{ widgets.badge_state(item.currentState) }}
-                    {{ new.isNew(item.updateAt) }}
+                    {{ widgets.badge_state(item.stateCurrent) }}
+                    {{ new.isNew(item.updatedAt) }}
                 {% endblock %}
                 {% block card_body %}
                     {{ bpk.identification(item) }}

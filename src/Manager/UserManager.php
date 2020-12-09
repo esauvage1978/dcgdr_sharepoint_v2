@@ -140,7 +140,7 @@ class UserManager
 
         if (!file_exists($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png')) {
             copy(
-                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/__default.png',
+                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/__default_'. rand(1,16).'.png',
                 $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png'
             );
         }

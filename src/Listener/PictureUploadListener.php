@@ -57,7 +57,7 @@ class PictureUploadListener
 
             $picture->setFileExtension($extension);
         }
-        $picture->setUpdateAt(new \DateTime());
+        $picture->setUpdatedAt(new \DateTime());
     }
 
     /**

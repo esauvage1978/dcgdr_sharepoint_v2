@@ -120,11 +120,11 @@ class Step1500_BackpackFixtures extends Fixture implements FixtureGroupInterface
             ->setDir3($data['n3'])
             ->setDir4($data['n4'])
             ->setDir5($data['n5'])
-            ->setCurrentState($data['afficher']=='1'?WorkflowData::STATE_PUBLISHED:WorkflowData::STATE_ABANDONNED)
+            ->setStateCurrent($data['afficher']=='1'?WorkflowData::STATE_PUBLISHED:WorkflowData::STATE_ABANDONNED)
             ->setStateAt($this->convertDate($data['date_create']))
-            ->setContentState('Version 1.0.0')
+            ->setStateContent('Version 1.0.0')
             ->setOwner($user===null? $this->user:$user)
-            ->setUpdateAt
+            ->setUpdatedAt
             (
                 $data['date_update'] == "01/01/0001 00:00:00" ?
                     $this->convertDate($data['date_create']) :

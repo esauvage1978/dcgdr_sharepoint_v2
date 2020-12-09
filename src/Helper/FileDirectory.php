@@ -16,10 +16,16 @@ class FileDirectory
      */
     private $fsObject;
 
+    /**
+     * @var SplitNameFile
+     */
+    private $splitNameFile;
 
-    public function __construct()
+
+    public function __construct(SplitNameFile $splitNameFile)
     {
         $this->fsObject = new Filesystem();
+        $this->splitNameFile=$splitNameFile;
     }
 
     public function dirExist(string $chemin, string $directory)
@@ -93,7 +99,7 @@ class FileDirectory
 
     public function toSlugAllFiles(string $cheminSource)
     {
-        $sf=new  SplitFile();
+        $sf= $this->splitNameFile;
         $dir = opendir($cheminSource);
 
         while ($file = readdir($dir)) {

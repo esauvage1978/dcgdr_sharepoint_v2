@@ -57,7 +57,7 @@ class BackpackType extends AppTypeAbstract
                 self::LABEL=>'Niveau 5',
                 self::REQUIRED => false
             ])
-            ->add('updateAt', DateTimeType::class,
+            ->add('updatedAt', DateTimeType::class,
                 [
                     self::LABEL			=> 'dater',
                     self::REQUIRED=>false

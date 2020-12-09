@@ -36,10 +36,10 @@ class BackpackStateManager extends AbstractManager
         $actionState
             ->setUser($user)
             ->setBackpack($item)
-            ->setContent($item->getContentState())
+            ->setContent($item->getStateContent())
             ->setChangeAt(new \DateTime())
             ->setStateOld($initial_state)
-            ->setStateNew($item->getCurrentState());
+            ->setStateNew($item->getStateCurrent());
 
         $this->save($actionState);
     }

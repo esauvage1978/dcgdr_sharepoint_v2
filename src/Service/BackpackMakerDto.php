@@ -13,18 +13,30 @@ use App\Workflow\WorkflowData;
 
 class BackpackMakerDto
 {
-    Const DRAFT='draft';
-    Const MY_DRAFT='mydraft';
-    Const PUBLISHED='published';
-    Const SEARCH='search';
-    Const PUBLISHED_FOR_RUBRIC='published_for_rubric';
-    Const PUBLISHED_FOR_UNDERRUBRIC='published_for_underrubric';
-    Const NEWS='news';
-    Const NEWS_FOR_RUBRIC='news_for_rubric';
-    Const NEWS_FOR_UNDERRUBRIC='news_for_underrubric';
-    Const ARCHIVED='archived';
-    Const ABANDONNED='abandonned';
-    Const HIDE='hide';
+    public const DRAFT = 'draft';
+    public const MY_DRAFT_UPDATABLE = 'mydraft_updatable';
+
+    public const ABANDONNED = 'abandonned';
+    public const MY_ABANDONNED_UPDATABLE = 'myabandonned_updatable';
+
+    public const PUBLISHED = 'published';
+    public const MY_PUBLISHED_UPDATABLE = 'mypublished_updatable';
+
+    public const ARCHIVED = 'archived';
+    public const MY_ARCHIVED_UPDATABLE = 'myarchived_updatable';
+
+    public const ALL = 'all';
+
+    const SEARCH = 'search';
+    const PUBLISHED_FOR_RUBRIC = 'published_for_rubric';
+    const PUBLISHED_FOR_UNDERRUBRIC = 'published_for_underrubric';
+    const NEWS = 'news';
+    const NEWS_FOR_RUBRIC = 'news_for_rubric';
+    const NEWS_FOR_UNDERRUBRIC = 'news_for_underrubric';
+
+
+    
+    const HIDE = 'hide';
 
     /**
      * @var User
@@ -39,36 +51,60 @@ class BackpackMakerDto
     public function __construct(?User $user)
     {
         $this->user = $user;
-        $this->gestionnaire = Role::isGestionnaire( $this->user);
+        $this->gestionnaire = Role::isGestionnaire($this->user);
     }
 
 
-    public function get(string $type,?string $param=null): BackpackDto
+    public function get(string $type, ?string $param = null): BackpackDto
     {
         $dto = new BackpackDto();
         $dto = $this->checkUser($dto);
-        switch ($type)
-        {
+        switch ($type) {
+            case self::ALL:
+                $dto
+                    ->setVisible(BackpackDto::TRUE);
+                break;
             case self::DRAFT:
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_DRAFT);
+                    ->setStateCurrent(WorkflowData::STATE_DRAFT)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
-            case self::MY_DRAFT:
+            case self::MY_DRAFT_UPDATABLE:
                 if (!is_null($this->user)) {
                     $dto->setOwnerDto((new UserDto())->setId($this->user->getId()));
                 }
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_DRAFT);
+                    ->setStateCurrent(WorkflowData::STATE_DRAFT)
+                    ->setVisible(BackpackDto::TRUE);
+                break;
+            case self::MY_PUBLISHED_UPDATABLE:
+                if (!is_null($this->user)) {
+                    $dto->setOwnerDto((new UserDto())->setId($this->user->getId()));
+                }
+                $dto
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::PUBLISHED:
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
+            case self::MY_ARCHIVED_UPDATABLE:
+                if (!is_null($this->user)) {
+                    $dto->setOwnerDto((new UserDto())->setId($this->user->getId()));
+                }
+                $dto
+                    ->setStateCurrent(WorkflowData::STATE_ARCHIVED)
+                    ->setVisible(BackpackDto::TRUE);
+                break;
+            case self::ARCHIVED:
+                $dto
+                    ->setStateCurrent(WorkflowData::STATE_ARCHIVED)
+                    ->setVisible(BackpackDto::TRUE);
+                break;                
             case self::SEARCH:
-                if(null===$param) {
+                if (null === $param) {
                     throw new \InvalidArgumentException('Il manque le critère de recherche');
                 }
                 $dto
@@ -76,58 +112,66 @@ class BackpackMakerDto
                     ->setVisible(BackpackDto::TRUE);
                 break;
             case self::PUBLISHED_FOR_RUBRIC:
-                if(null===$param) {
+                if (null === $param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la rubrique');
                 }
                 $dto->setRubricDto((new RubricDto())->setId($param));
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::PUBLISHED_FOR_UNDERRUBRIC:
-                if(null===$param) {
+                if (null === $param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la sous rubrique');
                 }
                 $dto->setUnderRubricDto((new UnderRubricDto())->setId($param));
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::NEWS:
                 $dto
                     ->setIsNew(BackpackDto::TRUE)
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::NEWS_FOR_RUBRIC:
-                if(null===$param) {
+                if (null === $param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la rubrique');
                 }
                 $dto->setRubricDto((new RubricDto())->setId($param));
                 $dto
                     ->setIsNew(BackpackDto::TRUE)
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::NEWS_FOR_UNDERRUBRIC:
-                if(null===$param) {
+                if (null === $param) {
                     throw new \InvalidArgumentException('Il manque l\'id de la sous rubrique');
                 }
                 $dto->setUnderRubricDto((new UnderRubricDto())->setId($param));
                 $dto
                     ->setIsNew(BackpackDto::TRUE)
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED);
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::ARCHIVED:
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_ARCHIVED);
+                    ->setStateCurrent(WorkflowData::STATE_ARCHIVED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
+            case self::MY_ABANDONNED_UPDATABLE:
+                if (!is_null($this->user)) {
+                    $dto->setOwnerDto((new UserDto())->setId($this->user->getId()));
+                }
+                $dto
+                    ->setStateCurrent(WorkflowData::STATE_ABANDONNED)
+                    ->setVisible(BackpackDto::TRUE);
+                break;                
             case self::ABANDONNED:
                 $dto
-                    ->setVisible(BackpackDto::TRUE)
-                    ->setCurrentState(WorkflowData::STATE_ABANDONNED);
+                    ->setStateCurrent(WorkflowData::STATE_ABANDONNED)
+                    ->setVisible(BackpackDto::TRUE);
                 break;
             case self::HIDE:
                 $dto
@@ -146,5 +190,4 @@ class BackpackMakerDto
         }
         return $dto;
     }
-
 }

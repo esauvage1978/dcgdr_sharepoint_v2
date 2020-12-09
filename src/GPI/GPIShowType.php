@@ -23,10 +23,10 @@ final class GPIShowType
         ];
     }
 
-    public static function getName($page)
+    public static function getName($key)
     {
-        self::checkData($page);
-        return array_search($page,self::getDatas());
+        self::checkData($key);
+        return array_search($key,self::getDatas());
     }
 
     public static function hasData(string $data): bool

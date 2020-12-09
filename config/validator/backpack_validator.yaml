@@ -1,4 +1,4 @@
-App\Entity\BackPack:
+App\Entity\Backpack:
   constraints:
     - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
         fields: [underRubric, name]

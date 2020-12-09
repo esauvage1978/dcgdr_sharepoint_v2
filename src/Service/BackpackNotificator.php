@@ -68,7 +68,7 @@ class BackpackNotificator
         foreach ($users as $user) {
             if (Role::isUser($user) && $user->emailvalidated()) {
                 $this->backpackDto
-                    ->setCurrentState(WorkflowData::STATE_PUBLISHED)
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
                     ->setIsNew(BackpackDto::TRUE)
                     ->setUserDto((new UserDto())->setId($user->getId()))
                     ->setVisible(BackpackDto::TRUE);

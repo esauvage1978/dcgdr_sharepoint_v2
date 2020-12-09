@@ -9,7 +9,7 @@ namespace App\Helper;
  * @author Emmanuel SAUVAGE <emmanuel.sauvage@live.fr>
  * @version 1.0.0
  */
-class SplitFile
+class SplitNameFile
 {
     private $name;
     private $extension;

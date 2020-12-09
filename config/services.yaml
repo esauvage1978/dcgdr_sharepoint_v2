@@ -20,7 +20,7 @@ parameters:
     mailer.smtp.username: '%env(MAILER_SMTP_USERNAME)%'
     mailer.smtp.password: '%env(MAILER_SMTP_PASSWORD)%'
 
-    tree_undevelopped_for_nbr: '%env(TREE_UNDEVELOPPED_FOR_NBR)%'
+    es.tree.undevelopped.nbr: '%env(ES_TREE_UNDEVELOPPED_NBR)%'
 
     news_time: '%env(NEWS_TIME)%'
 
