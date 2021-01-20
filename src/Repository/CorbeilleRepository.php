@@ -15,10 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
 class CorbeilleRepository extends ServiceEntityRepository
 {
     const ALIAS = 'c';
-    const ALIAS_RUBRIC_WRITERS='crw';
-    const ALIAS_RUBRIC_READERS='crr';
-    const ALIAS_UNDERRUBRIC_WRITERS='curw';
-    const ALIAS_UNDERRUBRIC_READERS='curr';
+    const ALIAS_RUBRIC_WRITERS = 'crw';
+    const ALIAS_RUBRIC_READERS = 'crr';
+    const ALIAS_UNDERRUBRIC_WRITERS = 'curw';
+    const ALIAS_UNDERRUBRIC_READERS = 'curr';
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -31,11 +31,15 @@ class CorbeilleRepository extends ServiceEntityRepository
             ->select(
                 self::ALIAS,
                 UserRepository::ALIAS,
-                OrganismeRepository::ALIAS
+                OrganismeRepository::ALIAS,
+                RubricRepository::ALIAS . 'r',
+                RubricRepository::ALIAS . 'w'
             )
-            ->leftJoin(self::ALIAS.'.users', UserRepository::ALIAS)
-            ->leftJoin(self::ALIAS.'.organisme', OrganismeRepository::ALIAS)
-            ->orderBy(self::ALIAS.'.name', 'ASC')
+            ->innerJoin(self::ALIAS . '.organisme', OrganismeRepository::ALIAS)
+            ->leftJoin(self::ALIAS . '.users', UserRepository::ALIAS)
+            ->leftJoin(self::ALIAS . '.rubricReaders', RubricRepository::ALIAS . 'r')
+            ->leftJoin(self::ALIAS . '.rubricWriters', RubricRepository::ALIAS . 'w')
+            ->orderBy(self::ALIAS . '.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
@@ -44,12 +48,11 @@ class CorbeilleRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder(self::ALIAS)
             ->select(self::ALIAS)
-            ->leftJoin(self::ALIAS . '.users' , UserRepository::ALIAS )
+            ->leftJoin(self::ALIAS . '.users', UserRepository::ALIAS)
             ->where(UserRepository::ALIAS . '.id = :user')
             ->setParameter('user', $userId)
             ->orderBy(self::ALIAS . '.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
-
 }

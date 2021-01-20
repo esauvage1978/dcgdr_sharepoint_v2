@@ -1,11 +1,11 @@
 {% extends 'organisme/layout.html.twig' %}
 {% import "macros/datatables.html.twig" as tables %}
 {% set columns = {
-    'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
     'Référence': {'class': 'alwaysVisible text-center', 'orderBy': true},
+    'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
     'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'alwaysVisible text-center', 'orderBy': true},
+    '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible text-center', 'orderBy': true},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
@@ -32,28 +32,26 @@
     {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
     {% for item in items %}
         <tr>
+            <td class="align-middle text-center ">{{ item.ref }}</td>
             <td class="align-middle">
                 <a href="{{ path(route_show,{id:item.id}) }}"
-                   class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
+                   class="text-{{ item.isEnable ? 'p-dark' : 'danger text-bold' }}">
                     {{ item.name }}
                 </a>
             </td>
-            <td class="align-middle text-center ">{{ item.ref }}</td>
             <td class="align-middle">{{ item.content | raw }}</td>
 
             <td class="align-middle text-center">
-                {% if   item.corbeilles.count==0 %}
-                    <span class="text-light"><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge  bg-info">{{ item.corbeilles.count }}</small>
-                {% endif %}
+                {% set nbr = item.corbeilles.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class="align-middle text-center">
-                {% if   item.users.count==0 %}
-                    <span class="text-light"><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge  bg-info">{{ item.users.count }}</small>
-                {% endif %}
+                {% set nbr = item.users.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class=" d-flex  justify-content-end ">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
@@ -61,8 +59,8 @@
                         'Modifier',
                         path(route_edit,{id:item.id}),
                         'fa fa-edit',
-                        'purple',
-                        'primary btn-sm'
+                        'p-dark',
+                        'p-dark btn-sm'
                     ) }}
                 {% endif %}
             </td>

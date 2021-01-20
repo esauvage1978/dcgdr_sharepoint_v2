@@ -19,20 +19,18 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
-        $(function () {
 
-            $(document).on('change', '.custom-file-input', function () {
-                let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-                $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
-            });
+$(document).on('change', '.custom-file-input', function () {
+let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+$(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+});
 
-            $('#picture_updatedAt_date_month').val(new Date().getMonth());
-            $('#picture_updatedAt_date_day').val(new Date().getDay());
-            $('#picture_updatedAt_date_year').val(new Date().getFullYear());
-            $('#picture_updatedAt_time_hour').val(new Date().getHours());
-            $('#picture_updatedAt_time_minute').val(new Date().getMinutes());
+        $('#picture_updatedAt_date_month').val(.getMonth() + 1);
+        $('#picture_updatedAt_date_day').val(new Date().getDate());
+        $('#picture_updatedAt_date_year').val(new Date().getFullYear());
+        $('#picture_updatedAt_time_hour').val(new Date().getHours());
+        $('#picture_updatedAt_time_minute').val(new Date().getMinutes());
 
 
-        })
     </script>
 {% endblock %}

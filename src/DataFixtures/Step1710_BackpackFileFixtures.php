@@ -2,18 +2,20 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Backpack;
-use App\Entity\BackpackFile;
-use App\Helper\FileDirectory;
-use App\Helper\FixturesImportData;
-use App\Helper\ParamsInServices;
 use App\Helper\Slugger;
-use App\Helper\SplitFile;
+use App\Entity\Backpack;
+use App\Helper\FileTools;
+use App\Entity\BackpackFile;
+use App\Helper\DirectoryTools;
+use App\Helper\ParamsInServices;
+use App\Helper\FixturesImportData;
+use App\Helper\SlugFiles;
+use App\Helper\SplitNameOfFile;
 use App\Repository\BackpackRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInterface
@@ -35,9 +37,14 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
     private $entityManagerInterface;
 
     /**
-     * @var FileDirectory
+     * @var FileTools
      */
-    private $fileDirectory;
+    private $fileTools;
+
+    /**
+     * @var DirectoryTools
+     */
+    private $DirectoryTools;
 
     /**
      * @var ParamsInServices
@@ -56,8 +63,9 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
         $this->entityManagerInterface = $entityManagerI;
         $this->params = $params;
 
-        $this->fileDirectory = new FileDirectory();
-        $this->fileDirectory->toSlugAllFiles($this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC));
+        $this->directoryTools = new DirectoryTools();
+        $this->fileTools = new FileTools();
+
 
     }
 
@@ -73,6 +81,10 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
     public function load(ObjectManager $manager)
     {
+        $slugFile = new SlugFiles();
+        $slugFile->toSlug($this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC));
+
+
         $data = $this->fixturesImportData->importToArray(self::FILENAME . '.json');
 
         for ($i = 0; $i < \count($data); ++$i) {
@@ -101,8 +113,7 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
         /** @var Backpack $backpack */
         $backpack = $this->getInstance($data['obj_num'], $this->backpacks);
-        $sf=new  SplitFile();
-        $sf->split($data['adresse']);
+        $sf=new  SplitNameOfFile($data['adresse']);
         $slugified = Slugger::slugify($sf->getName());
         $filename= $slugified .'.'. $sf->getExtension();
         if (is_a($backpack, Backpack::class) and $data['titre']!='Thumbs'
@@ -110,7 +121,7 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
             $instance
                 ->setTitle($data['titre'])
                 ->setFileExtension($data['extension'])
-                ->setSize($this->fileDirectory->fileSize($this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC),$filename))
+                ->setSize($this->fileTools->size($this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC),$filename))
                 ->setModifyAt
                 (
                     $data['date_update'] == "01/01/0001 00:00:00" ?
@@ -136,12 +147,12 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
         $dirDestination = $this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC);
         $dirSource = $this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC);
 
-        if (!$this->fileDirectory->dirExist($dirDestination, $backpackId)) {
-            $this->fileDirectory->createDir($dirDestination, $backpackId);
+        if (!$this->directoryTools->exist($dirDestination, $backpackId)) {
+            $this->directoryTools->create($dirDestination, $backpackId);
         }
 
-        if(!$this->fileDirectory->fileExist($dirDestination . '/' . $backpackId.'/',$fileName)) {
-            $this->fileDirectory->moveFile($dirSource, $fileName, $dirDestination . '/' . $backpackId, $fileName);
+        if(!$this->fileTools->exist($dirDestination . '/' . $backpackId.'/',$fileName) && $this->fileTools->exist($dirSource, $fileName)) {
+            $this->fileTools->move($dirSource, $fileName, $dirDestination . '/' . $backpackId, $fileName);
         }
     }
 

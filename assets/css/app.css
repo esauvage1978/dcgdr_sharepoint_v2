@@ -33,6 +33,9 @@ body {
     border-color: #675ef2;
 }
 
+.select2-selection__choice {
+    background-color: #ff6584 !important;
+}
 
 .text-p-dark {
     color: #675ef2 !important;
@@ -47,6 +50,10 @@ body {
 }
 
 .bg-p-light {
+    background-color: #e6e7f9 !important;
+}
+
+.badge-p-light {
     background-color: #e6e7f9 !important;
 }
 

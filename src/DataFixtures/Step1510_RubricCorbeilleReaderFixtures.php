@@ -72,9 +72,10 @@ class Step1510_RubricCorbeilleReaderFixtures extends Fixture implements FixtureG
                 &&
                 is_a($rubric, Rubric::class)
             ) {
-                $rubric->addReader($corbeille);
-
-                $this->entityManagerInterface->persist($rubric);
+                if ($corbeille->getIsShowRead()) {
+                    $rubric->addReader($corbeille);
+                    $this->entityManagerInterface->persist($rubric);
+                }
             }
 
 

@@ -57,64 +57,30 @@
     {% endif %}
 {% endmacro %}
 
-
-{% macro vignette(item, route_show, role) %}
-    {% embed 'widgets/card-widget.html.twig' %}
-        {% import "macros/widgets.html.twig" as widgets %}
-        {% block card_class %} h-100 border-light shadow{% endblock %}
-        {% block card_ribbon %}
-            <div class="ribbon-wrapper ribbon-lg ">
-                <div class="ribbon  bg-gradient-fuchsia">
-                    {{ widgets.icon(role) }} {{ role }}
-                </div>
-            </div>
-        {% endblock %}
-        {% block card_body_class %}text-center{% endblock %}
-        {% block card_body %}
-            <div class="box-profile">
-                <div class="text-center">
-                    <img class="profile-user-img img-fluid img-circle"
-                         src="{{ asset(item.avatar) }}"
-                         alt="User profile picture">
-                </div>
-            </div>
-            <a href="{{ path(route_show,{id:item.id}) }}">
-                <h5 class="text-bold {{ item.isEnable?'':'text-danger' }}">{{ item.name }}</h5>
-            </a>
-            <div class="text-muted">
-                <a href="mailto:{{ item.email }}" data-html="true"
-                   data-toggle="tooltip" data-placement="top">
-                    <span class="{{ item.isEnable?'':'text-danger' }}">{{ item.email }}</span>
-                </a>
-            </div>
-        {% endblock %}
-        {% block card_footer %}
-            {% if item.phone %}
-                <small class="text-muted">
-                    {{ widgets.icon('phone') }} {{ item.phone }}
-                </small>
-            {% endif %}
-            {% if item.content %}
-                <small class="text-muted">
-                    {{ item.content |raw }}
-                </small>
-            {% endif %}
-        {% endblock %}
-    {% endembed %}
+{% macro vignettes(items)%}
+	{% import _self as usr %}
+	<div class="p-2 text-center">
+		{% for item in items %}
+			{{ usr.vignette(item) }}
+		{% endfor %}
+	</div>
 {% endmacro %}
 
-{% macro vignettes(items, route_show, role) %}
-    {% import _self as macro %}
+{% macro vignette(item) %}
+	<a class="list-inline-item  hvr-grow-shadow " href="{{ path('user_show', {'id': item.id}) }}">
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
-        {% for item in items %}
-            <div class="col mb-4">
-                {{ macro.vignette(item,route_show,role) }}
-            </div>
-        {% endfor %}
-    </div>
+		<div class="text-center">
+			<img class="profile-user-img img-bordered-sm img-circle " src="{{ asset(item.avatar) }}" alt="User Image">
+		</div>
+		<div class="text-center align-center  text-p-dark" style="height:50px;width:110px">
 
+			{{ item.name }}
+		</div>
+	</a>
 {% endmacro %}
+
+
+
 
 {% macro lastConnexion(item) %}
 	{% if item.loginAt %}

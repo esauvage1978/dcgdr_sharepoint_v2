@@ -2,33 +2,34 @@
 
 namespace App\Controller;
 
-use App\Dto\BackpackDto;
-use App\Dto\UnderRubricDto;
 use App\Dto\UserDto;
-use App\Entity\Backpack;
 use App\Entity\Rubric;
-use App\Form\Backpack\BackpackNewType;
-use App\Form\Backpack\BackpackType;
-use App\Helper\ParamsInServices;
-use App\Helper\Slugger;
-use App\History\BackpackHistory;
-use App\History\HistoryShow;
-use App\Manager\BackpackManager;
-use App\Repository\BackpackDtoRepository;
-use App\Repository\BackpackFileRepository;
-use App\Repository\BackpackRepository;
-use App\Repository\UnderRubricRepository;
-use App\Security\BackpackVoter;
-use App\Security\CurrentUser;
 use App\Security\Role;
-use App\Service\BackpackMakerDto;
+use App\Helper\Slugger;
+use App\Dto\BackpackDto;
+use App\Entity\Backpack;
 use App\Tree\BackpackTree;
+use App\Dto\UnderRubricDto;
+use App\History\HistoryShow;
+use App\Security\CurrentUser;
 use App\Workflow\WorkflowData;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\HttpFoundation\File\File;
+use App\Security\BackpackVoter;
+use App\Helper\ParamsInServices;
+use App\History\BackpackHistory;
+use App\Manager\BackpackManager;
+use App\Service\BackpackForTree;
+use App\Service\BackpackMakerDto;
+use App\Form\Backpack\BackpackType;
+use App\Form\Backpack\BackpackNewType;
+use App\Repository\BackpackRepository;
+use App\Repository\BackpackDtoRepository;
+use App\Repository\UnderRubricRepository;
+use App\Repository\BackpackFileRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * Class ThematicController
@@ -36,25 +37,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BackpackController extends AbstractGController
 {
-    /**
-     * @var UnderRubricRepository
-     */
-    private $underRubricRepository;
 
-    /**
-     * @var BackpackDtoRepository
-     */
-    private $backpackDtoRepository;
 
     /**
      * @var BackpackMakerDto
      */
     private $backpackMakerDto;
 
-    /**
-     * @var ParamsInServices
-     */
-    private $paramsInServices;
+
 
     public function __construct
     (
@@ -62,7 +52,6 @@ class BackpackController extends AbstractGController
         BackpackDtoRepository $backpackDtoRepository,
         backpackManager $manager,
         UnderRubricRepository $underRubricRepository,
-        ParamsInServices $paramsInServices,
         CurrentUser $currentUser
     )
     {
@@ -70,7 +59,6 @@ class BackpackController extends AbstractGController
         $this->manager = $manager;
         $this->domaine = 'backpack';
         $this->underRubricRepository = $underRubricRepository;
-        $this->paramsInServices = $paramsInServices;
         $this->backpackDtoRepository = $backpackDtoRepository;
         $this->backpackMakerDto = new BackpackMakerDto($currentUser->getUser());
     }
@@ -127,54 +115,6 @@ class BackpackController extends AbstractGController
 
 
     /**
-     * @Route("/backpacks/news/rubric/{id}", name="backpacks_news_for_rubric", methods={"GET"})
-     * @IsGranted("ROLE_USER")
-     */
-    public function newsForRubric(Request $request, string $id)
-    {
-        return $this->treeView($request,
-            $this->backpackMakerDto->get(
-                BackpackMakerDto::NEWS_FOR_RUBRIC, $id
-            ));
-    }
-
-    /**
-     * @Route("/backpacks/news/underrubric/{id}", name="backpacks_news_for_underrubric", methods={"GET"})
-     * @IsGranted("ROLE_USER")
-     */
-    public function newsForUnderRubric(Request $request, string $id)
-    {
-        return $this->treeView($request,
-            $this->backpackMakerDto->get(
-                BackpackMakerDto::NEWS_FOR_UNDERRUBRIC, $id
-            ));
-    }
-
-    /**
-     * @Route("/backpacks/news", name="backpacks_news", methods={"GET"})
-     * @IsGranted("ROLE_USER")
-     */
-    public function news(Request $request)
-    {
-        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::NEWS));
-    }
-
-
-
-
-
-
-
-    /**
-     * @Route("/backpacks/hide", name="backpacks_hide", methods={"GET"})
-     * @IsGranted("ROLE_USER")
-     */
-    public function showHide(Request $request)
-    {
-        return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::HIDE));
-    }
-
-    /**
      * @Route("/backpack/{id}/history", name="backpack_history", methods={"GET","POST"})
      * @return Response
      * @IsGranted("ROLE_USER")
@@ -201,7 +141,7 @@ class BackpackController extends AbstractGController
      * @Route("/backpack/{id}", name="backpack_del", methods={"DELETE"})
      * @IsGranted("ROLE_USER")
      */
-    public function delete(Request $request, Backpack $item)
+    public function delete(Request $request, BackpackForTree $backpackForTree, Backpack $item)
     {
         $this->denyAccessUnlessGranted(BackpackVoter::DELETE, $item);
 
@@ -216,7 +156,10 @@ class BackpackController extends AbstractGController
             $this->manager->remove($item);
         }
 
-        return $this->treeView($request,$dto);
+        $renderArray = $backpackForTree->getDatas($this->container, $request, null, $dto);
+        return $this->render('backpack/tree.html.twig', $renderArray);
+
+
     }
 
 
@@ -242,18 +185,4 @@ class BackpackController extends AbstractGController
 
 
 
-
-    /**
-     * @Route("/backpacks/search", name="backpacks_search", methods={"GET","POST"})
-     * @IsGranted("ROLE_USER")
-     */
-    public function search(Request $request): Response
-    {
-        $r = $request->get('r');
-        if($r===null) {
-            return $this->redirectToRoute('home');
-        } else {
-            return $this->treeView($request, $this->backpackMakerDto->get(BackpackMakerDto::SEARCH, $r));
-        }
-    }
 }

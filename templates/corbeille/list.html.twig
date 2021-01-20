@@ -1,16 +1,16 @@
 {% extends 'corbeille/layout.html.twig' %}
 {% import "macros/datatables.html.twig" as tables %}
 {% set columns = {
-    'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
     'Nom de la corbeille': {'class': 'alwaysVisible ', 'orderBy': true},
+    'Nom de l\'organisme': {'class': 'alwaysVisible', 'orderBy': true},
     'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-eye"  data-toggle="tooltip" data-placement="top" title="Corbeille pour la consultation"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-bullhorn"  data-toggle="tooltip" data-placement="top" title="Corbeille pour le pilotage"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i> ': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i> ': {'class': 'alwaysVisible text-center', 'orderBy': false},
+    '<i class="fa fa-users"  data-toggle="tooltip" data-placement="top" title="Nombre d\'utilisateurs"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+    '<i class="fa fa-eye"  data-toggle="tooltip" data-placement="top" title="Corbeille pour la consultation"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+    '<i class="fa fa-bullhorn"  data-toggle="tooltip" data-placement="top" title="Corbeille pour le pilotage"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de rubrique"></i> ': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+    '<i class="fa fa-project-diagram" data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i> ': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
     {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
@@ -35,53 +35,58 @@
     {% for item in items %}
         <tr>
             <td class="align-middle">
-                <a href="{{ path('organisme_show',{id:item.organisme.id}) }}"
-                   class="text-{{ item.organisme.isEnable ? 'primary' : 'danger text-bold' }}">
-                    {{ item.organisme.ref }} - {{ item.organisme.name }}
-                </a>
-            </td>
-            <td class="align-middle">
                 <a href="{{ path(route_show,{id:item.id}) }}"
-                   class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
+                   class="text-{{ item.isEnable ? 'p-dark' : 'danger text-bold' }}">
                     {{ item.name }}
                 </a>
             </td>
 
-            <td class="align-middle col-4">{{ item.content | raw }}</td>
+            <td class="align-middle text-xs ">
+                <a href="{{ path('organisme_show',{id:item.organisme.id}) }}"
+                   class="text-{{ item.organisme.isEnable ? 'p-dark' : 'danger text-bold' }}">
+                    {{ item.organisme.ref }} - {{ item.organisme.name }}
+                </a>
+            </td>
+            <td class="align-middle  text-xs text-muted">{{ item.content | raw }}</td>
             <td class="align-middle text-center">
-                {% if   item.users.count==0 %}
-                    <span class="text-light"><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge bg-info">{{ item.users.count }}</small>
-                {% endif %}
+                {% set nbr = item.users.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ item.isShowRead ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
+                <div class="p-2 {{ not item.isShowRead ? 'badge badge-light text-light' : 'badge badge-success text-success' }}">
+                    {{ not item.isShowRead ? '1' : '0' }}
+                </div>
+            </td>
+            <td class="align-middle text-center ">
+                {% set nbr = item.rubricReaders.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-p-light  text-p-dark2' }}">
+                    {{ nbr }}
+                </div>
+            </td>
+            <td class="align-middle text-center ">
+                {% set nbr = item.underRubricReaders.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-p-light text-p-dark2' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class="align-middle text-center">
-                {% if  item.rubricReaders.count ==0 %}
-                    <span class="text-light" ><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge bg-info">{{ item.rubricReaders.count}}</small>
-                {% endif %}
+                <div class="p-2 {{ not item.isShowWrite ? 'badge badge-light text-light' : 'badge badge-success text-success' }}">
+                    {{ not item.isShowWrite ? '1' : '0' }}
+                </div>
             </td>
-            <td class="align-middle text-center">
-
+            <td class="align-middle text-center ">
+                {% set nbr = item.rubricWriters.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-p-light  text-p-dark2' }}">
+                    {{ nbr }}
+                </div>
             </td>
-            <td class="align-middle text-center">
-                <span class="text-{{ item.isShowWrite ? 'info' : 'light' }}"><i class="fas fa-circle"></i></span>
-            </td>
-
-
-            <td class="align-middle text-center">
-                {% if  item.rubricWriters.count==0 %}
-                    <span class="text-light" ><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge bg-info">{{ item.rubricWriters.count}}</small>
-                {% endif %}
-            </td>
-            <td class="align-middle text-center">
-
+            <td class="align-middle text-center ">
+                {% set nbr = item.underRubricWriters.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-p-light text-p-dark2' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class=" align-middle text-right">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
@@ -89,8 +94,8 @@
                         'Modifier',
                         path(route_edit,{id:item.id}),
                         'fa fa-edit',
-                        'purple',
-                        'primary btn-sm'
+                        'p-dark',
+                        'p-dark btn-sm'
                     ) }}
                 {% endif %}
             </td>

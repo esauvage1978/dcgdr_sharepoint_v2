@@ -17,27 +17,40 @@ class BackpackFileType extends AppTypeAbstract
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('file', FileType::class,
+            ->add(
+                'file',
+                FileType::class,
                 [
                     self::LABEL => 'Choisir le fichier',
-                    self::REQUIRED => false
-                ])
-            ->add('title', TextType::class,
+                    self::REQUIRED => false,
+                    self::ATTR => [self::CSS_CLASS => 'custom-file-input']
+                ]
+            )
+            ->add(
+                'title',
+                TextType::class,
                 [
                     self::LABEL => 'titre',
                     self::REQUIRED => false
-                ])
-            ->add('content', TextareaType::class,
+                ]
+            )
+            ->add(
+                'content',
+                TextareaType::class,
                 [
                     'label' => 'Description',
                     'required' => false,
                     self::ATTR => [self::ROWS => 3, self::CSS_CLASS => 'textarea'],
-                ])
-            ->add('modifyAt', DateTimeType::class,
+                ]
+            )
+            ->add(
+                'modifyAt',
+                DateTimeType::class,
                 [
                     'label' => ' ',
                     'required' => false
-                ]);
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

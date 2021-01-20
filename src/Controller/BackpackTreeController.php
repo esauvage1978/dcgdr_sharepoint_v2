@@ -56,6 +56,57 @@ class BackpackTreeController extends AbstractGController
         return $this->render('backpack/tree.html.twig', $renderArray);
     }
 
+    /**
+     * @Route("/backpacks/news", name="backpacks_news", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function news(Request $request)
+    {
+        $renderArray = $this->backpackForTree->getDatas($this->container, $request, BackpackMakerDto::NEWS);
+        return $this->render('backpack/tree.html.twig', $renderArray);
+    }
+
+    /**
+     * @Route("/backpacks/news/rubric/{id}", name="backpacks_news_for_rubric", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function newsForRubric(Request $request, string $id)
+    {
+        $dto = $this->backpackForTree->getDto(BackpackMakerDto::NEWS_FOR_RUBRIC, $id);
+        $renderArray = $this->backpackForTree->getDatas($this->container, $request, null, $dto);
+        return $this->render('backpack/tree.html.twig', $renderArray);
+    }
+
+    /**
+     * @Route("/search", name="search", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function search(
+        Request $request,
+        BackpackDtoRepository $backpackDtoRepository,
+        BackpackMakerDto $backpackMakerDto
+    ) {
+        $r = $request->get('r');
+        if ($r === null) {
+            return $this->redirectToRoute('home');
+        } else {
+
+            $dto = $this->backpackForTree->getDto(BackpackMakerDto::SEARCH, $r);
+            $renderArray = $this->backpackForTree->getDatas($this->container, $request, null, $dto);
+            return $this->render('backpack/tree.html.twig', $renderArray);
+        }
+    }
+
+    /**
+     * @Route("/backpacks/news/underrubric/{id}", name="backpacks_news_for_underrubric", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function newsForUnderRubric(Request $request, string $id)
+    {
+        $dto = $this->backpackForTree->getDto(BackpackMakerDto::NEWS_FOR_UNDERRUBRIC, $id);
+        $renderArray = $this->backpackForTree->getDatas($this->container, $request, null, $dto);
+        return $this->render('backpack/tree.html.twig', $renderArray);
+    }
 
     /**
      * @Route("/backpacks/draft", name="backpacks_draft", methods={"GET"})

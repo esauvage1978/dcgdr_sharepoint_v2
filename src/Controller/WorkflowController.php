@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use App\Controller\AbstractGController;
-use App\Entity\Backpack;
-use App\Repository\BackpackStateRepository;
-use App\Workflow\WorkflowBackpackManager;
 use DateTime;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\Entity\Backpack;
+use App\Workflow\WorkflowData;
+use App\Controller\AbstractGController;
+use App\Workflow\WorkflowBackpackManager;
+use App\Repository\BackpackStateRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/workflow")
@@ -108,7 +109,7 @@ class WorkflowController extends AbstractGController
     public function applyTransitionBackpack(Request $request, Backpack $item, WorkflowBackpackManager $workflowBackpackManager, string $transition): Response
     {
         if (WorkflowData::hasTransition($transition) === false) {
-            throw new Exception('transition non présente : ' . $transition);
+            throw new \Exception('transition non présente : ' . $transition);
         }
 
         if ($this->isCsrfTokenValid($transition . $item->getId(), $request->request->get('_token'))) {

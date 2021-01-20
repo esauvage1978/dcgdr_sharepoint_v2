@@ -5,8 +5,8 @@
 
 
 {% block breadcrumb %}
-    {% import "profil/actions.html.twig" as actions %}
-    {{ actions.menu('permission') }}
+    {% import "profil/_btn_actions_profil.html.twig" as actions %}
+    {{ actions.show('permission') }}
 {% endblock %}
 
 {% block page_content %}

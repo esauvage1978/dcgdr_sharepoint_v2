@@ -62,7 +62,7 @@
 		<script type="text/javascript">
 			$(function () {
 fillComboboxRubric('#cmb_rubric', "{{ path('ajax_fill_combobox_rubrics') }}", true);
-});
+}); 
 
 $('#cmb_rubric').change(function () {
 fillComboboxRubricChained('#cmb_rubric', '#cmb_underrubric', "{{ path('ajax_fill_combobox_underrubrics') }}", true, false);

@@ -9,7 +9,7 @@ use App\Dto\RubricDto;
 use App\Dto\UnderRubricDto;
 use App\Entity\Rubric;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class RubricDtoRepository extends ServiceEntityRepository implements DtoRepositoryInterface

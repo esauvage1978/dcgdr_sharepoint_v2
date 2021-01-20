@@ -58,12 +58,12 @@
                 {% block card_title %}Utilisateurs{% endblock %}
                 {% block card_body %}
                     {% import "macros/user.html.twig" as usr %}
-                    {{ usr.views(item.users) }}
+                    {{ usr.vignettes(item.users) }}
                 {% endblock %}
             {% endembed %}
 
             {% if item.rubricReaders |length >0 %}
-                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:false} %}
+                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
                     {% block card_title %}Rubriques en lecture : {{ item.rubricReaders |length }}{% endblock %}
                     {% block card_body %}
                         {% import "macros/rubric.html.twig" as rbc %}
@@ -79,7 +79,7 @@
                 {% endembed %}
             {% endif %}
             {% if item.rubricWriters |length >0 %}
-                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:false} %}
+                {% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
                     {% block card_title %}Rubriques en écriture : {{ item.rubricWriters |length }}{% endblock %}
                     {% block card_body %}
                         {% import "macros/rubric.html.twig" as rbc %}
@@ -94,6 +94,52 @@
                     {% endblock %}
                 {% endembed %}
             {% endif %}
+{% set datas = item.underRubricReaders %}
+
+{% set nbr = datas |length %}
+
+{% if nbr >0 %}
+	{% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+		{% block card_title %}Sous-rubriques en lecture :
+			{{ nbr }}
+		{% endblock %}
+		{% block card_body %}
+			{% import "macros/underrubric.html.twig" as urbc %}
+			<div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+				{% for rubric in datas %}
+					<div class="col mb-4">
+						{{ urbc.vignette(rubric,'admin_underrubric_show','underthematic_show') }}
+					</div>
+				{% endfor %}
+			</div>
+
+		{% endblock %}
+	{% endembed %}
+{% endif %}
+{% set datas = item.underRubricWriters %}
+
+{% set nbr = datas |length %}
+
+{% if nbr >0 %}
+	{% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+		{% block card_title %}Sous-rubriques en écriture :
+			{{ nbr }}
+		{% endblock %}
+		{% block card_body %}
+			{% import "macros/underrubric.html.twig" as urbc %}
+			<div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3">
+				{% for rubric in datas %}
+					<div class="col mb-4">
+						{{ urbc.vignette(rubric,'admin_underrubric_show','underthematic_show') }}
+					</div>
+				{% endfor %}
+			</div>
+
+		{% endblock %}
+	{% endembed %}
+{% endif %}
+
+
         </div>
     </div>
 

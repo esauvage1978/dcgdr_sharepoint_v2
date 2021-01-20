@@ -32,50 +32,47 @@
 	{% import "macros/widgets.html.twig" as widget %}
 	{% import "macros/workflow.html.twig" as wkf %}
 
-
 	<div class="col-sm-12 ">
-
-		<span>Etat actuel du porte-document :
-
-			{{ wkf.badge_state(item.stateCurrent) }}
-			<span class="d-none">
-				{{item.stateCurrent}}
-			</span>
-			<small>
-				Le
-				{{ widget.showXShortDate(item.stateAt) }}
-			</small>
-		</span>
-	</div>
-
-	<div class="col-sm-12 ">
-
-
-		{% if item.stateContent  %}
-			<div class="callout callout-p-dark  mt-4 mb-4">
-				{{ item.stateContent | raw }}
+		<div class="card  flat shadow">
+			<div class="card-header">
+				{{ wkf.badge_state(item.stateCurrent) }}
+				<span class="d-none">
+					{{item.stateCurrent}}
+					
+				</span>
+				<small class="text-muted">
+					depuis le
+					{{ widget.showLongDate(item.stateAt) }}
+				</small>
 			</div>
-		{% endif %}
-	</div>
-	<div class="col-12 d-flex flex-row-reverse bd-highlight mt-3">
+			<div class="card-body">
 
-		<a href="{{ path('workflow_backpack_history',{id:item.id}) }}" class="btn btn-p-dark ml-2">
-			{{widget.icon('history')}}
-			Historique
-		</a>
-		<a href="{{ path('workflow_backpack_notification',{id:item.id}) }}" class="btn btn-p-dark ml-2">
+				<p>
+					{% if item.stateContent  %}
+						{{ item.stateContent | raw }}
+					{% endif %}
+				</p>
+			</div>
+			<div class="card-footer text-muted text-xs d-flex flex-row-reverse bd-highlight">
+				<a href="{{ path('workflow_backpack_history',{id:item.id}) }}" class="text-p-dark ml-2">
+					{{widget.icon('history')}}
+					Historique
+				</a>
+				<a href="{{ path('workflow_backpack_notification',{id:item.id}) }}" class="text-p-dark ml-2">
 
-			{{widget.icon('mail-sent')}}
-			Notifications
-		</a>
-		{% if is_granted('ROLE_GESTIONNAIRE') %}
-			<a href="{{ path('workflow_action_check',{id:item.id}) }}" class="btn btn-p-dark">
-				{{widget.icon('workflow')}}
-				Check workflow
-			</a>
-		{% endif %}
-	</div>
-{% endmacro %}
+					{{widget.icon('mail-sent')}}
+					Notifications
+				</a>
+				{% if is_granted('ROLE_GESTIONNAIRE') %}
+					<a href="{{ path('workflow_action_check',{id:item.id}) }}" class="text-p-dark">
+						{{widget.icon('workflow')}}
+						Check workflow
+					</a>
+				{% endif %}
+			</div>
+		</div>
+	{% endmacro %}
+
 
 {% macro card(item,transition,choice) %}
 	<div class="col-sm-12    mb-4">

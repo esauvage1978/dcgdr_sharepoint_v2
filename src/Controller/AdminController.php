@@ -45,29 +45,55 @@ class AdminController extends AbstractController
             ]
         ];
 
+        $app_entries = [
+            [
+                'name' => 'Image de représentation',
+                'route' => 'picture_list',
+                'content' => 'des rubriques et des sous-rubriques',
+                'smallcontent' => 'Réservé au gestionnaire',
+                'icon' => 'far fa-image text-p-dark'
+            ],
+            [
+                'name' => 'Thématique des rubriques',
+                'route' => 'thematic_list',
+                'content' => '',
+                'smallcontent' => 'Réservé au gestionnaire',
+                'icon' => 'fab fa-usb text-p-dark'
+            ],
+            [
+                'name' => 'Rubriques',
+                'route' => 'admin_rubric_list',
+                'content' => '',
+                'smallcontent' => 'Réservé au gestionnaire',
+                'icon' => 'fas fa-project-diagram text-p-dark'
+            ],
+            [
+                'name' => 'Thématique des sous-rubriques',
+                'route' => 'underthematic_list',
+                'content' => '',
+                'smallcontent' => 'Réservé au gestionnaire',
+                'icon' => 'fab fa-usb text-p-dark'
+            ],
+            [
+                'name' => 'Sous-rubriques',
+                'route' => 'admin_underrubric_list',
+                'content' => '',
+                'smallcontent' => 'Réservé au gestionnaire',
+                'icon' => 'fas fa-project-diagram text-p-dark'
+            ],
+        ];
 
 
-        $app_entries = [[
-            'name' => 'Image de présentation',
-            'route' => 'picture_list'
-        ], [
-            'name' => 'Thématique des rubriques',
-            'route' => 'thematic_list'
-        ], [
-            'name' => 'Rubriques',
-            'route' => 'admin_rubric_list'
-        ], [
-            'name' => 'Thématique des sous-rubriques',
-            'route' => 'underthematic_list'
-        ], [
-            'name' => 'Sous-rubriques',
-            'route' => 'admin_underrubric_list'
-        ]];
 
-        $action_entries = [[
-            'name' => 'Envoie les notifications',
-            'route' => 'command_notificator'
-        ]];
+        $action_entries = [
+            [
+                'name' => 'Envoie les notifications',
+                'route' => 'command_notificator',
+                'content' => 'Envoie les notificatio par rapport aux abonnées',
+                'smallcontent' => 'Réservé au gestionnaire',
+                'icon' => 'fas fa-paper-plane text-p-dark'
+            ]
+        ];
 
         return $this->render('admin/index.html.twig', [
             'general_entries' => $general_entries,

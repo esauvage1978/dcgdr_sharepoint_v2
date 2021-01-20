@@ -1,5 +1,5 @@
 
-function fillComboboxChained(selecteurSource, selecteurDestination, route, appelEnCascade, addReference, selectedId = "") {
+function fillComboboxChained(selecteurSource, selecteurDestination, route, appelEnCascade, selectedId = "") {
     var id = $(selecteurSource).val();
 
     if (id == null) return;
@@ -19,8 +19,7 @@ function fillComboboxChained(selecteurSource, selecteurDestination, route, appel
                 } else {
                     selected = '';
                 }
-                $(selecteurDestination).append('<option ' + selected + ' value="' + value.id + '">' +
-                    (addReference ? value.ref + ' - ' : '') + value.name + '</option>');
+                $(selecteurDestination).append('<option ' + selected + ' value="' + value.id + '">' + value.name + '</option>');
             });
             if (appelEnCascade) {
                 $(selecteurDestination).change();
@@ -30,7 +29,7 @@ function fillComboboxChained(selecteurSource, selecteurDestination, route, appel
 }
 
 
-function arborescence(fieldSource, route, idMp, idP, appelEnCascade, fieldForm) {
+function arborescence(fieldSource, route, idUR, appelEnCascade, fieldForm) {
     var data = getVal(fieldForm);
 
     fieldSource.empty();
@@ -39,8 +38,7 @@ function arborescence(fieldSource, route, idMp, idP, appelEnCascade, fieldForm) 
         method: "POST",
         url: route,
         data: {
-            'idMp': idMp,
-            'idP': idP
+            'id': idUR
         },
         dataType: 'json',
         success: function (json) {
@@ -66,7 +64,7 @@ function arborescence(fieldSource, route, idMp, idP, appelEnCascade, fieldForm) 
     );
 }
 
-function arborescenceChained(fieldSource, route, idMp, idP, dataSource, appelEnCascade, fieldForm) {
+function arborescenceChained(fieldSource, route, idUR, dataSource, appelEnCascade, fieldForm) {
     var data = fieldForm.val();
 
     fieldSource.empty();
@@ -74,8 +72,7 @@ function arborescenceChained(fieldSource, route, idMp, idP, dataSource, appelEnC
         method: "POST",
         url: route,
         data: {
-            'idMp': idMp,
-            'idP': idP,
+            'id': idUR,
             'data': dataSource
         },
         dataType: 'json',

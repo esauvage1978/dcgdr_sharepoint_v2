@@ -1,0 +1,23 @@
+<!-- Intervenants -->
+<section>
+	<h5 class="text-p-dark2 p-1  text-center ">
+		Destinataires
+	</h5>
+	<div class="card-body">
+		<div class="form-group row">
+			<label for="{{ form.r.vars.id }}">
+				Pilote de la rubrique
+			</label>
+			{{ form_widget(form.prp) }}
+		</div>
+	</div>
+	<div class="card-body">
+		<div class="form-group row">
+			<label for="{{ form.pur.vars.id }}">
+				Pilotes de la sous rubrique
+			</label>
+			{{ form_widget(form.pur) }}
+		</div>
+	</div>
+
+</section>

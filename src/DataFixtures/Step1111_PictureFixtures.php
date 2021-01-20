@@ -3,15 +3,15 @@
 namespace App\DataFixtures;
 
 use App\Entity\Picture;
-use App\Helper\FileDirectory;
-use App\Helper\FixturesImportData;
+use App\Helper\FileTools;
 use App\Helper\ImageResize;
 use App\Helper\ParamsInServices;
+use App\Helper\FixturesImportData;
 use App\Validator\PictureValidator;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class Step1111_PictureFixtures extends Fixture implements FixtureGroupInterface
@@ -28,9 +28,9 @@ class Step1111_PictureFixtures extends Fixture implements FixtureGroupInterface
     private $validator;
 
     /**
-     * @var FileDirectory
+     * @var FileTools
      */
-    private $fileDirectory;
+    private $fileTools;
 
     /**
      * @var EntityManagerInterface
@@ -57,7 +57,7 @@ class Step1111_PictureFixtures extends Fixture implements FixtureGroupInterface
         $this->fixturesImportData = $fixturesImportData;
         $this->validator = $validator;
         $this->entityManagerInterface = $entityManagerI;
-        $this->fileDirectory = new FileDirectory();
+        $this->fileTools = new FileTools();
         $this->params = $params;
         $this->imageResize=new ImageResize($params);
     }
@@ -120,9 +120,10 @@ class Step1111_PictureFixtures extends Fixture implements FixtureGroupInterface
         $dirDestination=$this->params->get(ParamsInServices::DIRECTORY_PICTURE);
         $dirSource=$this->params->get(ParamsInServices::DIRECTORY_FIXTURES_PICTURE);
 
-        $this->fileDirectory->moveFile($dirSource, $fileNameSource, $dirDestination , $fileNameDestination);
-
-        $this->imageResize->resize($dirDestination.'/'.$fileNameDestination);
+        if ($this->fileTools->exist($dirSource, $fileNameSource)) {
+            $this->fileTools->move($dirSource, $fileNameSource, $dirDestination, $fileNameDestination);
+            $this->imageResize->resize($dirDestination . '/' . $fileNameDestination);
+        }
     }
 
     public static function getGroups(): array

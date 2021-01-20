@@ -36,48 +36,51 @@
 
 			{{ include(domaine ~ '/_show/_identification.html.twig') }}
 			{% if item.stateCurrent in [workflow_archived,workflow_abandonned] %}
+				{{ include(domaine ~ '/_show/_rubric.html.twig') }}
+				{{ include(domaine ~ '/_show/_arborescence.html.twig') }}
+				{{ include(domaine ~ '/_show/_content.html.twig') }}
+				{{ include(domaine ~ '/_show/_files.html.twig') }}
+			{% else %}
+				{% set nbrL=item.backpackLinks | length %}
+				{% set nbrF=item.backpackFiles | length %}
 
-				{% else %}
-					{% set nbrL=item.backpackLinks | length %}
-					{% set nbrF=item.backpackFiles | length %}
+				<div class="card card-p-dark card-tabs">
+					<div class="card-header p-0 pt-1">
+						<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">
+									Général
+								</a>
+							</li>
 
-					<div class="card card-p-dark card-tabs">
-						<div class="card-header p-0 pt-1">
-							<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-								<li class="nav-item">
-									<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">
-										Général
-									</a>
-								</li>
-
-								<li class="nav-item">
-									<a class="nav-link" id="custom-tabs-one-file-tab" data-toggle="pill" href="#custom-tabs-one-file" role="tab" aria-controls="custom-tabs-one-file" aria-selected="false">
-										Fichiers (<strong>{{ nbrL + nbrF}}</strong>)
-									</a>
-								</li>
+							<li class="nav-item">
+								<a class="nav-link" id="custom-tabs-one-file-tab" data-toggle="pill" href="#custom-tabs-one-file" role="tab" aria-controls="custom-tabs-one-file" aria-selected="false">
+									Fichiers (<strong>{{ nbrL + nbrF}}</strong>)
+								</a>
+							</li>
 
 
-							</ul>
-						</div>
+						</ul>
+					</div>
+				</div>
+
+
+				<div class="tab-content " id="custom-tabs-one-tabContent">
+
+					<div class="tab-pane fade active show " id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+						{{ include(domaine ~ '/_edit/_rubric.html.twig') }}
+						{{ include(domaine ~ '/_edit/_arborescence.html.twig') }}
+						{{ include(domaine ~ '/_edit/_name.html.twig') }}
+						{{ save.btn()}}
 					</div>
 
 
-					<div class="tab-content " id="custom-tabs-one-tabContent">
+					<div class="tab-pane fade" id="custom-tabs-one-file" role="tabpanel" aria-labelledby="custom-tabs-one-file-tab">
+						{{ include(domaine ~ '/_edit/_files.html.twig') }}
+						{{ save.btn()}}
 
-						<div class="tab-pane fade active show " id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-							{{ include(domaine ~ '/_edit/_rubric.html.twig') }}
-							{{ include(domaine ~ '/_edit/_arborescence.html.twig') }}
-							{{ include(domaine ~ '/_edit/_name.html.twig') }}
-							{{ save.btn()}}
-						</div>
-
-
-						<div class="tab-pane fade" id="custom-tabs-one-file" role="tabpanel" aria-labelledby="custom-tabs-one-file-tab">
-							{{ include(domaine ~ '/_edit/_files.html.twig') }}
-							{{ save.btn()}}
-
-						</div>
 					</div>
+				</div>
 
 
 			{% endif %}
@@ -111,6 +114,31 @@
 	<p class="mt-5 mb-5">&nbsp;</p>
 	<p class="mt-5 mb-5">&nbsp;</p>
 	<p class="mt-5 mb-5">&nbsp;</p>
+	<div class="modal fade" id="addDir" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ajoute un libellé</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="addDir_field_new" class="col-form-label">Libellé</label>
+							<input type="text" class="form-control d-none" id="addDir_field">
+							<input type="text" class="form-control" id="addDir_field_new">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					<button type="button" id="btn_addDir" class="btn btn-success">Ajouter le libellé</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}
 
@@ -118,72 +146,164 @@
 	{{ parent() }}
 	<script src="{{ absolute_url( asset('js/backpack_file.js')) }}"></script>
 	<script src="{{ absolute_url( asset('js/arborescence.js')) }}"></script>
-	<script type="text/javascript">
-		$(function () {
-arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", "{{ item.underRubric.id }}", true, '#backpack_dir1');
+	<script src="{{ absolute_url( asset('/js/es_widget.js')) }}"></script>
+	<script src="{{ absolute_url( asset('/js/es_arborescence.js')) }}"></script>
+	<script src="{{ absolute_url( asset('js/fillCombobox.js')) }}"></script>
 
-$('#cmb_dir1').change(function () {
+	<script type="text/javascript">
+		let idUR = {{ item.underRubric is null ?0:item.underRubric.id }};
+
+let idR = {{ item.underRubric.rubric is null ?0:item.underRubric.rubric.id }};
+
+let r_less = $('#cmb_rubric');
+let ur_less = $('#cmb_underrubric');
+let ur = $('#backpack_underrubric');
+
+
+let route_r = "{{ path('ajax_fill_combobox_rubrics') }}";
+let route_ur = "{{ path('ajax_fill_combobox_underrubrics') }}";
+
+
+fillComboboxRubric(r_less, route_r, true, idR);
+r_less.change(function () {
+fillComboboxRubricChained(r_less, ur_less, route_ur, true, false, idUR);
+});
+
+ur_less.change(function () {
+setVal(ur, getVal(ur_less));
+});
+
+
+$(function () {
+
+
+$('#backpack_updatedAt_date_month').val(new Date().getMonth() + 1);
+
+$('#backpack_updatedAt_date_day').val(new Date().getDate());
+
+$('#backpack_updatedAt_date_year').val(new Date().getFullYear());
+
+$('#backpack_updatedAt_time_hour').val(new Date().getHours());
+
+$('#backpack_updatedAt_time_minute').val(new Date().getMinutes());
+
+
+});
+
+$(document).on('change', '.custom-file-input', function () {
+let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+$(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+});
+
+/*##################################
+####################################
+####        Niveaux         ########
+####################################
+##################################*/
+
+let cmb1 = $('#cmb_dir1');
+let cmb2 = $('#cmb_dir2');
+let cmb3 = $('#cmb_dir3');
+let cmb4 = $('#cmb_dir4');
+let cmb5 = $('#cmb_dir5');
+
+let formcmb1 = $('#backpack_dir1');
+
+let formcmb2 = $('#backpack_dir2');
+let formcmb3 = $('#backpack_dir3');
+let formcmb4 = $('#backpack_dir4');
+let formcmb5 = $('#backpack_dir5');
+
+let div1 = $('#div_dir1');
+let div2 = $('#div_dir2');
+let div3 = $('#div_dir3');
+let div4 = $('#div_dir4');
+let div5 = $('#div_dir5');
+
+let route1 ="{{ path('ajax_fill_combobox_dir1') }}";
+let route2 ="{{ path('ajax_fill_combobox_dir2') }}";
+let route3 ="{{ path('ajax_fill_combobox_dir3') }}";
+let route4 ="{{ path('ajax_fill_combobox_dir4') }}";
+let route5 ="{{ path('ajax_fill_combobox_dir5') }}";
+
+
+arborescence(cmb1, route1, idUR, true, formcmb1);
+
+
+cmb1.change(function () {
 var data = $('#cmb_dir1  option:selected').text();
-$('#backpack_dir1').val(data);
+setVal(formcmb1, data);
 if (data === "") {
-$('#div_dir2').addClass('d-none');
-$('#div_dir3').addClass('d-none');
-$('#div_dir4').addClass('d-none');
-$('#div_dir5').addClass('d-none');
+hide(div2);
+hide(div3);
+hide(div4);
+hide(div5);
 } else {
-$('#div_dir2').removeClass('d-none');
-arborescenceChained('#cmb_dir2', "{{ path('ajax_fill_combobox_dir2') }}", "{{ item.underRubric.id }}", true, '#backpack_dir2', data);
+show(div2);
+arborescenceChained(cmb2, route2, idUR, data, true, formcmb2);
+
 }
 });
-$('#cmb_dir2').change(function () {
+
+
+cmb2.change(function () {
 var data = $('#cmb_dir2  option:selected').text();
-$('#backpack_dir2').val(data);
+setVal(formcmb2, data);
+
 if (data === "") {
-$('#div_dir3').addClass('d-none');
-$('#div_dir4').addClass('d-none');
-$('#div_dir5').addClass('d-none');
+hide(div3);
+hide(div4);
+hide(div5);
 } else {
-$('#div_dir3').removeClass('d-none');
-arborescenceChained('#cmb_dir3', "{{ path('ajax_fill_combobox_dir3') }}", "{{ item.underRubric.id }}", true, '#backpack_dir3', data);
+show(div3);
+arborescenceChained(cmb3, route3, idUR, data, true, formcmb3);
+
+
 }
 });
-$('#cmb_dir3').change(function () {
+
+cmb3.change(function () {
 var data = $('#cmb_dir3  option:selected').text();
-$('#backpack_dir3').val(data);
+setVal(formcmb3, data);
+
 if (data === "") {
-$('#div_dir4').addClass('d-none');
-$('#div_dir5').addClass('d-none');
+hide(div4);
+hide(div5);
 } else {
-$('#div_dir4').removeClass('d-none');
-arborescenceChained('#cmb_dir4', "{{ path('ajax_fill_combobox_dir4') }}", "{{ item.underRubric.id }}", true, '#backpack_dir4', data);
+show(div4);
+arborescenceChained(cmb4, route4, idUR, data, true, formcmb4);
+
+
 }
 });
-$('#cmb_dir4').change(function () {
+
+cmb4.change(function () {
 var data = $('#cmb_dir4  option:selected').text();
-$('#backpack_dir4').val(data);
+setVal(formcmb4, data);
 if (data === "") {
-$('#div_dir5').addClass('d-none');
+hide(div5);
 } else {
-$('#div_dir5').removeClass('d-none');
-arborescenceChained('#cmb_dir5', "{{ path('ajax_fill_combobox_dir5') }}", "{{ item.underRubric.id }}", true, '#backpack_dir5', data);
+show(div5);
+arborescenceChained(cmb5, route5, idUR, data, true, formcmb5);
+
+
 }
 });
-$('#cmb_dir5').change(function () {
+
+cmb5.change(function () {
 var data = $('#cmb_dir5  option:selected').text();
-$('#backpack_dir5').val(data);
+setVal(formcmb5, data);
 });
-});
+
 
 $('#addDir').on('show.bs.modal', function (event) {
-var button = $(event.relatedTarget) // Button that triggered the modal
+var button = $(event.relatedTarget)
 var recipient = button.data('whatever')
-// Extract info from data-* attributes
-// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 var modal = $(this)
 
 modal.find('#addDir_field').val(recipient)
 });
+
 
 $(function () {
 $('#btn_addDir').click(function () {
@@ -200,27 +320,6 @@ $('#addDir_field').val("");
 $('#' + selecteurCible).change();
 
 });
-});
-
-$(function () {
-
-
-$('#picture_updatedAt_date_month').val(new Date().getMonth() + 1);
-$('#picture_updatedAt_date_day').val(new Date().getDay());
-$('#picture_updatedAt_date_year').val(new Date().getFullYear());
-$('#picture_updatedAt_time_hour').val(new Date().getHours());
-$('#picture_updatedAt_time_minute').val(new Date().getMinutes());
-
-
-});
-
-$(document).on('change', '.custom-file-input', function () {
-let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-$(this).parent('.custom-file').find('.custom-file-label').text(fileName);
-});
-
-$('#backpack_underrubric').on("select2:selecting", function (e) {
-arborescence('#cmb_dir1', "{{ path('ajax_fill_combobox_dir1') }}", e.params.args.data.id, true, '#backpack_dir1');
 });
 	</script>
 {% endblock %}

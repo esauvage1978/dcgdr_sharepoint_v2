@@ -16,96 +16,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FillComboboxController extends AbstractGController
-{
-    /**
-     * @Route("/ajax/getrubrics", name="ajax_fill_combobox_rubrics", methods={"GET","POST"})
-     *
-     * @return Response
-     * @IsGranted("ROLE_USER")
-     */
-    public function AjaxGetRubrics(Request $request, RubricDtoRepository $rubricDtoRepository): Response
-    {
-        $dto = new RubricDto ();
-        /**
-         * @var User $user
-         */
-        $user=$this->getUser();
+{ 
 
-        $dto
-            ->setForUpdate(RubricDto::TRUE)
-            ->setVisible(RubricDto::TRUE);
 
-        if (!Role::isGestionnaire($user)) {
-            $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));
-        }
 
-        if ($request->isXmlHttpRequest()) {
-            return $this->json(
-                $rubricDtoRepository->findForCombobox($dto)
-            );
-        }
 
-        return new Response("Ce n'est pas une requête Ajax");
-    }
-
-    /**
-     * @Route("/ajax/getunderrubrics", name="ajax_fill_combobox_underrubrics", methods={"POST"})
-     *
-     * @return Response
-     * @IsGranted("ROLE_USER")
-     */
-    public function AjaxGetUnderRubrics(
-        Request $request,
-        UnderRubricDtoRepository $underrubricDtoRepository): Response
-    {
-        $idRubric = $request->get('id');
-        $dto = new UnderRubricDto ();
-        /**
-         * @var User $user
-         */
-        $user=$this->getUser();
-
-        $dto
-            ->setForUpdate(RubricDto::TRUE)
-            ->setVisible(RubricDto::TRUE)
-            ->setRubricDto((new RubricDto())
-                ->setId($idRubric)
-            );
-
-        if (!Role::isGestionnaire($user)) {
-            $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));
-        }
-
-        if ($request->isXmlHttpRequest()) {
-            return $this->json(
-                $underrubricDtoRepository->findForCombobox($dto)
-            );
-        }
-
-        return new Response("Ce n'est pas une requête Ajax");
-    }
-
-    /**
-     * @Route("/ajax/getdir1", name="ajax_fill_combobox_dir1", methods={"POST"})
-     *
-     * @return Response
-     * @IsGranted("ROLE_USER")
-     */
-    public function AjaxGetDir1(Request $request, BackpackRepository $repository): Response
-    {
-        $data = null;
-        if ($request->request->has('id')) {
-            $data = $request->request->get('id');
-        }
-        if ($request->isXmlHttpRequest()) {
-            return $this->json(
-                $repository->findAllFillComboboxDir1(
-                    $data)
-            );
-        }
-
-        return new Response("Ce n'est pas une requête Ajax");
-    }
 
     /**
      * @Route("/ajax/getdir2", name="ajax_fill_combobox_dir2", methods={"POST"})

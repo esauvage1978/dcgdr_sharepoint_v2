@@ -36,7 +36,6 @@ class BackpackMakerDto
 
 
     
-    const HIDE = 'hide';
 
     /**
      * @var User
@@ -173,10 +172,7 @@ class BackpackMakerDto
                     ->setStateCurrent(WorkflowData::STATE_ABANDONNED)
                     ->setVisible(BackpackDto::TRUE);
                 break;
-            case self::HIDE:
-                $dto
-                    ->setHide(BackpackDto::TRUE);
-                break;
+
         }
 
         return $dto;

@@ -43,8 +43,9 @@ class RubricController extends AbstractGController
     {
         $dto = new UnderRubricDto();
         $dto
+            ->setRubricDto((new RubricDto())->setId($item->getId()))
             ->setVisible(UnderRubricDto::TRUE)
-            ->setRubricDto((new RubricDto())->setId($item->getId()));
+            ;
 
         if (!is_null($this->getUser()) && !$this->isgranted('ROLE_GESTIONNAIRE')) {
             $dto->setUserDto((new UserDto())->setId($this->getUser()->getId()));

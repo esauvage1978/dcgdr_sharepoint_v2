@@ -30,7 +30,7 @@
                 {% block card_title %}Utilisateurs{% endblock %}
                 {% block card_body %}
                     {% import "macros/user.html.twig" as usr %}
-                    {{ usr.views(item.users) }}
+                    {{ usr.vignettes(item.users) }}
                 {% endblock %}
             {% endembed %}
 

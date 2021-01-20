@@ -11,7 +11,7 @@ use App\Entity\Backpack;
 use App\Entity\BackpackLink;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class BackpackDtoRepository extends ServiceEntityRepository implements DtoRepositoryInterface
@@ -54,7 +54,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function findAllForDtoPaginator(DtoInterface $dto, $page = null, $limit = null, $select = self::SELECT_ALL)
+    public function findAllForDtoPaginator(DtoInterface $dto, $page = null, $limit = null, $select = '')
     {
         /**
          * var ContactDto
@@ -98,7 +98,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                 $this->initialise_select_home();
                 break;
             case self::FILTRE_DTO_INIT_SEARCH:
-                $this->initialise_select();
+                $this->initialise_select_search();
                 break;
         }
 
@@ -148,6 +148,26 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             ->leftJoin(self::ALIAS.'.backpackFiles',BackpackFileRepository::ALIAS)
             ->leftJoin(self::ALIAS.'.backpackLinks',BackpackLinkRepository::ALIAS)
         ;
+    }
+
+    private function initialise_select_search()
+    {
+        $this->builder = $this->createQueryBuilder(self::ALIAS)
+            ->select(
+                self::ALIAS,
+                RubricRepository::ALIAS,
+                ThematicRepository::ALIAS,
+                UnderThematicRepository::ALIAS,
+                UnderRubricRepository::ALIAS,
+                BackpackFileRepository::ALIAS,
+                BackpackLinkRepository::ALIAS
+            )
+            ->join(self::ALIAS . '.underRubric', UnderRubricRepository::ALIAS)
+            ->join(UnderRubricRepository::ALIAS . '.underThematic', UnderThematicRepository::ALIAS)
+            ->join(UnderRubricRepository::ALIAS . '.rubric', RubricRepository::ALIAS)
+            ->join(RubricRepository::ALIAS . '.thematic', ThematicRepository::ALIAS)
+            ->leftJoin(self::ALIAS . '.backpackFiles', BackpackFileRepository::ALIAS)
+            ->leftJoin(self::ALIAS . '.backpackLinks', BackpackLinkRepository::ALIAS);
     }
 
     private function initialise_select()
