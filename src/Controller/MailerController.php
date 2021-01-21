@@ -8,9 +8,8 @@ use App\Entity\Backpack;
 use App\Entity\Mailer;
 use App\Mail\MailerMail;
 use App\Manager\MailerManager;
-use App\Form\Mailer\MailerFormActionType;
+use App\Form\Mailer\MailerFormBackpackType;
 use Symfony\Component\HttpFoundation\Request;
-use App\Form\Mailer\MailerFormDeployementType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -25,7 +24,7 @@ class MailerController extends AbstractController
         MailerManager $manager,
         MailerMail $mailerMail
     ) {
-        $form = $this->createForm(MailerFormActionType::class, ['data' => $item->getId()]);
+        $form = $this->createForm(MailerFormBackpackType::class, ['data' => $item->getId()]);
 
         $form->handleRequest($request);
 
@@ -39,7 +38,7 @@ class MailerController extends AbstractController
                 $mailer->setBackpack($item);
                 
                 foreach($users as $user){
-                    $mailerMail->send($user,$mailer,MailerMail::ACTION,$mailer->getSubject());
+                    $mailerMail->send($user,$mailer,MailerMail::BACKPACK,$mailer->getSubject());
                 }
 
                 $manager->save($mailer);
@@ -60,7 +59,7 @@ class MailerController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function mailierBackpackHistory(
-        Baclpack $item
+        Backpack $item
     ) {
         return $this->render('mailer/history_backpack.html.twig', [
             'item' => $item,

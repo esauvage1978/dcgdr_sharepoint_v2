@@ -77,9 +77,25 @@
 			{% if  _save != 'not' %}
 				{% set actions = actions|merge(_save) %}
 			{% endif %}
+
+		{% elseif twigTemplace=='add' %}
+			{% set actions = actions|merge(_save) %}
 		{% endif %}
-	{% elseif twigTemplace=='add' %}
-		{% set actions = actions|merge(_save) %}
+
+
 	{% endif %}
+
+{% if underRubric>0 %}
+	{% set _who = { 'user': {url: path('underrubric_who',{id:underRubric}),class:'btn-p-dark',attr:{title:'Consulter'}}} %}
+	{% set _showUR = { 'rubric': {url: path('underrubric_show',{id:underRubric}),class:'btn-p-dark',attr:{title:'Consulter'}}} %}
+
+	{% if twigTemplace=='tree' %}
+		{% set actions = actions|merge(_who) %}
+	{% elseif twigTemplace=='who' %}
+		{% set actions = actions|merge(_showUR) %}
+	{% endif %}
+
+{% endif %}
+
 	{{ btn_actions.show(actions) }}
 {% endmacro %}

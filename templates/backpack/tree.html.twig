@@ -4,39 +4,49 @@
 
 {% import "macros/default.html.twig" as new %}
 
-{% block title %}Porte-document {% endblock %}
+{% block title %}Porte-document
+{% endblock %}
 
 {% block page_subtitle %}
-    <span class="text-muted">
-        {% if underRubric is defined %}
-            {% if underRubric  and item %}
-<a href="{{ path('rubric_show',{id:item.underrubric.rubric.id})}}" class="text-p-dark">
+	<span class="text-muted">
+		{% if underRubric is defined %}
+			{% if underRubric  and item %}
+				<a href="{{ path('rubric_show',{id:item.underrubric.rubric.id})}}" class="text-p-dark">
 
-                {{ item.underrubric.rubric.name }} 
-                </a>
-            {% endif %}
-        {% endif %}
+					{{ item.underrubric.rubric.name }}
+				</a>
+			{% endif %}
+		{% endif %}
 
-        {{ count }}
-        {% if stateCurrent is defined and stateCurrent  %}
-{{ wkf.badge_state(stateCurrent) }}
-
-        {% endif %}
-        {% if isNew is defined and isNew==true %}
-            {{ new.spanNew() }}
-        {% endif %}
-        {% if hide is defined and item %}
-            {{ widgets.badge('Masqué','#252525') }}
-        {% endif %}
-    </span>
+		{{ count }}
+		{% if stateCurrent is defined and stateCurrent  %}
+			{{ wkf.badge_state(stateCurrent) }}
+		{% endif %}
+		{% if isNew is defined and isNew==true %}
+			{{ new.spanNew() }}
+		{% endif %}
+		{% if hide is defined and item %}
+			{{ widgets.badge('Masqué','#252525') }}
+		{% endif %}
+	</span>
 {% endblock %}
 
 
-{% block breadcrumb %}{% endblock %}
+{% block breadcrumb %}
+	{% import "backpack/_btn_actions.html.twig" as actions %}
+	{{ actions.backpack(
+        'tree',
+		'',
+		'',
+		'',
+underrubric is defined?underrubric:0,
+
+		''
+    ) }}
+
+{% endblock %}
 
 
 {% block page_content %}
-    {{ parent() }}
+	{{ parent() }}
 {% endblock %}
-
-

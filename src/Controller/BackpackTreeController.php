@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use App\Dto\BackpackDto;
 use App\Entity\Backpack;
+use App\Dto\UnderRubricDto;
+use App\Entity\UnderRubric;
+use App\Helper\UserByCorbeilles;
 use App\Manager\BackpackManager;
+use App\Service\BackpackCounter;
 use App\Service\BackpackForTree;
 use App\Service\BackpackMakerDto;
 use App\Repository\BackpackRepository;
 use App\Repository\BackpackDtoRepository;
-use App\Service\BackpackCounter;
+use App\Repository\UnderRubricDtoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -199,7 +203,26 @@ class BackpackTreeController extends AbstractGController
     {
         $dto= $this->backpackForTree->getDto(BackpackMakerDto::PUBLISHED_FOR_UNDERRUBRIC,$id);
         $renderArray = $this->backpackForTree->getDatas($this->container,$request, null, $dto);
+        $renderArray=array_merge($renderArray, ['underrubric'=>$id]);
         return $this->render('backpack/tree.html.twig', $renderArray);
+    }
+
+
+    /**
+     * @Route("/underrubric/{id}/who", name="underrubric_who", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function who(
+        UnderRubric $item,
+        UserByCorbeilles $userByCorbeilles
+    ) {
+        return $this->render('backpack/who.html.twig', [
+            'item' => $item,
+            'writers' => $userByCorbeilles->getUsers($item->getWriters()),
+            'readers' => $userByCorbeilles->getUsers($item->getReaders()),
+            'rwriters' => $userByCorbeilles->getUsers($item->getRubric()->getWriters()),
+            'rreaders' => $userByCorbeilles->getUsers($item->getRubric()->getReaders()),
+        ]);
     }
 
 }

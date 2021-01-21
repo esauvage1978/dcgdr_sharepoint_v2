@@ -89,7 +89,7 @@ class AdminController extends AbstractController
             [
                 'name' => 'Envoie les notifications',
                 'route' => 'command_notificator',
-                'content' => 'Envoie les notificatio par rapport aux abonnées',
+                'content' => 'Envoie les notifications par rapport aux abonnées',
                 'smallcontent' => 'Réservé au gestionnaire',
                 'icon' => 'fas fa-paper-plane text-p-dark'
             ]

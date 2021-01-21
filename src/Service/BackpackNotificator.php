@@ -66,14 +66,14 @@ class BackpackNotificator
     private function notifyBackpackNew(array $users)
     {
         foreach ($users as $user) {
-            if (Role::isUser($user) && $user->emailvalidated()) {
+            if (Role::isUser($user) && $user->getEmailValidated()) {
                 $this->backpackDto
                     ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
                     ->setIsNew(BackpackDto::TRUE)
                     ->setUserDto((new UserDto())->setId($user->getId()))
                     ->setVisible(BackpackDto::TRUE);
 
-
+ 
                 /** @var Backpack[] $result */
                 $result = $this->backpackRepository->findAllForDto($this->backpackDto, BackpackDtoRepository::FILTRE_DTO_INIT_HOME);
 

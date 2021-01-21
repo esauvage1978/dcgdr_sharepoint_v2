@@ -1,36 +1,31 @@
+{% import "macros/file.html.twig" as file %}
 {% for backpackFile in backpack.backpackFiles %}
 
-    <tr>
-        <td class="col-8">
-            <a target="_blank" style="color:#57a7fe; text-decoration: none"
-               href="{{ path('backpack_file_show',{'id':backpack.id, 'fileId':backpackFile.id}) }}" data-html="true"
-               data-toggle="tooltip" data-placement="top" title="{{ backpackFile.content }}" data-container="body">
 
-                {{ include('file/_icone_extension.html.twig',{'extension': backpackFile.fileExtension}) }}
-                {{ backpackFile.title }}.{{ backpackFile.fileExtension }}
-            </a>
-        </td>
-        <td class="col-1 text-center">
-            <span class="text-muted">
-                {{ backpackFile.content | raw }}
-            </span>
-        </td>
-        <td class="col-1 right">
-            {{ include('backpack/_show/_size.html.twig',{size: backpackFile.size}) }}
-        </td>
-        <td class="col-1 text-muted text-xs ">
-            {%  set color='black' %}
-            {% if backpackFile.modifyAt %}
-                {% set difference = date("today").diff(date(backpackFile.modifyAt)) %}
-                {% set leftDays = difference.days %}
-                {% if leftDays <8 %}
-                    {%  set color='#f012be' %}
-                {% endif %}
-            {% endif %}
-            <span style="color:{{ color }}">
-                {{ backpackFile.modifyAt  | date('d/m/Y H:i') }}
-            </span>
-        </td>
-    </tr>
+	<tr>
+		<td >
+			<a target="_blank" href="{{ path('backpack_file_show',{'id':backpack.id, 'fileId':backpackFile.id}) }}" style="color:#57a7fe; text-decoration: none">
+				{{ backpackFile.title }}.{{ backpackFile.fileExtension }}
+			</a>
+            <br/>
+			<span class="text-muted">
+				{{ backpackFile.content | raw }}
+			</span>
+		</td>
+
+		<td >
+			{%  set color='black' %}
+			{% if backpackFile.modifyAt %}
+				{% set difference = date("today").diff(date(backpackFile.modifyAt)) %}
+				{% set leftDays = difference.days %}
+				{% if leftDays <8 %}
+					{%  set color='#f012be' %}
+				{% endif %}
+			{% endif %}
+			<span style="color:{{ color }}">
+				{{ backpackFile.modifyAt  | date('d/m/Y H:i') }}
+			</span>
+		</td>
+	</tr>
 
 {% endfor %}
