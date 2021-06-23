@@ -24,6 +24,8 @@ parameters:
 
     news_time: '%env(NEWS_TIME)%'
 
+    liam.link: '%env(LIAM_LINK)%'
+
     image.resize.x: 480
     image.resize.y: 320
 

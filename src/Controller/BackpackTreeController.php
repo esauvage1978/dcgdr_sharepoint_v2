@@ -86,9 +86,7 @@ class BackpackTreeController extends AbstractGController
      * @IsGranted("ROLE_USER")
      */
     public function search(
-        Request $request,
-        BackpackDtoRepository $backpackDtoRepository,
-        BackpackMakerDto $backpackMakerDto
+        Request $request
     ) {
         $r = $request->get('r');
         if ($r === null) {

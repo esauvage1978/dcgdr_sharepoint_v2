@@ -18,3 +18,4 @@ twig:
         workflow_abandonned: 'abandonned'
         workflow_draft: 'draft'
         news_time: '%env(NEWS_TIME)%'
+        liam_link: '%env(LIAM_LINK)%'
