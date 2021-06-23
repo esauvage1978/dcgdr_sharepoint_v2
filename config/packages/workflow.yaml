@@ -7,7 +7,7 @@ framework:
                 enabled: true
             marking_store:
                 type: 'method'
-                property: 'currentState'
+                property: 'stateCurrent'
             supports:
                 - App\Entity\Backpack
             initial_marking: draft

@@ -1,18 +1,22 @@
 {% extends 'user/layout.html.twig' %}
+
 {% import "macros/datatables.html.twig" as tables %}
+{% import "@AdminLTE/Macros/default.html.twig" as macro %}
+{% import "macros/user.html.twig" as usr %}
+
 {% set columns = {
     '#': {'class': 'all', 'orderBy': true},
     'Nom / Email': {'class': 'alwaysVisible', 'orderBy': true},
+'<i class="fa fa-clock" data-toggle="tooltip" data-placement="top" title="dernière connexion"></i>': {'class': 'align-middle text-center', 'orderBy': true},
     'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fa fa-user-cog"  data-toggle="tooltip" data-placement="top" title="Administrateur"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-user-astronaut"  data-toggle="tooltip" data-placement="top" title="Gestionnaire"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-user-secret"  data-toggle="tooltip" data-placement="top" title="Gestionnaire local"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-user"  data-toggle="tooltip" data-placement="top" title="Utilisateur"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-envelope-open-text"  data-toggle="tooltip" data-placement="top" title="Mail non vérifié"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-rss"  data-toggle="tooltip" data-placement="top" title="Abonné"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-building"  data-toggle="tooltip" data-placement="top" title="Nombre d\'organismes"></i>': {'class': 'text-center', 'orderBy': false},
-    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'text-center', 'orderBy': false},
+'<i class="fa fa-user-cog" data-toggle="tooltip" data-placement="top" title="Administrateur"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+		'<i class="fa fa-user-astronaut" data-toggle="tooltip" data-placement="top" title="Gestionnaire"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+'<i class="fa fa-user-secret" data-toggle="tooltip" data-placement="top" title="Gestionnaire local"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+'<i class="fa fa-user" data-toggle="tooltip" data-placement="top" title="Utilisateur"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+'<i class="fa fa-envelope-open-text" data-toggle="tooltip" data-placement="top" title="Mail non vérifié"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+'<i class="fa fa-rss" data-toggle="tooltip" data-placement="top" title="Abonné"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+'<i class="fa fa-building" data-toggle="tooltip" data-placement="top" title="Nombre d\'organismes"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+'<i class="fa fa-boxes" data-toggle="tooltip" data-placement="top" title="Nombre de corbeilles"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
 
@@ -21,7 +25,7 @@
 {% block page_subtitle %}Liste{% endblock %}
 
 {% block breadcrumb %}
-    {% import "default/actions.html.twig" as actions %}
+    {% import "user/actions.html.twig" as actions %}
     {{ actions.admin(
         'list',
         is_granted('ROLE_ADMIN'),
@@ -33,7 +37,6 @@
 {% block page_content %}
 
 
-    {% import "@AdminLTE/Macros/default.html.twig" as macro %}
 
     {{ tables.datatable_header(tableName, columns,  {'striped': true}) }}
     {% for item in items %}
@@ -47,7 +50,7 @@
             </td>
             <td class="align-middle">
                 <a href="{{ path(route_show,{id:item.id}) }}"
-                   class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
+                   class="text-{{ item.isEnable ? 'p-dark' : 'danger text-bold' }}">
                     {{ item.name }}
                 </a>
                 <br/>
@@ -57,43 +60,54 @@
                     <small>{{ item.phone }}</small>
                 {% endif %}
             </td>
+<td class="align-middle text-center p-0 m-0 ">{{ usr.lastConnexion(item)  }}</td>
+
             <td class="align-middle">{{ item.content | raw }}</td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_ADMIN' in item.roles ? 'info' : 'light' }} "><i
-                            class="fas fa-circle"></i></span>
+<div class="p-2 {{ 'ROLE_ADMIN' in item.roles ? 'badge badge-success text-success' : 'badge badge-light text-light' }}">
+	{{ 'ROLE_ADMIN' in item.roles ? '1' : '0' }}
+</div>
+
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_GESTIONNAIRE' in item.roles ? 'info' : 'light' }} "><i
-                            class="fas fa-circle"></i></span>
+<div class="p-2 {{ 'ROLE_GESTIONNAIRE' in item.roles ? 'badge badge-success text-success' : 'badge badge-light text-light' }}">
+	{{ 'ROLE_GESTIONNAIRE' in item.roles ? '1' : '0' }}
+</div>
+
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_GESTIONNAIRE_LOCAL' in item.roles ? 'info' : 'light' }} "><i
-                            class="fas fa-circle"></i></span>
+<div class="p-2 {{ 'ROLE_GESTIONNAIRE_LOCAL' in item.roles ? 'badge badge-success text-success' : 'badge badge-light text-light' }}">
+	{{ 'ROLE_GESTIONNAIRE_LOCAL' in item.roles ? '1' : '0' }}
+</div>
+
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ 'ROLE_USER' in item.roles ? 'info' : 'light' }} "><i
-                            class="fas fa-circle"></i></span>
+<div class="p-2 {{ 'ROLE_USER' in item.roles ? 'badge badge-success text-success' : 'badge badge-light text-light' }}">
+	{{ 'ROLE_USER' in item.roles ? '1' : '0' }}
+</div>
+
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ not item.emailvalidated ? 'danger' : 'light' }} "><i
-                            class="fas fa-circle"></i></span>
+                <div class="p-2 {{ not item.emailvalidated ? 'badge badge-danger text-danger' : 'badge badge-success text-success' }}">
+                    {{ not item.emailvalidated ? '1' : '0' }}
+                </div>
             </td>
             <td class="align-middle text-center">
-                <span class="text-{{ item.subscription ? 'info' : 'light' }} "><i class="fas fa-circle"></i></span>
+                <div class="p-2 {{ not item.subscription ? 'badge badge-light text-light' : 'badge badge-success text-success' }}">
+                    {{ not item.subscription ? '1' : '0' }}
+                </div>
             </td>
             <td class="align-middle text-center">
-                {% if   item.organismes.count==0 %}
-                    <span class="text-light"><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge  bg-info">{{ item.organismes.count }}</small>
-                {% endif %}
+                {% set nbr = item.organismes.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class="align-middle text-center">
-                {% if   item.corbeilles.count==0 %}
-                    <span class="text-light"><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge  bg-info">{{ item.corbeilles.count }}</small>
-                {% endif %}
+                {% set nbr = item.corbeilles.count %}
+                <div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+                    {{ nbr }}
+                </div>
             </td>
             <td class=" align-middle text-right">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
@@ -101,8 +115,8 @@
                         'Modifier',
                         path(route_edit,{id:item.id}),
                         'fa fa-edit',
-                        'purple',
-                        'primary btn-sm'
+                        'p-dark',
+                        'p-dark btn-sm'
                     ) }}
                 {% endif %}
             </td>

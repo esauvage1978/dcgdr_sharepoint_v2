@@ -40,7 +40,7 @@ class Picture implements EntityInterface
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $updateAt;
+    private $updatedAt;
 
     /**
      * @ORM\Column(type="string", length=10)
@@ -115,14 +115,14 @@ class Picture implements EntityInterface
 
 
 
-    public function getUpdateAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdateAt(?\DateTimeInterface $updateAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

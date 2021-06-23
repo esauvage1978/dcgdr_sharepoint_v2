@@ -3,14 +3,16 @@
 namespace App\DataFixtures;
 
 use App\Entity\Picture;
-use App\Helper\FileDirectory;
-use App\Helper\FixturesImportData;
+use App\Helper\FileTools;
 use App\Helper\ImageResize;
+use App\Helper\DirectoryTools;
+use App\Helper\ParamsInServices;
+use App\Helper\FixturesImportData;
 use App\Validator\PictureValidator;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
@@ -27,9 +29,9 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
     private $validator;
 
     /**
-     * @var FileDirectory
+     * @var FileTools
      */
-    private $fileDirectory;
+    private $fileTools;
 
     /**
      * @var EntityManagerInterface
@@ -37,7 +39,7 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
     private $entityManagerInterface;
 
     /**
-     * @var ParameterBagInterface
+     * @var ParamsInServices
      */
     private $params;
 
@@ -50,15 +52,14 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
         FixturesImportData $fixturesImportData,
         PictureValidator $validator,
         EntityManagerInterface $entityManagerI,
-        ParameterBagInterface $params
-    )
-    {
+        ParamsInServices $params
+    ) {
         $this->fixturesImportData = $fixturesImportData;
         $this->validator = $validator;
         $this->entityManagerInterface = $entityManagerI;
-        $this->fileDirectory = new FileDirectory();
+        $this->fileTools = new FileTools();
         $this->params = $params;
-        $this->imageResize=new ImageResize($params);
+        $this->imageResize = new ImageResize($params);
     }
 
     public function load(ObjectManager $manager)
@@ -68,7 +69,7 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
         for ($i = 0; $i < count($data); ++$i) {
             $instance = $this->initialise(new Picture(), $data[$i]);
 
-            if(!empty($instance)) {
+            if (!empty($instance)) {
                 $this->checkAndPersist($instance);
             }
         }
@@ -101,13 +102,13 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
 
         if (count($dataFile) == 2) {
             $instance
-                ->setName('R_'.$data['nom'])
+                ->setName('R_' . $data['nom'])
                 ->setIsEnable(true)
                 ->setContent($data['visuel'])
                 ->setFileName(md5(uniqid()))
                 ->setFileExtension($dataFile[1]);
 
-                $this->moveFile($data['visuel'], $instance->getFullName());
+            $this->moveFile($data['visuel'], $instance->getFullName());
         } else {
             return null;
         }
@@ -117,17 +118,17 @@ class Step1110_PictureFixtures extends Fixture implements FixtureGroupInterface
 
     private function moveFile(string $fileNameSource, string $fileNameDestination)
     {
-        $dirDestination=$this->params->get('directory_picture');
-        $dirSource=$this->params->get('directory_data_picture');
+        $dirDestination = $this->params->get(ParamsInServices::DIRECTORY_PICTURE);
+        $dirSource = $this->params->get(ParamsInServices::DIRECTORY_FIXTURES_PICTURE);
 
-        $this->fileDirectory->moveFile($dirSource, $fileNameSource, $dirDestination , $fileNameDestination);
-        $this->imageResize->resize($dirDestination.'/'.$fileNameDestination);
+        if ($this->fileTools->exist($dirSource, $fileNameSource)) {
+            $this->fileTools->move($dirSource, $fileNameSource, $dirDestination, $fileNameDestination);
+            $this->imageResize->resize($dirDestination . '/' . $fileNameDestination);
+        }
     }
 
     public static function getGroups(): array
     {
         return ['step1110'];
     }
-
-
 }

@@ -61,28 +61,26 @@ class Step1511_RubricCorbeilleWriterFixtures extends Fixture implements FixtureG
 
     public function load(ObjectManager $manager)
     {
-        $data = $this->fixturesImportData->importToArray(self::FILENAME.'.json');
+        $data = $this->fixturesImportData->importToArray(self::FILENAME . '.json');
 
         for ($i = 0; $i < \count($data); ++$i) {
             $corbeille = $this->getInstance($data[$i]['droite'], $this->corbeilles);
             /** @var Rubric $rubric */
             $rubric = $this->getInstance($data[$i]['gauche'], $this->rubrics);
 
-            if (is_a($corbeille, Corbeille::class)
+            if (
+                is_a($corbeille, Corbeille::class)
                 &&
                 is_a($rubric, Rubric::class)
             ) {
-                $rubric->addWriter($corbeille);
-
-                $this->entityManagerInterface->persist($rubric);
+                if ($corbeille->getIsShowWrite()) {
+                    $rubric->addWriter($corbeille);
+                    $this->entityManagerInterface->persist($rubric);
+                }
             }
-
-
         }
 
         $manager->flush();
-
-
     }
 
     public static function getGroups(): array

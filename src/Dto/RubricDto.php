@@ -7,7 +7,10 @@ use App\Entity\Thematic;
 
 class RubricDto extends AbstractDtoIsEnable
 {
-
+    /**
+     * @var ?string
+     */
+    private $forUpdate;
     /**
      * @var ?ThematicDto
      */
@@ -100,9 +103,22 @@ class RubricDto extends AbstractDtoIsEnable
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getForUpdate()
+    {
+        return $this->forUpdate;
+    }
 
-
-
-
+    /**
+     * @param mixed $forUpdate
+     * @return RubricDto
+     */
+    public function setForUpdate($forUpdate)
+    {
+        $this->forUpdate = $forUpdate;
+        return $this;
+    }
 
 }

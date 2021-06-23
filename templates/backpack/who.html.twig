@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ app_name }}
+	- Intervenants
+{% endblock %}
+
+{% block page_title %}
+	<i class="fas fa-project-diagram"></i>
+	{{ item.underthematic.name }}
+	>
+	{{ item.name }}
+{% endblock %}
+
+{% block page_subtitle %}{% endblock %}
+
+{% block breadcrumb %}
+	{% import "backpack/_btn_actions.html.twig" as actions %}
+	{{ actions.backpack(
+        'who',
+		'',
+		'',
+		'',
+        item.id,
+		''
+    ) }}
+{% endblock %}
+
+
+{% block page_content %}
+	<div class="row justify-content-center">
+		<div class="{{ col_1_2 }}">
+			{% embed 'widgets/card-widget.html.twig' %}
+				{% block card_class %}
+					card-primary card-outline
+				{% endblock %}
+				{% block card_body_class %}
+					box-profile
+				{% endblock %}
+				{% block card_body %}
+					<h3 class="profile-username text-center">{{ item.name }}</h3>
+					<h5 class="text-center">
+						<a href="{{ path('underthematic_show',{id:item.underthematic.id}) }}">{{ item.underthematic.name }}</a>
+					</h5>
+					<small class="float-right">
+						{% if item.isEnable %}
+							<span class="text-success">Visible</span>
+						{% else %}
+							<span class="text-danger">Masquée</span>
+						{% endif %}
+					</small>
+				{% endblock %}
+			{% endembed %}
+
+			{% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+				{% block card_title %}Utilisateurs avec des droits d'écriture sur la rubrique ({{rwriters|length}})
+				{% endblock %}
+				{% block card_body %}
+					{% import "macros/user.html.twig" as usr %}
+					{{ usr.vignettes(rwriters) }}
+				{% endblock %}
+			{% endembed %}
+
+			{% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+				{% block card_title %}Utilisateurs avec des droits d'écriture sur la sous rubrique ({{writers|length}})
+				{% endblock %}
+				{% block card_body %}
+					{% import "macros/user.html.twig" as usr %}
+					{{ usr.vignettes(writers) }}
+				{% endblock %}
+			{% endembed %}
+
+			{% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+				{% block card_title %}Utilisateurs avec des droits de lecture sur la rubrique ({{rreaders|length}})
+				{% endblock %}
+				{% block card_body %}
+					{% import "macros/user.html.twig" as usr %}
+					{{ usr.vignettes(rreaders) }}
+
+				{% endblock %}
+			{% endembed %}
+
+			{% embed 'widgets/card-widget.html.twig' with {collapsible:true, collapsed:true} %}
+				{% block card_title %}Utilisateurs avec des droits de lecture sur la sous rubrique ({{readers|length}})
+				{% endblock %}
+				{% block card_body %}
+					{% import "macros/user.html.twig" as usr %}
+					{{ usr.vignettes(readers) }}
+
+				{% endblock %}
+			{% endembed %}
+
+
+		</div>
+	</div>
+{% endblock %}

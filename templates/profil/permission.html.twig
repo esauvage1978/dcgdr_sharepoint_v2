@@ -1,0 +1,31 @@
+{% extends 'profil/layout.html.twig' %}
+    {% import "macros/widgets.html.twig" as widgets %}
+
+{% block page_subtitle %} Permissions aux rubriques et sous rubriques  {% endblock %}
+
+
+{% block breadcrumb %}
+    {% import "profil/_btn_actions_profil.html.twig" as actions %}
+    {{ actions.show('permission') }}
+{% endblock %}
+
+{% block page_content %}
+    {% if is_granted('ROLE_GESTIONNAIRE') %}
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible ">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-info"></i> Information !</h5>
+                <p>Les données affichées sont informatives.</p>
+                <p> Vous êtes gestionnaire ou administrateur, toutes les rubriques sont consultables et
+                    modifiables.</p>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <div class="row justify-content-center">
+
+        {% import "macros/permission.html.twig" as per %}
+        {{ per.show(items, itemsConsult, itemsModif,itemsConsultU, itemsModifU) }}
+    </div>
+{% endblock %}

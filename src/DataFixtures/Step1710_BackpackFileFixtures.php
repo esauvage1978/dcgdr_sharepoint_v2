@@ -2,15 +2,20 @@
 
 namespace App\DataFixtures;
 
+use App\Helper\Slugger;
 use App\Entity\Backpack;
+use App\Helper\FileTools;
 use App\Entity\BackpackFile;
-use App\Helper\FileDirectory;
+use App\Helper\DirectoryTools;
+use App\Helper\ParamsInServices;
 use App\Helper\FixturesImportData;
+use App\Helper\SlugFiles;
+use App\Helper\SplitNameOfFile;
 use App\Repository\BackpackRepository;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInterface
@@ -32,12 +37,17 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
     private $entityManagerInterface;
 
     /**
-     * @var FileDirectory
+     * @var FileTools
      */
-    private $fileDirectory;
+    private $fileTools;
 
     /**
-     * @var ParameterBagInterface
+     * @var DirectoryTools
+     */
+    private $DirectoryTools;
+
+    /**
+     * @var ParamsInServices
      */
     private $params;
 
@@ -45,14 +55,18 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
         FixturesImportData $fixturesImportData,
         BackpackRepository $backpackRepository,
         EntityManagerInterface $entityManagerI,
-        ParameterBagInterface $params
+        ParamsInServices $params
     )
     {
         $this->fixturesImportData = $fixturesImportData;
         $this->backpacks = $backpackRepository->findAll();
         $this->entityManagerInterface = $entityManagerI;
-        $this->fileDirectory = new FileDirectory();
         $this->params = $params;
+
+        $this->directoryTools = new DirectoryTools();
+        $this->fileTools = new FileTools();
+
+
     }
 
     public function getInstance(string $id, $entitys)
@@ -67,6 +81,10 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
     public function load(ObjectManager $manager)
     {
+        $slugFile = new SlugFiles();
+        $slugFile->toSlug($this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC));
+
+
         $data = $this->fixturesImportData->importToArray(self::FILENAME . '.json');
 
         for ($i = 0; $i < \count($data); ++$i) {
@@ -95,25 +113,27 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
         /** @var Backpack $backpack */
         $backpack = $this->getInstance($data['obj_num'], $this->backpacks);
-
+        $sf=new  SplitNameOfFile($data['adresse']);
+        $slugified = Slugger::slugify($sf->getName());
+        $filename= $slugified .'.'. $sf->getExtension();
         if (is_a($backpack, Backpack::class) and $data['titre']!='Thumbs'
         ) {
             $instance
                 ->setTitle($data['titre'])
                 ->setFileExtension($data['extension'])
-                ->setSize($this->fileDirectory->fileSize($this->params->get('directory_data_doc'), $data['adresse']))
+                ->setSize($this->fileTools->size($this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC),$filename))
                 ->setModifyAt
                 (
                     $data['date_update'] == "01/01/0001 00:00:00" ?
-                        $backpack->getUpdateAt() :
+                        $backpack->getUpdatedAt() :
                         $this->convertDate($data['date_update'])
                 )
-                ->setFileName(substr($data['adresse'], 0, strlen($data['adresse']) - 1 - strlen($data['extension'])))
+                ->setFileName($slugified)
                 ->setBackpack($backpack)
                 ->setContent($data['description'])
             ;
 
-            $this->moveFile($backpack->getId(), $data['adresse']);
+            $this->moveFile($backpack->getId(), $filename);
 
             return $instance;
         }
@@ -123,12 +143,17 @@ class Step1710_BackpackFileFixtures extends Fixture implements FixtureGroupInter
 
     private function moveFile(string $backpackId, string $fileName)
     {
-        $dirDestination = $this->params->get('directory_file_backpack');
-        $dirSource = $this->params->get('directory_data_doc');
 
-        $this->fileDirectory->createDir($dirDestination, $backpackId);
+        $dirDestination = $this->params->get(ParamsInServices::DIRECTORY_UPLOAD_BACKPACK_DOC);
+        $dirSource = $this->params->get(ParamsInServices::DIRECTORY_FIXTURES_DOC);
 
-        $this->fileDirectory->moveFile($dirSource, $fileName, $dirDestination . '/' . $backpackId, $fileName);
+        if (!$this->directoryTools->exist($dirDestination, $backpackId)) {
+            $this->directoryTools->create($dirDestination, $backpackId);
+        }
+
+        if(!$this->fileTools->exist($dirDestination . '/' . $backpackId.'/',$fileName) && $this->fileTools->exist($dirSource, $fileName)) {
+            $this->fileTools->move($dirSource, $fileName, $dirDestination . '/' . $backpackId, $fileName);
+        }
     }
 
     public static function getGroups(): array

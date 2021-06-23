@@ -2,7 +2,9 @@
 
 namespace App\Manager;
 
+use App\Entity\Backpack;
 use App\Entity\EntityInterface;
+use App\Security\CurrentUser;
 use App\Validator\BackpackValidator;
 use App\Workflow\WorkflowData;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,35 +12,43 @@ use Symfony\Component\Security\Core\Security;
 
 class BackpackManager extends AbstractManager
 {
-    private $security;
+    /**
+     * @var CurrentUser
+     */
+    private $currentUser;
+
     public function __construct(
         EntityManagerInterface $manager,
         BackpackValidator $validator,
-        Security $security
+        CurrentUser $currentUser
     ) {
         parent::__construct($manager, $validator);
-        $this->security=$security;
+        $this->currentUser=$currentUser;
     }
 
     public function initialise(EntityInterface $entity): void
     {
-        $entity->setUpdateAt(new \DateTime());
+        /**
+         * @var Backpack $bp
+         */
+        $bp=$entity;
+        $entity->setUpdatedAt(new \DateTime());
 
         if(empty( $entity->getId())) {
-            $entity
-                ->setOwner( $this->security->getUser())
-                ->setCurrentState(WorkflowData::STATE_DRAFT)
+            $bp
+                ->setOwner( $this->currentUser->getUser())
+                ->setStateCurrent(WorkflowData::STATE_DRAFT)
                 ->setStateAt(new \DateTime());
         }
 
-        foreach ($entity->getBackpackFiles() as $backpackFile)
+        foreach ($bp->getBackpackFiles() as $backpackFile)
         {
-            $backpackFile->setBackpack($entity);
+            $backpackFile->setBackpack($bp);
         }
 
-        foreach ($entity->getBackpackLinks() as $backpackLink)
+        foreach ($bp->getBackpackLinks() as $backpackLink)
         {
-            $backpackLink->setBackpack($entity);
+            $backpackLink->setBackpack($bp);
         }
     }
 

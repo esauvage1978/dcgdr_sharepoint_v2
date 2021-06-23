@@ -36,7 +36,7 @@ class BackpackNewType extends AppTypeAbstract
                         ->select('c')
                         ->orderBy('c.name', 'ASC');
                 }])
-            ->add('updateAt', DateTimeType::class,
+            ->add('updatedAt', DateTimeType::class,
                 [
                     self::LABEL			=> 'dater',
                     self::REQUIRED=>false

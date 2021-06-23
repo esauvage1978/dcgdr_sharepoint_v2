@@ -3,10 +3,13 @@
 {% block page_title %}<i class="fas fa-project-diagram"></i> {{ item.thematic.name }} > {{ item.name }}{% endblock %}
 
 {% block breadcrumb %}
-    {% import "macros/widgets.html.twig" as widgets %}
-    {% set actions = { 'home': {url: path('home'),class:'btn-secondary',attr:{title:'Accueil'}}} %}
-    {{ widgets.page_actions(actions) }}
+	{% import "rubric/_btn_actions.html.twig" as actions %}
+	{{ actions.show(
+        'show',
+        item
+    ) }}
 {% endblock %}
+
 
 {% block page_content %}
     {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -20,3 +23,5 @@
         {{ urbc.vignettes_by_underthematic(items,'underrubric_show','underthematic_show') }}
     {% endif %}
 {% endblock %}
+
+

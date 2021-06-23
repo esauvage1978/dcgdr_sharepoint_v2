@@ -1,0 +1,79 @@
+{% extends 'backpack/layout.html.twig' %}
+
+{% block page_subtitle %}Ajout d'un commentaire{% endblock %}
+
+{% block breadcrumb %}
+    {% import "backpack/actions.html.twig" as actions %}
+    {{ actions.backpack(
+        'comment_add',
+        item.stateCurrent,
+        item.owner==app.user,
+        item,
+        item.underrubric
+    ) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'backpack_comment_add'})) }}
+    {% import "macros/delele.html.twig" as del %}
+    {% import "macros/submit.html.twig" as sub %}
+    {{ form_start(form) }}
+
+    <div class="row justify-content-center ">
+
+        <div class="{{ col_1_2 }}">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% import "macros/widgets.html.twig" as widgets %}
+                {% import "macros/backpack.html.twig" as bpk %}
+                {% import "macros/default.html.twig" as new %}
+                {% block card_class %}h-100{% endblock %}
+                {% block card_title_class %} text-bold{% endblock %}
+                {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
+                {% block card_tools %}
+                    {{ widgets.badge_state(item.stateCurrent) }}
+                    {{ new.isNew(item.updatedAt) }}
+                {% endblock %}
+                {% block card_body %}
+                    {{ bpk.identification(item) }}
+                    <hr/>
+                    <div class="row">
+                        <div class=" col-12">
+                            <div class="form-group row">
+                                {{ form_label(form.usersTo,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                                <div class="col">
+                                    {{ form_errors(form.usersTo) }}
+                                    {{ form_widget(form.usersTo) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class=" col-12">
+                            <div class="form-group row">
+                                {{ form_label(form.subject,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                                <div class="col">
+                                    {{ form_errors(form.subject) }}
+                                    {{ form_widget(form.subject) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        {{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+                        <div class="col">
+                            {{ form_errors(form.content) }}
+                            {{ form_widget(form.content) }}
+                        </div>
+                    </div>
+
+                {% endblock %}
+
+            {% endembed %}
+
+        </div>
+    </div>
+
+    {% import "macros/submit.html.twig" as sub %}
+    <div class="d-none">{{ form_rest(form) }}{{ sub.btn() }}</div>
+    {{ form_end(form) }}
+{% endblock %}

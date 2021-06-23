@@ -1,181 +1,202 @@
 {% extends 'profil/layout.html.twig' %}
 {% import "macros/submit.html.twig" as sub %}
-
-
+{% import "macros/user.html.twig" as user %}
 
 
 {% block breadcrumb %}
-    {% import '@AdminLTE/Macros/buttons.html.twig'  as btn %}
-    <div class="btn-toolbar  float-right" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2" role="group" aria-label="First group">
-            {{ btn.link_button(
-                '',
-                path('password_change'),
-                'fas fa-key',
-                'secondary',
-                'secondary'
-            ) }}
-            {{ btn.link_button(
-                '',
-                path('avatar'),
-                'fas fa-user-circle',
-                'secondary',
-                'secondary'
-            ) }}
-            {{ sub.btn_onclick() }}
-
-            <i class=""></i>
-        </div>
-    </div>
+	{% import "profil/_btn_actions_profil.html.twig" as btn_actions_profil %}
+	{{ btn_actions_profil.show('index') }}
 {% endblock %}
 
 
 {% block page_content %}
-    <div class="row justify-content-center">
-        <div class="{{ col_1_2 }}">
+	{{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'profil'})) }}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_class %} card-primary card-outline{% endblock %}
-                {% block card_body_class %} box-profile{% endblock %}
-                {% block card_body %}
-                    <div class="text-center">
-                        <img class="profile-user-img img-fluid img-circle"
-                             src="{{ asset(app.user.avatar) }}"
-                             alt="User profile picture">
-                    </div>
+	<div class="row justify-content-center">
 
-                    <h3 class="profile-username text-center">{{ app.user.name }}</h3>
+		<div class="{{ col_sm_1_2 }}">
+			{% embed 'widgets/card-widget.html.twig' %}
+				{% block card_class %}
+					flat-shadow bg-p-dark
+				{% endblock %}
+				{% block card_body_class %}
+					box-profile
+				{% endblock %}
+				{% block card_body %}
+					<div class="text-center">
+						<img class="profile-user-img img-fluid img-circle" style="width:60%" src="{{ asset(app.user.avatar) }}" alt="User profile picture">
+					</div>
+					<p>
+						<h3 class="profile-username text-p-light text-center">{{ app.user.name }}</h3>
 
-                    <p class="text-muted text-center">{{ app.user.email }}</p>
-                {% endblock %}
-            {% endembed %}
+					</p>
+					<p class="text-center">
+						<a href="mailto::{{ app.user.email }}" class="text-p-light">
+							{{ app.user.email }}
+						</a>
+					</p>
+				{% endblock %}
+			{% endembed %}
 
-            {% if app.user.emailvalidated == false %}
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="icon fas fa-ban"></i> Adresse mail non vérifiée !</h5>
-                    <p>
-                        Attention votre adresse mail n'a pas encore été vérifiée.
-                    </p>
-                    <p>
-                        <a href="{{ path('profil_sendmail_email_validated') }}">Cliquer ici</a> pour renvoyer le lien de
-                        vérification.
-                    </p>
-                </div>
-            {% endif %}
+			{% embed 'widgets/card-widget.html.twig' %}
+				{% block card_class %}flat mt-4 bg-p-light
+				{% endblock %}
 
-            {{ form_start(form) }}
+				{% block card_title %}Habilitations
+				{% endblock %}
+				{% block card_body_class %}p-0
+				{% endblock %}
+				{% block card_body %}
+					<div class="list-group list-group-flush dropright">
+						<div class="list-group-item list-group-item-action">
+							{% if 'ROLE_ADMIN' in app.user.roles %}
+								<span class="text-success">
+									<i class="fas fa-check"></i>
+									Administrateur</span>
+							{% else %}
+								<span class="text-danger">
+									<i class="fas fa-times"></i>
+									Administrateur</span>
+							{% endif %}
+						</div>
+						<div class="list-group-item list-group-item-action">
+							{% if 'ROLE_GESTIONNAIRE' in app.user.roles %}
+								<span class="text-success">
+									<i class="fas fa-check"></i>
+									Gestionnaire</span>
+							{% else %}
+								<span class="text-danger">
+									<i class="fas fa-times"></i>
+									Gestionnaire</span>
+							{% endif %}
+						</div>
+						<div class="list-group-item list-group-item-action">
+							{% if 'ROLE_USER' in app.user.roles %}
+								<span class="text-success">
+									<i class="fas fa-check"></i>
+									Utilisateur</span>
+							{% else %}
+								<span class="text-danger">
+									<i class="fas fa-times"></i>
+									Utilisateur</span>
+							{% endif %}
+						</div>
+					</div>
+				{% endblock %}
+			{% endembed %}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_class %} border border-info{% endblock %}
-                {% block card_body_class %} text-center{% endblock %}
-                {% block card_body %}
-                    {{ form_row(form.subscription) }}
-                {% endblock %}
-            {% endembed %}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_body %}
-                    <div class="form-group row">
-                        {{ form_label(form.name,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
-                        <div class="col">
-                            {{ form_errors(form.name) }}
-                            {{ form_widget(form.name) }}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        {{ form_label(form.email,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
-                        <div class="col">
-                            {{ form_errors(form.email) }}
-                            {{ form_widget(form.email) }}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        {{ form_label(form.phone,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
-                        <div class="col">
-                            {{ form_errors(form.phone) }}
-                            {{ form_widget(form.phone) }}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        {{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
-                        <div class="col">
-                            {{ form_errors(form.content) }}
-                            {{ form_widget(form.content) }}
-                        </div>
-                    </div>
-                {% endblock %}
-            {% endembed %}
+		</div>
 
-            <div class="d-none">
-                {{ sub.btn() }}
-                {{ form_rest(form) }}
-            </div>
+		<div class="{{ col_sm_2_2 }}">
 
-            {{ form_end(form) }}
 
-        </div>
-        <div class="{{ col_2_2 }} ">
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Habilitations{% endblock %}
-                {% block card_body_class %}p-0{% endblock %}
-                {% block card_body %}
-                    <div class="list-group list-group-flush dropright">
-                        <div class="list-group-item list-group-item-action">
-                            {% if 'ROLE_ADMIN' in app.user.roles %}
-                                <span class="text-success"><i class="fas fa-check"></i> Administrateur</span>
-                            {% else %}
-                                <span class="text-danger"><i class="fas fa-times"></i> Administrateur</span>
-                            {% endif %}
-                        </div>
-                        <div class="list-group-item list-group-item-action">
-                            {% if 'ROLE_GESTIONNAIRE' in app.user.roles %}
-                                <span class="text-success"><i class="fas fa-check"></i> Gestionnaire</span>
-                            {% else %}
-                                <span class="text-danger"><i class="fas fa-times"></i> Gestionnaire</span>
-                            {% endif %}
-                        </div>
-                        <div class="list-group-item list-group-item-action">
-                            {% if 'ROLE_USER' in app.user.roles %}
-                                <span class="text-success"><i class="fas fa-check"></i> Utilisateur</span>
-                            {% else %}
-                                <span class="text-danger"><i class="fas fa-times"></i> Utilisateur</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endblock %}
-            {% endembed %}
+			{{ user.messageEmailValidated(app.user) }}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Organismes{% endblock %}
-                {% block card_tools %}
-                    {% if is_granted('ROLE_GESTIONNAIRE') %}
-                        <small class="ml-auto">
-                            <a href="{{ path('user_edit',{'id': app.user.id}) }}">modifier</a>
-                        </small>
-                    {% endif %}
-                {% endblock %}
-                {% block card_body %}
-                    {% import "macros/organisme.html.twig" as org %}
-                    {{ org.views(item.organismes,true) }}
-                {% endblock %}
-            {% endembed %}
+			{{ form_start(form) }}
 
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% block card_title %}Corbeilles{% endblock %}
-                {% block card_tools %}
-                    {% if is_granted('ROLE_GESTIONNAIRE') %}
-                        <small class="ml-auto">
-                            <a href="{{ path('user_edit',{'id': app.user.id}) }}">modifier</a>
-                        </small>
-                    {% endif %}
-                {% endblock %}
-                {% block card_body %}
-                    {% import "macros/corbeille.html.twig" as cor %}
-                    {{ cor.views(item.corbeilles,true) }}
-                {% endblock %}
-            {% endembed %}
-        </div>
-    </div>
+			{% embed 'widgets/card-widget.html.twig' %}
+				{% block card_class %}
+					border border-def1 mb-4 bg-p-dark border-p-dark
+				{% endblock %}
+				{% block card_body_class %}
+					text-center text-p-light
+				{% endblock %}
+				{% block card_body %}
+					{{ form_row(form.subscription) }}
+				{% endblock %}
+			{% endembed %}
+
+
+			<div class="row">
+				<div class="col-lg-12 col-xl-6">
+
+					{% embed 'widgets/card-widget.html.twig' %}
+						{% block card_body %}
+							<div class="form-group row">
+								{{ form_label(form.name,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+								<div class="col">
+									{{ form_errors(form.name) }}
+									{{ form_widget(form.name) }}
+								</div>
+							</div>
+							<div class="form-group row">
+								{{ form_label(form.email,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+								<div class="col">
+									{{ form_errors(form.email) }}
+									{{ form_widget(form.email) }}
+								</div>
+							</div>
+							<div class="form-group row">
+								{{ form_label(form.phone,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+								<div class="col">
+									{{ form_errors(form.phone) }}
+									{{ form_widget(form.phone) }}
+								</div>
+							</div>
+							<div class="form-group row">
+								{{ form_label(form.content,'', { 'label_attr': {'class':'col-sm-3 col-form-label' }}) }}
+								<div class="col">
+									{{ form_errors(form.content) }}
+									{{ form_widget(form.content) }}
+								</div>
+							</div>
+						{% endblock %}
+					{% endembed %}
+
+				</div>
+				<div class="col-lg-12 col-xl-6">
+
+
+					{% embed 'widgets/card-widget.html.twig' %}
+						{% block card_title %}Organismes
+						{% endblock %}
+						{% block card_tools %}
+							{% if is_granted('ROLE_GESTIONNAIRE') %}
+								<small class="ml-auto">
+									<a href="{{ path('user_edit',{'id': app.user.id}) }}" class="text-p-dark">modifier</a>
+								</small>
+							{% endif %}
+						{% endblock %}
+						{% block card_body %}
+							{% import "macros/organisme.html.twig" as org %}
+							{{ org.views(item.organismes,true) }}
+						{% endblock %}
+					{% endembed %}
+
+					{% embed 'widgets/card-widget.html.twig' %}
+						{% block card_title %}Corbeilles
+						{% endblock %}
+						{% block card_tools %}
+							{% if is_granted('ROLE_GESTIONNAIRE') %}
+								<small class="ml-auto">
+									<a href="{{ path('user_edit',{'id': app.user.id}) }} " class="text-p-dark">modifier</a>
+
+								</small>
+							{% endif %}
+						{% endblock %}
+						{% block card_body %}
+							{% import "macros/corbeille.html.twig" as cor %}
+							{{ cor.views(item.corbeilles,true) }}
+						{% endblock %}
+					{% endembed %}
+
+					<div class="col-12 d-flex justify-content-center mt-5">
+						<img src="{{ asset('img/profil.svg')}}" alt"compte" style="width:70%"/>
+					</div>
+
+				</div>
+			</div>
+
+
+			<div class="d-none">
+				{{ sub.btn() }}
+				{{ form_rest(form) }}
+			</div>
+
+			{{ form_end(form) }}
+
+		</div>
+
+	</div>
 {% endblock %}
-

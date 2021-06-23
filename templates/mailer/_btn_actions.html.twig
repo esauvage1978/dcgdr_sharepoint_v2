@@ -1,0 +1,24 @@
+{% macro show(twigTemplace,item) %}
+	{% import "macros/btn_actions.html.twig" as btn_actions %}
+
+	{% set _home = { 'home': {url: path('home'),class:'btn-p-dark',attr:{title:'Accueil'}}}  %}
+	{% set _show = { 'backpack': {url: path('backpack_show',{id:item.id}),class:'btn-p-dark',attr:{title:'Consulter le porte-document'}}} %}
+	{% set _mail_sent = { 'mail-sent': {url: path('mailer_backpack_composer',{id:item.id}),class:'btn-p-dark',attr:{title:'Envoyer un message'}}} %}
+
+
+	{% set actions = {} %}
+
+	{% set actions = actions|merge(_home) %}
+	{% set actions = actions|merge({'divider2': null}) %}
+
+	{% if twigTemplace=='composer' %}
+		{% set actions = actions|merge(_show) %}
+	{% elseif twigTemplace=='history' %}
+		{% set actions = actions|merge(_show) %}
+		{% set actions = actions|merge({'divider3': null}) %}
+		{% set actions = actions|merge(_mail_sent) %}
+	{% endif %}
+
+	{{ btn_actions.show(actions) }}
+
+{% endmacro %}

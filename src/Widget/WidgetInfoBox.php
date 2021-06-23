@@ -5,12 +5,13 @@ namespace App\Widget;
 
 class WidgetInfoBox
 {
-private $route;
-private $routeOptions;
-private $color;
-private $icon;
-private $title;
-private $data;
+    private $route;
+    private $routeOptions;
+    private $bgColor;
+    private $foreColor;
+    private $icon;
+    private $title;
+    private $data;
 
     /**
      * @param mixed $route
@@ -33,12 +34,22 @@ private $data;
     }
 
     /**
-     * @param mixed $color
+     * @param mixed $bgColor
      * @return WidgetInfoBox
      */
-    public function setColor($color)
+    public function setBgColor($bgColor)
     {
-        $this->color = $color;
+        $this->bgColor = $bgColor;
+        return $this;
+    }
+
+    /**
+     * @param mixed $foreColor
+     * @return WidgetInfoBox
+     */
+    public function setForeColor($foreColor)
+    {
+        $this->foreColor = $foreColor;
         return $this;
     }
 
@@ -77,11 +88,12 @@ private $data;
         return
             [
                 'route' => $this->route,
-                'routeOptions' => isset($this->routeOptions)?$this->routeOptions:[],
-                'color' => isset($this->color)?$this->color:'success',
-                'icon' => isset($this->icon)?$this->icon:'fa fa-home',
-                'title' => isset($this->title)?$this->title:'',
-                'data' => isset($this->data)?$this->data:'-'
+                'routeOptions' => isset($this->routeOptions) ? $this->routeOptions : [],
+                'bgColor' => isset($this->bgColor) ? $this->bgColor : 'success',
+                'foreColor' => isset($this->foreColor) ? $this->foreColor : 'success',
+                'icon' => isset($this->icon) ? $this->icon : 'fa fa-home',
+                'title' => isset($this->title) ? $this->title : '',
+                'data' => isset($this->data) ? $this->data : '-'
             ];
     }
 }

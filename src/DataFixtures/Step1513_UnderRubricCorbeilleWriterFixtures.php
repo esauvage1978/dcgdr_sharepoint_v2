@@ -59,28 +59,26 @@ class Step1513_UnderRubricCorbeilleWriterFixtures extends Fixture implements Fix
 
     public function load(ObjectManager $manager)
     {
-        $data = $this->fixturesImportData->importToArray(self::FILENAME.'.json');
+        $data = $this->fixturesImportData->importToArray(self::FILENAME . '.json');
 
         for ($i = 0; $i < \count($data); ++$i) {
             $corbeille = $this->getInstance($data[$i]['droite'], $this->corbeilles);
             /** @var UnderRubric $underrubric */
             $underrubric = $this->getInstance($data[$i]['gauche'], $this->underrubrics);
 
-            if (is_a($corbeille, Corbeille::class)
+            if (
+                is_a($corbeille, Corbeille::class)
                 &&
                 is_a($underrubric, UnderRubric::class)
             ) {
-                $underrubric->addWriter($corbeille);
-
-                $this->entityManagerInterface->persist($underrubric);
+                if ($corbeille->getIsShowWrite()) {
+                    $underrubric->addWriter($corbeille);
+                    $this->entityManagerInterface->persist($underrubric);
+                }
             }
-
-
         }
 
         $manager->flush();
-
-
     }
 
     public static function getGroups(): array

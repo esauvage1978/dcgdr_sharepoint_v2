@@ -1,50 +1,49 @@
 {% extends 'backpack/layout.html.twig' %}
 
-{% import "backpack/actions.html.twig" as actions %}
+{% import "backpack/_btn_actions.html.twig" as actions %}
 
-{% block page_subtitle %}Historique des changements d'état{% endblock %}
+{% block page_subtitle %}Historique des changements d'état
+{% endblock %}
 
 {% block breadcrumb %}
-    {{ actions.backpack(
-        'workflow',
-        item.currentState,
+	{{ actions.backpack(
+'workflow',
+        item.stateCurrent,
         item.owner==app.user,
         item,
-        item.underrubric
+        null
     ) }}
 {% endblock %}
 
 {% block page_content %}
+	<div class="row justify-content-center ">
+		<div class="col-10">
+			{% embed 'widgets/card-widget.html.twig' %}
+				{% import "macros/widgets.html.twig" as widgets %}
+				{% import "macros/backpack.html.twig" as bpk %}
+				{% block card_body_class %}h-100 bg-light shadow
+				{% endblock %}
+				{% block card_body %}
+					{{ include('backpack/_show/_identification.html.twig') }}
+					{{ include('backpack/_show/_content.html.twig') }}
 
-    <div class="row justify-content-center ">
-        <div class="col-10">
-            {% embed 'widgets/card-widget.html.twig' %}
-                {% import "macros/widgets.html.twig" as widgets %}
-                {% block card_title_class %} text-info{% endblock %}
-                {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
-                {% block card_tools %}
-                    <small class="text-muted">
-                        Créé par <strong>{{ item.owner.name }}</strong>
-                        Mise à jour le <strong>{{ item.updateAt |format_datetime('full', 'short', locale='fr') }}</strong>
-                        {{ widgets.badge_state(item.currentState) }}
-                    </small>
-                {% endblock %}
-                {% block card_body_class %}h-100 bg-light shadow{% endblock %}
-                {% block card_body %}
+					<hr/>
+					{% embed 'widgets/timeline-widget.html.twig' %}
+						{% block timeline_title %}Création
+						{% endblock %}
+						{% block timeline_title_class %}bg-secondary
+						{% endblock %}
+						{% block timeline_body %}
+							{% import "macros/workflow.html.twig" as workflow %}
+							{% for state in item.backpackStates %}
+								{{ workflow.timeline(state) }}
+							{% endfor %}
+						{% endblock %}
+					{% endembed %}
 
-                    {% embed 'widgets/timeline-widget.html.twig' %}
-                        {% block timeline_title %}Création{% endblock %}
-                        {% block timeline_title_class %}bg-secondary{% endblock %}
-                        {% block timeline_body %}
-                            {% import "macros/workflow.html.twig" as workflow %}
-                            {% for state in item.backpackStates %}
-                                {{ workflow.timeline(state) }}
-                            {% endfor %}
-                        {% endblock %}
-                    {% endembed %}
-
-                {% endblock %}
-            {% endembed %}
-        </div>
-    </div>
+				{% endblock %}
+			{% endembed %}
+		</div>
+	</div>
 {% endblock %}
+

@@ -8,9 +8,10 @@ use App\Dto\BackpackDto;
 use App\Dto\DtoInterface;
 use App\Dto\RubricDto;
 use App\Entity\Backpack;
+use App\Entity\BackpackLink;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class BackpackDtoRepository extends ServiceEntityRepository implements DtoRepositoryInterface
@@ -53,7 +54,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function findAllForDtoPaginator(DtoInterface $dto, $page = null, $limit = null, $select = self::SELECT_ALL)
+    public function findAllForDtoPaginator(DtoInterface $dto, $page = null, $limit = null, $select = '')
     {
         /**
          * var ContactDto
@@ -97,7 +98,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                 $this->initialise_select_home();
                 break;
             case self::FILTRE_DTO_INIT_SEARCH:
-                $this->initialise_select();
+                $this->initialise_select_search();
                 break;
         }
 
@@ -147,6 +148,26 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             ->leftJoin(self::ALIAS.'.backpackFiles',BackpackFileRepository::ALIAS)
             ->leftJoin(self::ALIAS.'.backpackLinks',BackpackLinkRepository::ALIAS)
         ;
+    }
+
+    private function initialise_select_search()
+    {
+        $this->builder = $this->createQueryBuilder(self::ALIAS)
+            ->select(
+                self::ALIAS,
+                RubricRepository::ALIAS,
+                ThematicRepository::ALIAS,
+                UnderThematicRepository::ALIAS,
+                UnderRubricRepository::ALIAS,
+                BackpackFileRepository::ALIAS,
+                BackpackLinkRepository::ALIAS
+            )
+            ->join(self::ALIAS . '.underRubric', UnderRubricRepository::ALIAS)
+            ->join(UnderRubricRepository::ALIAS . '.underThematic', UnderThematicRepository::ALIAS)
+            ->join(UnderRubricRepository::ALIAS . '.rubric', RubricRepository::ALIAS)
+            ->join(RubricRepository::ALIAS . '.thematic', ThematicRepository::ALIAS)
+            ->leftJoin(self::ALIAS . '.backpackFiles', BackpackFileRepository::ALIAS)
+            ->leftJoin(self::ALIAS . '.backpackLinks', BackpackLinkRepository::ALIAS);
     }
 
     private function initialise_select()
@@ -253,7 +274,6 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                     ' OR ' . self::ALIAS. '.id IN (' . $qRC->getDQL() . ')' .
                     ' OR ' . RubricRepository::ALIAS . '.isShowAll = 1' .
                     ' OR ' . UnderRubricRepository::ALIAS . '.isShowAll = 1');
-
         }
     }
 
@@ -264,7 +284,7 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
             $from = date('Y-m-d', strtotime((new DateTime())->format('Y-m-d') . ' -8 day'));
 
             $this->builder->andWhere(
-                self::ALIAS . '.updateAt BETWEEN  :from AND :to');
+                self::ALIAS . '.updatedAt BETWEEN  :from AND :to');
 
             $this->addParams('from', $from);
             $this->addParams('to', $to);
@@ -274,9 +294,9 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
     private function initialise_where_state()
     {
 
-        if (!empty($this->dto->getCurrentState())) {
-            $this->builder->andwhere(self::ALIAS . '.currentState = :state');
-            $this->addParams('state', $this->dto->getCurrentState());
+        if (!empty($this->dto->getStateCurrent())) {
+            $this->builder->andwhere(self::ALIAS . '.stateCurrent = :state');
+            $this->addParams('state', $this->dto->getStateCurrent());
         }
 
 
@@ -376,7 +396,15 @@ class BackpackDtoRepository extends ServiceEntityRepository implements DtoReposi
                     ' OR ' . self::ALIAS . '.dir3 like :search' .
                     ' OR ' . self::ALIAS . '.dir4 like :search' .
                     ' OR ' . self::ALIAS . '.dir5 like :search' .
-                    ' OR ' . self::ALIAS . '.name like :search');
+                    ' OR ' . self::ALIAS . '.name like :search' .
+                    ' OR ' . self::ALIAS . '.stateContent like :search' .
+                    ' OR ' . BackpackLinkRepository::ALIAS . '.title like :search' .
+                    ' OR ' . BackpackLinkRepository::ALIAS . '.link like :search' .
+                    ' OR ' . BackpackLinkRepository::ALIAS . '.content like :search' .
+                    ' OR ' . BackpackFileRepository::ALIAS . '.title like :search' .
+                    ' OR ' . BackpackFileRepository::ALIAS . '.fileName like :search' .
+                    ' OR ' . BackpackFileRepository::ALIAS . '.content like :search'
+);
 
             $this->addParams('search', '%' . $dto->getWordSearch() . '%');
         }

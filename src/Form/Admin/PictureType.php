@@ -25,7 +25,7 @@ class PictureType extends AppTypeAbstract
                     self::LABEL			=> 'Choisir le fichier',
                     self::REQUIRED=>false
                 ])
-            ->add('updateAt', DateTimeType::class,
+            ->add('updatedAt', DateTimeType::class,
                 [
                     self::LABEL			=> 'Choisir le fichier',
                     self::REQUIRED=>false

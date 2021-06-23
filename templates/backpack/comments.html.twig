@@ -1,0 +1,49 @@
+{% extends 'backpack/layout.html.twig' %}
+
+{% block page_subtitle %}Liste des commentaires{% endblock %}
+
+{% block breadcrumb %}
+    {% import "backpack/actions.html.twig" as actions %}
+    {{ actions.backpack(
+        'comments',
+        item.stateCurrent,
+        item.owner==app.user,
+        item,
+        item.underrubric
+    ) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ render(controller('App\\Controller\\GPIController::showGPIAction', { 'page': 'backpack_comments'})) }}
+    <div class="row justify-content-center ">
+        <div class="col-10">
+            {% embed 'widgets/card-widget.html.twig' %}
+                {% import "macros/widgets.html.twig" as widgets %}
+                {% import "macros/backpack.html.twig" as bpk %}
+                {% import "macros/default.html.twig" as new %}
+                {% block card_title_class %} text-bold{% endblock %}
+                {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
+                {% block card_tools %}
+                    {{ widgets.badge_state(item.stateCurrent) }}
+                    {{ new.isNew(item.updatedAt) }}
+                {% endblock %}
+                {% block card_body %}
+                    {{ bpk.identification(item) }}
+                    <hr/>
+
+                    {% embed 'widgets/timeline-widget.html.twig' %}
+                        {% block timeline_title %}Création{% endblock %}
+                        {% block timeline_title_class %}bg-secondary{% endblock %}
+                        {% block timeline_body %}
+                            {% import "macros/comment.html.twig" as comment %}
+                            {% for comment in item.comments %}
+                                {{ comment.timeline(comment) }}
+                            {% endfor %}
+                        {% endblock %}
+                    {% endembed %}
+
+                {% endblock %}
+            {% endembed %}
+        </div>
+    </div>
+{% endblock %}

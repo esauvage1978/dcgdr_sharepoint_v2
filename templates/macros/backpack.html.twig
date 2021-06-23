@@ -1,0 +1,34 @@
+{%  macro identification(item) %}
+    {% import "macros/widgets.html.twig" as widgets %}
+    {% import "macros/user.html.twig" as user %}
+    <div class="row ">
+        <div class="col-12 d-flex justify-content-around  align-items-center">
+            <div class="d-flex   align-items-center">
+                <small class="text-muted ">créé par&nbsp;</small>
+                {{ user.view(item.owner) }}
+            </div>
+            <small class="text-muted ">
+                Modifié le <strong>{{ widgets.showLongDate (item.updatedAt) }}</strong>
+            </small>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro isNew(dateNew) %}
+	{% import _self as macro %}
+	{% if dateNew %}
+		{% set difference = date("today").diff(date(dateNew)) %}
+		{% set leftDays = difference.days %}
+		{% if leftDays < news_time %}
+			{{ macro.spanNew() }}
+		{% endif %}
+	{% endif %}
+{% endmacro %}
+
+{% macro spanNew() %}
+	<span class="badge bg-p-light text-p-dark2">
+		<i class="fas fa-certificate"></i>
+		Mise à jour
+	</span>
+{% endmacro %}
+

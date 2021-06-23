@@ -6,9 +6,10 @@ namespace App\Repository;
 
 use App\Dto\DtoInterface;
 use App\Dto\RubricDto;
+use App\Dto\UnderRubricDto;
 use App\Entity\Rubric;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class RubricDtoRepository extends ServiceEntityRepository implements DtoRepositoryInterface
@@ -57,7 +58,7 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
         $this->initialise_where();
 
-        $this->initialise_orderByName();
+        $this->initialise_orderBy();
 
         return $this->builder
             ->getQuery()
@@ -169,7 +170,7 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
     private function initialise_selectCombobox()
     {
         $this->builder = $this->createQueryBuilder(self::ALIAS)
-            ->select('distinct '. self::ALIAS.'.id, '.self::ALIAS.'.name')
+            ->select('distinct '. self::ALIAS.'.id, '.self::ALIAS.'.name', ThematicRepository::ALIAS.'.name as thematic')
             ->Join(self::ALIAS . '.thematic', ThematicRepository::ALIAS)
             ->LeftJoin(self::ALIAS . '.underRubrics', UnderRubricRepository::ALIAS)
             ->LeftJoin(UnderRubricRepository::ALIAS . '.underThematic', UnderThematicRepository::ALIAS);
@@ -200,12 +201,13 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
         $this->initialise_where_thematic();
 
-        $this->initialise_where_underRubric();
-
         $this->initialise_where_enable();
 
-        $this->initialise_where_user_can_show();
-
+        if($dto->getForUpdate()===RubricDto::TRUE) {
+            $this->initialise_where_user_can_update();
+        } else {
+            $this->initialise_where_user_can_show();
+        }
 
         $this->initialise_where_search();
 
@@ -279,9 +281,6 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
         }
     }
 
-    private function initialise_where_underRubric()
-    {
-    }
 
     private function initialise_where_search()
     {
@@ -312,21 +311,65 @@ class RubricDtoRepository extends ServiceEntityRepository implements DtoReposito
 
             $qRRC = $this->createQueryBuilder(self::ALIAS . '2')
                 ->select(self::ALIAS . '2.id')
-                ->Join(self::ALIAS . '2.writers', CorbeilleRepository::ALIAS_RUBRIC_READERS)
+                ->Join(self::ALIAS . '2.readers', CorbeilleRepository::ALIAS_RUBRIC_READERS)
                 ->Join(CorbeilleRepository::ALIAS_RUBRIC_READERS . '.users', UserRepository::ALIAS_RUBRIC_READERS)
                 ->Where(UserRepository::ALIAS_RUBRIC_READERS . '.id= :idUser');
+
+            $qURWC = $this->createQueryBuilder(self::ALIAS . '3')
+                ->select(self::ALIAS . '3.id')
+                ->Join(self::ALIAS . '3.underRubrics', UnderRubricRepository::ALIAS . '1')
+                ->Join(UnderRubricRepository::ALIAS . '1.writers', CorbeilleRepository::ALIAS_UNDERRUBRIC_WRITERS)
+                ->Join(CorbeilleRepository::ALIAS_UNDERRUBRIC_WRITERS . '.users', UserRepository::ALIAS_UNDERRUBRIC_WRITERS)
+                ->Where(UserRepository::ALIAS_UNDERRUBRIC_WRITERS . '.id= :idUser');
+
+            $qURRC = $this->createQueryBuilder(self::ALIAS . '4')
+                ->select(self::ALIAS . '4.id')
+                ->Join(self::ALIAS . '4.underRubrics', UnderRubricRepository::ALIAS . '2')
+                ->Join(UnderRubricRepository::ALIAS . '2.readers', CorbeilleRepository::ALIAS_UNDERRUBRIC_READERS)
+                ->Join(CorbeilleRepository::ALIAS_UNDERRUBRIC_READERS . '.users', UserRepository::ALIAS_UNDERRUBRIC_READERS)
+                ->Where(UserRepository::ALIAS_UNDERRUBRIC_READERS . '.id= :idUser');
+
+            $this->addParams('idUser', $u->getId());
+            $this->builder
+                ->andWhere(
+                    self::ALIAS . '.id IN (' . $qRWC->getDQL() . ')' .
+                    ' OR ' . self::ALIAS . '.id IN (' . $qRRC->getDQL() . ')' .
+                    ' OR ' . self::ALIAS . '.id IN (' . $qURWC->getDQL() . ')' .
+                    ' OR ' . self::ALIAS . '.id IN (' . $qURRC->getDQL() . ')' .
+                    ' OR ' . UnderRubricRepository::ALIAS . '.isShowAll = 1' .
+                    ' OR ' . self::ALIAS . '.isShowAll = 1');
+
+        }
+    }
+    private function initialise_where_user_can_update()
+    {
+        $u=$this->dto->getUserDto();
+        if (!empty($u) && !empty($u->getId())) {
+
+
+            $qRWC = $this->createQueryBuilder(self::ALIAS . '1')
+                ->select(self::ALIAS . '1.id')
+                ->Join(self::ALIAS . '1.writers', CorbeilleRepository::ALIAS_RUBRIC_WRITERS)
+                ->Join(CorbeilleRepository::ALIAS_RUBRIC_WRITERS . '.users', UserRepository::ALIAS_RUBRIC_WRITERS)
+                ->Where(UserRepository::ALIAS_RUBRIC_WRITERS . '.id= :idUser');
+
+
+            $qURWC = $this->createQueryBuilder(self::ALIAS . '3')
+                ->select(self::ALIAS . '3.id')
+                ->Join(self::ALIAS . '3.underRubrics', UnderRubricRepository::ALIAS . '1')
+                ->Join(UnderRubricRepository::ALIAS . '1.writers', CorbeilleRepository::ALIAS_UNDERRUBRIC_WRITERS)
+                ->Join(CorbeilleRepository::ALIAS_UNDERRUBRIC_WRITERS . '.users', UserRepository::ALIAS_UNDERRUBRIC_WRITERS)
+                ->Where(UserRepository::ALIAS_UNDERRUBRIC_WRITERS . '.id= :idUser');
+
 
             $this->addParams('idUser', $u->getId());
 
             $this->builder
                 ->andWhere(
                     self::ALIAS . '.id IN (' . $qRWC->getDQL() . ')' .
-                    ' OR ' . self::ALIAS . '.id IN (' . $qRRC->getDQL() . ')' .
-                    ' OR ' . self::ALIAS . '.isShowAll = 1');
-
+                    ' OR ' . self::ALIAS . '.id IN (' . $qURWC->getDQL() . ')' );
         }
     }
-
 
     private function initialise_orderBy()
     {

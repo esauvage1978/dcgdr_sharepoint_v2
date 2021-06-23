@@ -9,6 +9,7 @@ use App\Helper\StackMessage;
 use App\Mail\BackpackMail;
 use App\Repository\BackpackDtoRepository;
 use App\Repository\UserRepository;
+use App\Security\Role;
 use App\Workflow\WorkflowData;
 
 class BackpackNotificator
@@ -65,32 +66,38 @@ class BackpackNotificator
     private function notifyBackpackNew(array $users)
     {
         foreach ($users as $user) {
-            $this->backpackDto
-                ->setCurrentState(WorkflowData::STATE_PUBLISHED)
-                ->setIsNew(BackpackDto::TRUE)
-                ->setUserDto((new UserDto())->setId($user->getId()))
-                ->setVisible(BackpackDto::TRUE);
+            if (Role::isUser($user) && $user->getEmailValidated()) {
+                $this->backpackDto
+                    ->setStateCurrent(WorkflowData::STATE_PUBLISHED)
+                    ->setIsNew(BackpackDto::TRUE)
+                    ->setUserDto((new UserDto())->setId($user->getId()))
+                    ->setVisible(BackpackDto::TRUE);
 
+ 
+                /** @var Backpack[] $result */
+                $result = $this->backpackRepository->findAllForDto($this->backpackDto, BackpackDtoRepository::FILTRE_DTO_INIT_HOME);
 
-            /** @var Backpack[] $result */
-            $result = $this->backpackRepository->findAllForDto($this->backpackDto, BackpackDtoRepository::FILTRE_DTO_INIT_HOME);
+                if (empty($result)) {
+                    $this->stackMessage->push($user->getName() . ' -> pas de nouveauté');
+                    continue;
+                }
 
-            if (empty($result)) {
-                $this->stackMessage->push($user->getName() . ' -> pas de nouveauté');
-                continue;
+                $this->stackMessage->push(
+                    StackMessage::TABULATION .
+                    ' Notification à ' . $user->getName() .
+                    ' [' . $user->getEmail() . ']' . ' -> ' . count($result) . ' nouveautés');
+
+                $this->backpackMail->send(
+                    $user,
+                    BackpackMail::NEW,
+                    'Liste des dernières notifications',
+                    ['backpacks' => $result]);
+            } else {
+                $this->stackMessage->push(
+                    StackMessage::TABULATION .
+                    ' Exclus : ' . $user->getName() .
+                    ' (mail non validé ou pas le rôle user)');
             }
-
-            $this->stackMessage->push(
-                StackMessage::TABULTATION .
-                ' Notification à ' . $user->getName() .
-                ' [' . $user->getEmail() . ']' . ' -> ' . count($result) . ' nouveautés');
-
-            $this->backpackMail->send(
-                $user,
-                BackpackMail::NEW,
-                'Liste des dernières notifications',
-                ['backpacks' => $result]);
-
 
         }
     }

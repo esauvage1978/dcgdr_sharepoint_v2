@@ -3,9 +3,9 @@
 namespace App\Listener;
 
 use App\Entity\Picture;
-use App\Helper\FileDirectory;
-use App\Helper\ImageResize;
+use App\Helper\FileTools;
 use App\Service\Uploader;
+use App\Helper\ImageResize;
 use Doctrine\ORM\Mapping as ORM;
 
 class PictureUploadListener
@@ -40,14 +40,15 @@ class PictureUploadListener
     {
         if (!empty($picture->getFile())) {
 
+
             $extension = $this->uploader->getExtension($picture->getFile());
 
             if (empty($picture->getFileName())) {
                 $picture->setFileName(md5(uniqid()));
             } else {
-                $fileDirectory = new FileDirectory();
+                $fileTools = new FileTools();
                 $targetDir = $this->directory;
-                $fileDirectory->removeFile($targetDir, $picture->getFullName());
+                $fileTools->remove($targetDir, $picture->getFullName());
             }
 
             if (empty($picture->getName())) {
@@ -56,7 +57,7 @@ class PictureUploadListener
 
             $picture->setFileExtension($extension);
         }
-        $picture->setUpdateAt(new \DateTime());
+        $picture->setUpdatedAt(new \DateTime());
     }
 
     /**
@@ -81,8 +82,8 @@ class PictureUploadListener
      */
     public function postRemoveHandler(Picture $picture)
     {
-        $fileDirectory = new FileDirectory();
+        $fileTools = new FileTools();
         $targetDir = $this->directory;
-        $fileDirectory->removeFile($targetDir, $picture->getFullName());
+        $fileTools->remove($targetDir, $picture->getFullName());
     }
 }

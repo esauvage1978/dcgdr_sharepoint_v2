@@ -70,9 +70,10 @@ class Step1512_UnderRubricCorbeilleReaderFixtures extends Fixture implements Fix
                 &&
                 is_a($underrubric, UnderRubric::class)
             ) {
-                $underrubric->addReader($corbeille);
-
-                $this->entityManagerInterface->persist($underrubric);
+                if ($corbeille->getIsShowRead()) {
+                    $underrubric->addReader($corbeille);
+                    $this->entityManagerInterface->persist($underrubric);
+                }
             }
 
 

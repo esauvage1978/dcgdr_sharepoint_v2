@@ -28,7 +28,7 @@ class WorkflowBackpackTransitionManager
     public function intialiseBackpackForTransition(string $content, bool $automate=false)
     {
         $this->backpack->setStateAt(new \DateTime());
-        $this->backpack->setContentState($content);
+        $this->backpack->setStateContent($content);
         $object = __NAMESPACE__ . '\Transaction\Transition' . ucfirst( $this->transition);
         $instance=new $object($this->backpack);
         $instance->intialiseBackpackForTransition($automate);

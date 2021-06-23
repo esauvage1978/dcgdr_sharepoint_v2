@@ -12,7 +12,19 @@ function fillComboboxRubricChained(selecteurSource, selecteurDestination, route,
         dataType: 'json',
         success: function (json) {
             var selected='';
+            var tp='';
+            var tc='';
             $.each(json, function (index, value) {
+
+                tc=value.thematic;
+
+                if(tp !== tc) {
+                    if(tp!=='') {
+                        $(selecteurDestination).append('</optgroup>');
+                    }
+                    $(selecteurDestination).append('<optgroup label="'+ tc +'">');
+                }
+
                 if(selectedId === value.id ) {
                     selected='selected';
                 } else {
@@ -21,7 +33,9 @@ function fillComboboxRubricChained(selecteurSource, selecteurDestination, route,
                 $(selecteurDestination).append('<option ' + selected + ' value="' + value.id + '">' +
                     (addReference ? value.ref + ' - ' : '')
                     + value.name + '</option>');
+                tp=tc;
             });
+            $(selecteurDestination).append('</optgroup>');
             if (appelEnCascade) {
                 $(selecteurDestination).change();
             }
@@ -38,7 +52,18 @@ function fillComboboxRubric(selecteur, route, appelEnCascade, selectedId="") {
         dataType: 'json',
         success: function (json) {
             var selected='';
+            var tp='';
+            var tc='';
             $.each(json, function (index, value) {
+                tc=value.thematic;
+
+                if(tp !== tc) {
+                    if(tp!=='') {
+                        $(selecteur).append('</optgroup>');
+                    }
+                    $(selecteur).append('<optgroup label="'+ tc+'">');
+                }
+
                 if(selectedId === value.id ) {
                     selected='selected';
                 } else {
@@ -46,7 +71,10 @@ function fillComboboxRubric(selecteur, route, appelEnCascade, selectedId="") {
                 }
                 $(selecteur).append('<option ' + selected + ' value="' + value.id + '">'
                     + value.name + '</option>');
+
+                tp=tc;
             });
+            $(selecteur).append('</optgroup>');
             if (appelEnCascade) {
                 $(selecteur).change();
             }

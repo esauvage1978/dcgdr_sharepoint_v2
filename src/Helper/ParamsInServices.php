@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Helper;
-
 
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -13,33 +11,35 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class ParamsInServices
 {
-    CONST DIRECTIRY_IMPORT='directory_import';
-    CONST DIRECTORY_AVATAR= 'directory_avatar';
-    CONST DIRECTORY_PICTURE='directory_picture';
-    CONST DIRECTORY_DATA_PICTURE='directory_data_picture';
-    CONST DIRECTORY_FILE_BACKPACK='directory_file_backpack';
-    CONST DIRECTORY_DATA_DOC= 'directory_data_doc';
-
     CONST APPLICATION_NAME='application.name';
-    CONST MAILER_MAIL='mailer.mail';
-    CONST MAILER_NAME='mailer.name';
-    CONST MAILER_PREFIXE='mailer.prefixe';
-    CONST MAILER_SMTP_HOST='mailer.smtp.host';
-    CONST MAILER_SMTP_PORT='mailer.smtp.port';
-    CONST MAILER_SMTP_USERNAME='mailer.smtp.username';
-    CONST MAILER_SMTP_PASSWORD='mailer.smtp.password';
-
-    CONST TREE_UNDEVELOPPED_FOR_NBR= 'tree_undevelopped_for_nbr';
-
-    CONST NEWS_TIME='news_time';
-
+    CONST DIRECTORY_AVATAR= 'directory_avatar';
+    CONST DIRECTORY_FIXTURES_DOC= 'directory_fixtures_doc';
+    CONST DIRECTORY_FIXTURES_JSON='directory_fixtures_json';
+    CONST DIRECTORY_FIXTURES_PICTURE='directory_fixtures_picture';
+    CONST DIRECTORY_PICTURE='directory_picture';
+    CONST DIRECTORY_UPLOAD_BACKPACK_DOC='directory_upload_backpack_doc';
     CONST IMAGE_RESIZE_X='image.resize.x';
     CONST IMAGE_RESIZE_Y='image.resize.y';
+    CONST MAILER_NAME='mailer.name';
+    CONST MAILER_MAIL='mailer.mail';
+    CONST MAILER_PREFIXE='mailer.prefixe';
+    CONST MAILER_SMTP_PASSWORD='mailer.smtp.password';
+    CONST MAILER_SMTP_USERNAME='mailer.smtp.username';
+    CONST MAILER_SMTP_HOST='mailer.smtp.host';
+    CONST MAILER_SMTP_PORT='mailer.smtp.port';
+    CONST NEWS_TIME='news_time';
+    public const ES_TREE_UNDEVELOPPED_NBR = 'es.tree.undevelopped.nbr';
+
 
     /**
      * @var ParameterBagInterface
      */
     private $params;
+
+    /**
+     * @var array $datas
+     */
+    private $datas=[];
 
     /**
      * ParamsInServices constructor.
@@ -48,6 +48,26 @@ class ParamsInServices
     public function __construct(ParameterBagInterface $params)
     {
         $this->params = $params;
+        $this->datas=[
+            self::APPLICATION_NAME,
+            self::DIRECTORY_AVATAR,
+            self::DIRECTORY_FIXTURES_DOC,
+            self::DIRECTORY_FIXTURES_JSON,
+            self::DIRECTORY_FIXTURES_PICTURE,
+            self::DIRECTORY_PICTURE,
+            self::DIRECTORY_UPLOAD_BACKPACK_DOC,
+            self::IMAGE_RESIZE_X,
+            self::IMAGE_RESIZE_Y,
+            self::MAILER_NAME,
+            self::MAILER_MAIL,
+            self::MAILER_PREFIXE,
+            self::MAILER_SMTP_PASSWORD,
+            self::MAILER_SMTP_USERNAME,
+            self::MAILER_SMTP_HOST,
+            self::MAILER_SMTP_PORT,
+            self::NEWS_TIME,
+            self::ES_TREE_UNDEVELOPPED_NBR
+        ];
     }
 
     /**
@@ -60,6 +80,9 @@ class ParamsInServices
      */
     public function get(string $param_name) :string
     {
+        if(!in_array($param_name,$this->datas)){
+            throw new \InvalidArgumentException('Ce paramètre est incconnu : '. $param_name);
+        }
         return $this->params->get($param_name);
     }
 

@@ -38,7 +38,7 @@
                 <td colspan="3">
                     <a style=" font-size: 16px; color:#57a7fe; text-decoration: none;font-weight: bolder"
                        href="{{ absolute_url( path('backpack_show',{id:bp.id})) }}">
-                        {{ bp.name }} {{ bp.enable?'':' (masqué)' }}
+                        {{ bp.name }}
                     </a>
                 </td>
                 </thead>
@@ -78,7 +78,7 @@
                         Date de modification
                     </td>
                     <td>
-                        {{ bp.updateAt  | date('d/m/Y H:i') }}
+                        {{ bp.updatedAt  | date('d/m/Y H:i') }}
                     </td>
                 </tr>
                 {% if bp.content %}
@@ -109,13 +109,7 @@
                                     <td style="font-weight: bolder">
                                         Nom du fichier
                                     </td>
-                                    <td style="font-weight: bolder">
-                                        Description
-                                    </td>
-                                    <td style="font-weight: bolder">
-                                        Taille
-                                    </td>
-                                    <td style="font-weight: bolder">
+                                         <td style="font-weight: bolder">
                                         Date
                                     </td>
                                 </tr>

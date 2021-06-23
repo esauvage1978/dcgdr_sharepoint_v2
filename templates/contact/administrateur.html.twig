@@ -1,0 +1,14 @@
+{% extends 'contact/layout.html.twig' %}
+
+{% block page_subtitle %}Administrateur{% endblock %}
+
+
+{% block breadcrumb %}
+    {% import "profil/actions.html.twig" as actions %}
+    {{ actions.menu('administrateur') }}
+{% endblock %}
+
+{% block page_content %}
+    {% import "macros/user.html.twig" as user %}
+    {{ user.vignettes(items,'user_show','administrateur') }}
+{% endblock %}

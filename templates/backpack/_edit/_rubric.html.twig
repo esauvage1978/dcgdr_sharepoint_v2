@@ -1,0 +1,49 @@
+{% embed 'widgets/card-widget.html.twig' %}
+	{% block card_class %}flat
+	{% endblock %}
+	{% block card_body %}
+
+		<div class="form-group row m-2 js-createTip-wrapper">
+			<p>
+				<label class="control-label required" for="cmb_rubric">Rubrique</label>
+			</p>
+
+			<select name="cmb_rubric" id="cmb_rubric" class="form-control" required></select>
+
+			<div class="createTip  mt-4">
+
+				<div class="createTip__title">
+					Rubrique
+
+				</div>
+				<p>
+					La rubrique est obligatoire
+				</p>
+
+			</div>
+		</div>
+		<div class="form-group row m-2 js-createTip-wrapper">
+			<p>
+				<label class="control-label required" for="cmb_underrubric">Sous-rubrique</label>
+			</p>
+
+<select name="cmb_underrubric" id="cmb_underrubric" class="form-control" required></select>
+
+
+			<div class="createTip  mt-4">
+
+				<div class="createTip__title">
+					Sous-rubrique
+
+				</div>
+				<p>
+					La sous-rubrique est obligatoire
+				</p>
+
+			</div>
+		</div>
+
+
+	{% endblock %}
+
+{% endembed %}

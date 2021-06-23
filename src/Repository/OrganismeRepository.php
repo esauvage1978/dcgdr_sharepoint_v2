@@ -46,15 +46,4 @@ class OrganismeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /*
-    public function findOneBySomeField($value): ?Organisme
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

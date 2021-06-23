@@ -5,6 +5,10 @@ namespace App\Dto;
 
 class UnderRubricDto extends AbstractDtoIsEnable
 {
+    /**
+     * @var ?string
+     */
+    private $forUpdate;
 
     /**
      * @var ?UnderThematicDto
@@ -98,4 +102,21 @@ class UnderRubricDto extends AbstractDtoIsEnable
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getForUpdate()
+    {
+        return $this->forUpdate;
+    }
+
+    /**
+     * @param mixed $forUpdate
+     * @return UnderRubricDto
+     */
+    public function setForUpdate($forUpdate)
+    {
+        $this->forUpdate = $forUpdate;
+        return $this;
+    }
 }

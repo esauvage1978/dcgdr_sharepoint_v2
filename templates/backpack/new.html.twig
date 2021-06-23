@@ -89,11 +89,11 @@
                 fillComboboxRubricChained('#cmb_rubric', '#cmb_underrubric', "{{ path('ajax_fill_combobox_underrubrics') }}", true, false);
             });
 
-            $('#backpack_new_updateAt_date_month').val(new Date().getMonth()+1);
-            $('#backpack_new_updateAt_date_day').val(new Date().getDay());
-            $('#backpack_new_updateAt_date_year').val(new Date().getFullYear());
-            $('#backpack_new_updateAt_time_hour').val(new Date().getHours());
-            $('#backpack_new_updateAt_time_minute').val(new Date().getMinutes());
+            $('#backpack_new_updatedAt_date_month').val(new Date().getMonth()+1);
+            $('#backpack_new_updatedAt_date_day').val(new Date().getDay());
+            $('#backpack_new_updatedAt_date_year').val(new Date().getFullYear());
+            $('#backpack_new_updatedAt_time_hour').val(new Date().getHours());
+            $('#backpack_new_updatedAt_time_minute').val(new Date().getMinutes());
 
             $('#cmb_underrubric').change(function () {
                 $('#backpack_new_underrubric').val($('#cmb_underrubric').val());

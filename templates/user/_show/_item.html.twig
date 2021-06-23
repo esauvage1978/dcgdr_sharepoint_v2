@@ -63,7 +63,7 @@
                                 <b>Dernière connexion</b>
                             </div>
                             <div class="col-9">
-                                {{ item.loginat?user.loginat|date("d/m/Y", "Europe/Paris") }}
+                                {{ item.loginat?item.loginat|date("d/m/Y", "Europe/Paris") }}
                             </div>
                         </div>
                     {% endif %}

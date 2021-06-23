@@ -30,7 +30,6 @@ class BackpackType extends AppTypeAbstract
                 self::GROUP_BY => 'rubric.name',
                 self::LABEL=>'Sous-rubrique',
                 self::MULTIPLE => false,
-                self::ATTR => [self::CSS_CLASS => 'select2'],
                 self::REQUIRED => false,
                 self::QUERY_BUILDER => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
@@ -57,7 +56,7 @@ class BackpackType extends AppTypeAbstract
                 self::LABEL=>'Niveau 5',
                 self::REQUIRED => false
             ])
-            ->add('updateAt', DateTimeType::class,
+            ->add('updatedAt', DateTimeType::class,
                 [
                     self::LABEL			=> 'dater',
                     self::REQUIRED=>false

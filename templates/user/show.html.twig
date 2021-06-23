@@ -5,7 +5,7 @@
 
 
 {% block breadcrumb %}
-    {% import "default/actions.html.twig" as actions %}
+    {% import "user/actions.html.twig" as actions %}
     {{ actions.admin(
         'show',
         is_granted('ROLE_ADMIN'),

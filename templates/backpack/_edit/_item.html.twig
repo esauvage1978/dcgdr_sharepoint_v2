@@ -11,17 +11,18 @@
         <div class="{{ col_1_2 }}">
             {% embed 'widgets/card-widget.html.twig' %}
                 {% import "macros/widgets.html.twig" as widgets %}
-                {% block card_title_class %} text-info{% endblock %}
-                {% block card_title %}{{ widgets.icon('backpack') }}Porte-document{% endblock %}
+                {% import "macros/backpack.html.twig" as bpk %}
+                {% import "macros/default.html.twig" as new %}
+                {% block card_title_class %} text-bold{% endblock %}
+                {% block card_title %} {{ widgets.icon('backpack') }} {{ item.name }}{% endblock %}
                 {% block card_tools %}
-                    <small class="text-muted">
-                        Créé par <strong>{{ item.owner.name }}</strong>
-                        Mise à jour le <strong>{{ item.updateAt |format_datetime('full', 'short', locale='fr') }}</strong>
-                        {{ widgets.badge_state(item.currentState) }}
-                    </small>
+                    {{ widgets.badge_state(item.stateCurrent) }}
+                    {{ new.isNew(item.updatedAt) }}
                 {% endblock %}
                 {% block card_class %}h-100{% endblock %}
                 {% block card_body %}
+                    {{ bpk.identification(item) }}
+                    <hr/>
                     <div class="row">
                         <div class=" col-12">
                             <div class="form-group row">

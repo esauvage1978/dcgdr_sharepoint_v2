@@ -1,17 +1,27 @@
 {% extends 'admin_underrubric/layout.html.twig' %}
 {% import "macros/datatables.html.twig" as tables %}
 {% set columns = {
-    'Image de présentation': {'class': 'alwaysVisible', 'orderBy': false},
-    'Thématique / Rubrique': {'class': 'alwaysVisible', 'orderBy': true},
-    'Thématique de la sous rubrique': {'class': 'alwaysVisible', 'orderBy': true},
-    'Nom de la sous rubrique': {'class': 'alwaysVisible', 'orderBy': true},
+'Image de présentation': {'class': 'alwaysVisible text-center align-middle', 'orderBy': false},
 
-    'Description': {'class': 'alwaysVisible', 'orderBy': true},
-    'Ordre d\'affichage': {'class': 'alwaysVisible', 'orderBy': true},
-    '<i class="fas fa-project-diagram"  data-toggle="tooltip" data-placement="top" title="Nombre de sous-rubrique"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fas fa fa-eye"  data-toggle="tooltip" data-placement="top" title="Consultable par tous"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Corbeille de lecture"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
-    '<i class="fa fa-boxes"  data-toggle="tooltip" data-placement="top" title="Corbeille d\'écriture"></i>': {'class': 'alwaysVisible text-center', 'orderBy': false},
+'Nom de la sous rubrique': {'class': 'alwaysVisible  align-middle', 'orderBy': true},
+
+'Thématique / Rubrique': {'class': 'alwaysVisible  align-middle', 'orderBy': true},
+
+'Thématique de la sous rubrique': {'class': 'alwaysVisible  align-middle', 'orderBy': true},
+
+
+'Description': {'class': 'alwaysVisible  align-middle', 'orderBy': true},
+
+'Ordre d\'affichage': {'class': 'alwaysVisible text-center  align-middle', 'orderBy': true},
+
+'<i class="fas fa-suitcase" data-toggle="tooltip" data-placement="top" title="Nombre de porte-document"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+
+'<i class="fas fa fa-eye" data-toggle="tooltip" data-placement="top" title="Consultable par tous"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+
+'<i class="fa fa-boxes" data-toggle="tooltip" data-placement="top" title="Corbeille de lecture"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+
+'<i class="fa fa-boxes" data-toggle="tooltip" data-placement="top" title="Corbeille d\'écriture"></i>': {'class': 'pr-2 align-middle text-center p-0 m-0', 'orderBy': true},
+
     'actions': {'class': 'alwaysVisible', 'orderBy': false}
 } %}
 
@@ -42,48 +52,63 @@
                 {% endif %}
             </td>
             <td class="align-middle">
+                <a href="{{ path(route_show,{id:item.id}) }}"
+                   class="text-{{ item.isEnable ? 'p-dark' : 'danger text-bold' }}">
+                    {{ item.name }}
+                </a>
+            </td>
+            <td class="align-middle text-xs">
                 <a href="{{ path('thematic_show',{id:item.rubric.thematic.id}) }}"
-                   class="text-{{ item.rubric.thematic.isEnable ? 'primary' : 'danger text-bold' }}">
+                    class="text-{{ item.rubric.thematic.isEnable ? 'p-dark' : 'danger text-bold' }}">
+
                     {{ item.rubric.thematic.name }} ({{ item.rubric.thematic.showOrder }})
                 </a>
                 <br/>
                 <a href="{{ path('admin_rubric_show',{id:item.rubric.id}) }}"
-                   class="text-{{ item.rubric.isEnable ? 'primary' : 'danger text-bold' }}">
+                    class="text-{{ item.rubric.isEnable ? 'p-dark' : 'danger text-bold' }}">
+
                     {{ item.rubric.name }} ({{ item.rubric.showOrder }})
                 </a>
             </td>
-            <td class="align-middle">
+            <td class="align-middle text-xs">
                 <a href="{{ path('underthematic_show',{id:item.underthematic.id}) }}"
-                   class="text-{{ item.underthematic.isEnable ? 'primary' : 'danger text-bold' }}">
+                   class="text-{{ item.underthematic.isEnable ? 'p-dark' : 'danger text-bold' }}">
                     {{ item.underthematic.name }} ({{ item.underthematic.showOrder }})
                 </a>
             </td>
-            <td class="align-middle">
-                <a href="{{ path(route_show,{id:item.id}) }}"
-                   class="text-{{ item.isEnable ? 'primary' : 'danger text-bold' }}">
-                    {{ item.name }}
-                </a>
-            </td>
-            <td class="align-middle">{{ item.content | raw }}</td>
-            <td class="align-middle text-center">{{ item.showOrder }}</td>
+            <td class="align-middle text-xs text-muted">{{ item.content | raw }}</td>
+            <td class="align-middle text-center text-lg">{{ item.showOrder }}</td>
             <td class="align-middle text-center">
-            </td>
-            <td class="align-middle text-center">
-                <span class="text-{{ item.isShowAll ? 'primary' : 'light' }} " ><i class="fas fa-circle"></i></span>
+{% set nbr = item.backpacks.count %}
+
+<div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+	{{ nbr }}
+</div>
+
             </td>
             <td class="align-middle text-center">
-                {% if   item.readers.count==0 %}
-                    <span class="text-light" ><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge bg-info">{{ item.readers.count}}</small>
-                {% endif %}
+<div class="p-2 {{ not item.isShowAll ? 'badge badge-light text-light' : 'badge badge-success text-success' }}">
+{{ not item.isShowAll ? '1' : '0' }}
+
+</div>
+
             </td>
             <td class="align-middle text-center">
-                {% if   item.writers.count==0 %}
-                    <span class="text-light" ><i class="fas fa-circle"></i></span>
-                {% else %}
-                    <small class="badge bg-info">{{ item.writers.count}}</small>
-                {% endif %}
+{% set nbr = item.readers.count %}
+
+<div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+	{{ nbr }}
+</div>
+
+            </td>
+            <td class="align-middle text-center">
+{% set nbr = item.writers.count %}
+
+<div class="p-2 {{ nbr==0 ? 'badge badge-light text-light' :'badge badge-success ' }}">
+	{{ nbr }}
+</div>
+
+
             </td>
             <td class="  align-middle text-right ">
                 {% if is_granted('ROLE_GESTIONNAIRE') %}
@@ -91,8 +116,8 @@
                         'Modifier',
                         path(route_edit,{id:item.id}),
                         'fa fa-edit',
-                        'purple',
-                        'primary btn-sm'
+                        'p-dark',
+                        'p-dark btn-sm'
                     ) }}
                 {% endif %}
             </td>

@@ -87,7 +87,7 @@ class Step1700_BackpackLinkFixtures extends Fixture implements FixtureGroupInter
                 ->setModifyAt
                 (
                     $data['date_update'] == "01/01/0001 00:00:00" ?
-                        $backpack->getUpdateAt() :
+                        $backpack->getUpdatedAt() :
                         $this->convertDate($data['date_update'])
                 )
                 ->setBackpack($backpack)

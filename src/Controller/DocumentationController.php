@@ -14,13 +14,13 @@ class DocumentationController extends AbstractController
     {
         //les fichiers sont à déposer dans public/doc
         $docs = [[
-            'name' => 'premier doc',
-            'url' => 'DCGDR_PAR - recherche.pdf',
-            'date' => '11/05/2020'
+            'name' => 'Guide pour la recherche',
+            'url' => 'DCGDR_SHAREPOINT - recherche.pdf',
+            'date' => '02/07/2020'
         ], [
-            'name' => '3ème doc',
-            'url' => 'doc.pdf',
-            'date' => '10/05/2020'
+            'name' => 'Guide du compte utilisateur',
+            'url' => 'DCGDR_SHAREPOINT - compte utilisateur.pdf',
+            'date' => '05/07/2020'
         ]];
 
         return $this->render('documentation/index.html.twig', [

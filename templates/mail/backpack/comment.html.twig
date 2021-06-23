@@ -1,0 +1,19 @@
+{% extends './mail/template.html.twig' %}
+
+{% block title %} Commentaire envoyé depuis l'application {% endblock %}
+{% block title_content %} Commentaire envoyé depuis l'application {% endblock %}
+
+{% block body %}
+        <p>Un comment pour le porte-document ci-dessous vous est envoyé depuis l'application :</p>
+        <p>
+                <b>Sujet : </b>{{ subject | raw }}
+        </p>
+
+        <p>
+            {{ content | raw }}
+        </p>
+        <p>
+
+        </p>
+{% endblock %}
+
