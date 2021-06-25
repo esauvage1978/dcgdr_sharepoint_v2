@@ -138,10 +138,10 @@ class UserManager
     {
         if(is_null($user->getId())) return false;
 
-        if (!file_exists($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png')) {
+        if (!file_exists($this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'' . $user->getId() . '.png')) {
             copy(
-                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/__default_'. rand(1,16).'.png',
-                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'/' . $user->getId() . '.png'
+                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'__default_'. rand(1,16).'.png',
+                $this->params->get(ParamsInServices::DIRECTORY_AVATAR) .'' . $user->getId() . '.png'
             );
         }
 
