@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 /**
  * @Route("/profil")
- * @IsGranted("IS_AUTHENTICATED_FULLY")
+ * @IsGranted("ROLE_USER")
  */
 class ProfilController extends AbstractGController
 {

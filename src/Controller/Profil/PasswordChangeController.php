@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 /**
  * @Route("/profil")
- * @IsGranted("IS_AUTHENTICATED_FULLY")
+ * @IsGranted("ROLE_USER")
  */
 class PasswordChangeController extends AbstractGController
 {

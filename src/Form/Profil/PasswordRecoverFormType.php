@@ -23,8 +23,7 @@ class PasswordRecoverFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 8,
-                        'minMessage' => 'Le mot de passe doit avoir au minimum {{ limit }} caractères.',
-                        'max' => 4096,
+                        'max' => 255,
                     ]), ], ])
             ->add('plainPasswordConfirmation', PasswordType::class,[
                 'label'=>"Confirmation",

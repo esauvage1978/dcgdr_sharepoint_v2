@@ -38,7 +38,7 @@ class AdminRubricController extends AbstractGController
     }
 
     /**
-//     * @Route("/admin/rubric/sort", name="admin_rubric_sort", methods={"GET"})
+    * @Route("/admin/rubric/sort", name="admin_rubric_sort", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
     public function sort()

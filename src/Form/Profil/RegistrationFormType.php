@@ -35,7 +35,6 @@ class RegistrationFormType extends AppTypeAbstract
                     ]),
                     new Length([
                         'min' => 8,
-                        'minMessage' => 'Le mot de passe doit avoir au minimum {{ limit }} caractères.',
                         'max' => 255,
                     ]),
                 ],

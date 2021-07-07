@@ -17,11 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 /**
  * @Route("/profil/avatar")
- * @IsGranted("IS_AUTHENTICATED_FULLY")
+ * @IsGranted("ROLE_USER")
  */
 class AvatarController extends AbstractGController
 {
-    CONST DOMAINE='profil';
+    const DOMAINE = 'profil';
 
     /**
      * @Route("/", name="avatar")
@@ -32,7 +32,7 @@ class AvatarController extends AbstractGController
      */
     public function show(Request $request, UserRepository $userRepository): Response
     {
-        return $this->render( self::DOMAINE . '/avatar.html.twig');
+        return $this->render(self::DOMAINE . '/avatar.html.twig');
     }
 
     /**
@@ -52,7 +52,7 @@ class AvatarController extends AbstractGController
         /* on récupère la valeur envoyée par la vue */
         $image = $request->request->get('dataImg');
 
-        $userManager->changeAvatar($user,$image);
+        $userManager->changeAvatar($user, $image);
 
         $response = new Response(json_encode([
             'retour' => 'Avatar mis à jour',

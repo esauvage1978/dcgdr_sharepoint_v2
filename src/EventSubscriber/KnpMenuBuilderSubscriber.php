@@ -53,8 +53,6 @@ class KnpMenuBuilderSubscriber implements EventSubscriberInterface
             $this->addDeconnexion();
         } elseif ($this->currentUser->isAuthenticatedRemember()) {
             $this->addHome();
-            $this->addProfil();
-            $this->addDoc();
             $this->addConnexion();
         } else {
             $this->addHome();

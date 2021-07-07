@@ -21,6 +21,7 @@ class ContactController extends AbstractController
 {
     /**
      * @Route("/gestionnaire", name="gestionnaire")
+    * @IsGranted("ROLE_USER")
      */
     public function gestionnaire(UserRepository $repo)
     {
@@ -30,7 +31,8 @@ class ContactController extends AbstractController
     }
     /**
      * @Route("/administrateur", name="administrateur")
-     */
+     * @IsGranted("ROLE_USER")
+    */
     public function administrateur(UserRepository $repo)
     {
         return $this->render('contact/administrateur.html.twig', [

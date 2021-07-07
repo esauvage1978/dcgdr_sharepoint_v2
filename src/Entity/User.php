@@ -139,6 +139,16 @@ class User implements UserInterface, EntityInterface
      */
     private $CommentsTo;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $accountValidated;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $accountValidatedToken;
+
     public function __construct()
     {
         $this->organismes = new ArrayCollection();
@@ -148,6 +158,7 @@ class User implements UserInterface, EntityInterface
         $this->histories = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->CommentsTo = new ArrayCollection();
+        $this->setAccountValidated(false);
     }
 
     public function getId(): ?int
@@ -598,6 +609,30 @@ class User implements UserInterface, EntityInterface
             $this->CommentsTo->removeElement($commentsTo);
             $commentsTo->removeUsersTo($this);
         }
+
+        return $this;
+    }
+
+    public function getAccountValidated(): ?bool
+    {
+        return $this->accountValidated;
+    }
+
+    public function setAccountValidated(bool $accountValidated): self
+    {
+        $this->accountValidated = $accountValidated;
+
+        return $this;
+    }
+
+    public function getAccountValidatedToken(): ?string
+    {
+        return $this->accountValidatedToken;
+    }
+
+    public function setAccountValidatedToken(?string $accountValidatedToken): self
+    {
+        $this->accountValidatedToken = $accountValidatedToken;
 
         return $this;
     }
