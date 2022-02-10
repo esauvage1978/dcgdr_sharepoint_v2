@@ -12,7 +12,7 @@
         "jquery-ui": "^1.12",
         "js-cookie": "^2.2",
         "jstree": "^3.3.9",
-        "node-sass": "^4.13",
+        "node-sass": "^7.0",
         "sass-loader": "^7.3",
         "summernote": "^0.8.18",
         "webpack-notifier": "^1.12.0"
